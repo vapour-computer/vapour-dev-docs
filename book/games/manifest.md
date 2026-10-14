@@ -14,6 +14,11 @@ version = "0.1.0"
 [build]
 dir = "build/web"
 cover = "cover.png" # optional; omit if no cover is supplied
+
+[store]
+page = "store/page.json"
+content = "store/template.md"
+notes = "store/notes.md" # optional release notes
 ```
 
 | Field | Meaning |
@@ -24,11 +29,16 @@ cover = "cover.png" # optional; omit if no cover is supplied
 | `project.engine` | `godot`, `unity`, `bevy` or `other` |
 | `project.version` | Starts with a letter/digit; subsequent characters may include letters, digits, `.`, `+`, `_`, `-` |
 | `build.dir` | Required path to the web export directory or ZIP |
-| `build.cover` | Optional path to the cover file |
+| `build.cover` | Optional legacy path to the cover file; `store.page` media takes precedence |
+| `store.page` | Optional path to the JSON store-page definition |
+| `store.content` | Optional path to the store-page Markdown text; at most 20,000 characters |
+| `store.notes` | Optional path to Markdown release notes; at most 5,000 characters |
 
 Paths are resolved relative to the game directory chosen by `--dir`, not relative
 to an arbitrary shell directory. The server treats slug and engine as immutable
 after project creation; editing a local manifest does not rename an existing game.
+Media paths inside `page.json` are instead relative to that JSON file. See the
+[store-page reference](store-page.md) for its fields and limits.
 
 ## Overrides
 

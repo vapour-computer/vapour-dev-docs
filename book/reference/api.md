@@ -37,7 +37,8 @@ HTTP status. Common statuses: 400 invalid input, 401 unauthenticated, 403 forbid
 | `GET /projects` | Developer's games, including drafts |
 | `GET /projects/:id` | Owned game; unknown 404, another owner's game 403 |
 | `PATCH /projects/:id` | Owner edits title/tagline/description/tags |
-| `POST /projects/:id/publish` | Owner uploads multipart version/build ZIP/optional cover |
+| `PUT /projects/:id/store` | Owner updates page metadata and optional banner, cover, screenshots and trailer; does not create a build version |
+| `POST /projects/:id/publish` | Owner uploads a new version, build ZIP and optional release notes; a version value can be used once |
 | `POST /projects/:id/unpublish` | Owner sets game to draft, retaining stored files |
 | `DELETE /projects/:id` | Owner deletes project and stored build/cover/play files |
 
@@ -52,12 +53,21 @@ See [limits](limits.md) for input and ZIP limits.
 | --- | --- |
 | `GET /home?limit=20&cursor=<opaque>` | Published games/devs with `next_cursor` |
 | `GET /games/:slug` | Published game and developer; otherwise 404 |
+| `GET /games/:slug/page` | Complete public store-page data and layout for a published game |
+| `GET /games/:slug/releases` | Published version history and release notes |
+| `GET /categories` | Supported store categories for filters and forms |
+| `GET /media/...` | Store image or trailer at a media URL returned by the API; clients should not construct this path |
 | `GET /devs/:uid` | Public developer and published games |
 | `GET` or `HEAD /play/:slug[/<path>]` | Published extracted game files; root resolves to index.html |
 
 The source server assigns MIME types, browser isolation/resource headers,
 frame-ancestor policy tied to the web origin, and cache lifetimes. Missing files
 or unpublished games return 404. Verify those headers on the actual deployment.
+
+Store updates use multipart form data: a JSON metadata part describes tagline,
+description, category, tags and the page layout, while optional file parts carry
+media. Public page responses expose usable media URLs, category and releases;
+consumers do not need storage details. See [store-page limits](limits.md#store-page-media).
 
 ## Not yet available
 

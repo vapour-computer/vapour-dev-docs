@@ -14,6 +14,17 @@ Supported engine values are `godot`, `unity`, `bevy` and `other`. The default is
 The current templates do not generate a complete playable engine project.
 Create your Godot/Unity/Rust project in that directory or import an existing one.
 
+The scaffold also creates a `store/` directory:
+
+| File | Purpose |
+| --- | --- |
+| `template.md` | Markdown text for the store page |
+| `page.json` | Game details, media paths and page layout |
+| `page.schema.json` | Editor validation and autocomplete for `page.json` |
+| `README.md` | A short store-page editing reference |
+
+Edit these files before publishing; see [Create a store page](store-page.md).
+
 Normally it registers the remote project first. If the server rejects the
 request, scaffolding has not been written. If later disk or clone work fails,
 the already-created remote project may still exist; inspect your projects before
@@ -37,7 +48,8 @@ vapour create "My Game" --engine godot --from https://github.com/YOUR-ORG/YOUR-G
 
 The CLI shallow-clones the repository and removes the cloned `.git` directory,
 so the new project starts without the sample's Git history. It writes the new
-Vapour manifest. Use `--offline` as well if remote registration should wait.
+Vapour manifest and adds missing `store/` starter files without overwriting
+existing files. Use `--offline` as well if remote registration should wait.
 Git must be installed. Clone into a new empty destination; the CLI rejects a
 nonempty directory rather than overwriting an existing project.
 

@@ -10,7 +10,9 @@ Global options: `--api <base-url>`, `--version`, and normal `--help`.
 | `vapour logout` | Removes the local saved credential file; does not revoke a PAT or unset env vars |
 | `vapour whoami` | Queries the selected API and prints identity/role/API base |
 | `vapour create <name>` | `--engine godot\|unity\|bevy\|other`, `--from <git-url>`, `--offline` |
-| `vapour publish` | `--dir <game-dir>`, `--version <value>`, `--dry-run` |
+| `vapour publish` | `--dir <game-dir>`, `--version <value>`, `--notes <markdown>`, `--notes-file <path>`, `--skip-store`, `--dry-run`; publishes each version once |
+| `vapour store check` | `--dir <game-dir>`; validates page JSON, Markdown and media without uploading |
+| `vapour store push` | `--dir <game-dir>`; updates the store page without publishing a build version |
 | `vapour completion` | Generates shell-completion scripts; use `completion --help` for supported shells |
 
 API base precedence is `--api`, then nonempty `VAPOUR_API`, saved login API,
@@ -18,9 +20,13 @@ then `https://api.vapour.ink`. The default string is a source default, not a
 deployment/availability guarantee. Token precedence is `VAPOUR_TOKEN`, then the
 saved credential. Explicitly select the target for staging and local work.
 
+`publish --dry-run` validates and packs without authenticating, registering or
+uploading. It checks the store page unless `--skip-store` is supplied. Release
+notes come from `--notes-file`, then `--notes`, then `store.notes` in the manifest.
+
 No currently implemented Go command lists/deletes projects, starts a profiler or
-registers a `vapour://` handler. Use the [API reference](api.md) for source-preview
-project management.
+registers a `vapour://` handler. Use the [API reference](api.md) for project
+management outside the CLI.
 
 ## Standalone native executable — implemented proof
 

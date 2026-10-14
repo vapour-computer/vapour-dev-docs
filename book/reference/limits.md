@@ -7,9 +7,9 @@
 | Build ZIP upload | 512MiB |
 | Extracted archive | 1GiB |
 | ZIP entries | 5,000 |
-| Cover image | 5MiB |
+| Store cover image | 2MiB |
 | Game tagline | 140 characters |
-| Game description | 2,000 characters |
+| Store-page Markdown | 20,000 characters |
 | Tags | At most 5; each 1–24 characters |
 | Profile name/display name | 1–60 characters |
 | Developer bio | At most 500 characters |

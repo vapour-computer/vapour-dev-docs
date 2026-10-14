@@ -28,23 +28,6 @@
 * [Vapour tokens](auth/tokens.md)
 * [Claude keys](auth/claude-keys.md)
 
-## Build and publish games
-
-* [Create or import a project](games/create.md)
-* [vapour.toml reference](games/manifest.md)
-* [Create a store page](games/store-page.md)
-* [Web export requirements](games/web-export.md)
-* [Large-game delivery plan](games/large-games.md)
-* [Supported engines and frameworks](games/frameworks.md)
-* [Godot](games/godot.md)
-* [Unity](games/unity.md)
-* [Bevy and Rust](games/bevy.md)
-* [JavaScript frameworks](games/javascript-frameworks.md)
-* [Other HTML5 and Wasm frameworks](games/other-frameworks.md)
-* [Publish and verify a build](games/publish.md)
-* [Manage, unpublish and restore games](games/manage.md)
-* [Game publishing from CI](games/ci-cd.md)
-
 ## Telemetry and profiling
 
 * [Understand your game's performance](telemetry/guide.md)
@@ -62,6 +45,23 @@
 * [Offline and Claude reports](analysis/reports.md)
 * [Read a performance report](analysis/worked-example.md)
 * [Find expensive assets](analysis/assets.md)
+
+## Build and publish games
+
+* [Create or import a project](games/create.md)
+* [vapour.toml reference](games/manifest.md)
+* [Create a store page](games/store-page.md)
+* [Web export requirements](games/web-export.md)
+* [Large-game delivery plan](games/large-games.md)
+* [Supported engines and frameworks](games/frameworks.md)
+* [Godot](games/godot.md)
+* [Unity](games/unity.md)
+* [Bevy and Rust](games/bevy.md)
+* [JavaScript frameworks](games/javascript-frameworks.md)
+* [Other HTML5 and Wasm frameworks](games/other-frameworks.md)
+* [Publish and verify a build](games/publish.md)
+* [Manage, unpublish and restore games](games/manage.md)
+* [Game publishing from CI](games/ci-cd.md)
 
 ## Reference and maintenance
 

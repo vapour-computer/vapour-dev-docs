@@ -34,6 +34,19 @@ page = "store/page.json"
 content = "store/template.md"
 notes = "store/notes.md"
 
+# Preview: runtime/player hints
+[runtime]
+threads = false
+webgpu = false
+coep = "require-corp"      # require-corp | credentialless
+entry = "index.html"       # relative HTML entry path
+
+# Preview: phone player hints
+[mobile]
+orientation = "any"        # any | landscape | portrait
+render_scale = 0.75         # 0.25..1.0 phone DPR multiplier
+max_dpr = 2.0               # optional phone DPR cap
+
 # Preview: touch controls for phones
 [controller]
 mode = "keyboard-map"        # keyboard-map | dedicated
@@ -125,6 +138,27 @@ refuses a stale file ("rerun `vapour build`"). Do not commit `.vapour/`.
 | `content` | string | no | Released | Path to the Markdown text of the page. At most 20,000 characters. |
 | `notes` | string | no | Released | Path to Markdown release notes for this version. At most 5,000 characters. `--notes` and `--notes-file` override it. |
 
+## `[runtime]` (Preview)
+
+Hints for player/runtime behavior published with the build metadata.
+
+| Entry | Type | Required | Meaning |
+| --- | --- | --- | --- |
+| `threads` | bool | no | Declares that the build needs cross-origin isolation and SharedArrayBuffer. |
+| `webgpu` | bool | no | Declares WebGPU requirement/intent. |
+| `coep` | string | no | `require-corp` (default) or `credentialless` (opt-in compatibility path). |
+| `entry` | string | no | Relative HTML entry path when not `index.html`. Must not be absolute or contain `..`. |
+
+## `[mobile]` (Preview)
+
+Phone-only player hints (coarse pointer and short-side under 600 CSS px).
+
+| Entry | Type | Required | Meaning |
+| --- | --- | --- | --- |
+| `orientation` | string | no | `any` (default), `landscape`, or `portrait`. |
+| `render_scale` | number | no | Effective phone DPR multiplier, 0.25 to 1.0. |
+| `max_dpr` | number | no | Optional hard cap on effective phone DPR. Must be > 0. |
+
 ## `[controller]` (Preview)
 
 Touch controls for phones. They are **drawn by the Vapour player on top of your game** and turn finger movement into
@@ -173,6 +207,11 @@ These are the messages the CLI prints, with the fix.
 | `command=custom requires build.args (executable followed by arguments)` | Add `args`. |
 | `build.command must be auto, custom or none` | Fix the spelling. |
 | `split_warn_mib must be between 0 (default 1024) and 4096` | Pick a value in range. |
+| `runtime.coep must be require-corp or credentialless` | Use one of the two supported values. |
+| `runtime.entry must be a relative safe path` | Use a relative path such as `index.html` or `Build/MyGame.html`. |
+| `mobile.orientation must be any, landscape or portrait` | Pick one of the supported orientation hints. |
+| `mobile.render_scale must be between 0.25 and 1.0` | Keep phone downscale within range. |
+| `mobile.max_dpr must be > 0` | Use a positive cap value. |
 | `controller.mode is required when controller.controls are set` | Preview only. Add `mode`. |
 | `controller.controls[0]: x and y must be between 0 and 1` | Use fractions, not pixels. |
 | `controller.controls[0]: up is required for joystick` | A `dpad` or `joystick` needs all four directions. |

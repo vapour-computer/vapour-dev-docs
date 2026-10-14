@@ -62,8 +62,12 @@ refer to the correct environment and be protected by backend/rules authorization
 These build flags do not replace the runtime owner grant or create a backend
 config endpoint. Runtime changes cannot insert excluded code into production.
 
-## Native build and planned runtime
+## Native build and local dashboard
 
-`CLANG` can select a BPF-capable compiler for the current Rust build. Native
-`ANTHROPIC_API_KEY`, OS keyring, origins and local API settings belong to planned
-interfaces. They are not consumed by the current `probe-test` command.
+`CLANG` selects a BPF-capable compiler. The new `dashboard` command reads
+`ANTHROPIC_API_KEY` for explicit Claude analysis, or uses `secret-tool`/Secret
+Service. It writes native shutdown dumps beneath
+`$XDG_DATA_HOME/vapour-profiler/dumps`, defaulting to
+`~/.local/share/vapour-profiler/dumps`. `--port` defaults to 6767 and `--ttl` to 300.
+Origin access is local same-origin only. These settings do not activate collection
+or alter the separate `probe-test` command.

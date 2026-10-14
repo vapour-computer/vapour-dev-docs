@@ -1,8 +1,23 @@
 # Offline and Claude reports
 
-**Available today:** analysis of an active browser session through the package
-API. **Planned:** native trace preprocessing, native keyring client and standalone
-analysis of arbitrary valid `.vpt` files.
+**Available:** active browser-session analysis through the package API, and
+saved-dump/native-process analysis in the new local dashboard checkout.
+The standalone file-analysis CLI command remains pending.
+
+## Local dashboard workflow
+
+Open a `.vpt`/`.folded` dump or explicitly collect native CPU/RSS/PSS, then click
+**Offline report** or **Analyze with Claude**. Native summaries include observed
+process CPU and available memory fields; stack-containing imports can rank named
+hotspots. No unavailable native frames or stacks are invented. Native analysis
+uses the provider trait and keyring/environment key; browser analysis retains its
+independent TypeScript implementation and browser key storage.
+
+Use **Save report** for JSON and the comparison-baseline button for before/after
+summaries. Reports and flamegraphs cover the whole retained capture, not just
+the visible chart range. See [dashboard usage](../telemetry/dashboard.md).
+
+The remainder of this page describes the independent browser package API.
 
 ## Run analysis
 

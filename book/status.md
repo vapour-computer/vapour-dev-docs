@@ -8,6 +8,7 @@ source preview is not a deployment.
 | Component | Status | What you can use |
 | --- | --- | --- |
 | Standalone profiler (`vapour-profiler`) | Public, early | `probe-test`, the BPF build pipeline, the lifecycle test harness, the `.vpt` v1 trace specification |
+| Local performance dashboard | Implemented maintainer checkout; not yet a published release | `dashboard`, authenticated loopback API, CPU/RSS/PSS capture, dump viewer, flamegraphs, offline/Claude reports and comparisons |
 | Browser telemetry | Staging-only preview | Metrics, overlay, `.vpt` export and offline or direct-Claude analysis through an explicit integration API. Not wired into the player yet |
 | Publishing CLI (`vapour-cli`) | Preview, not yet released | `login`, `logout`, `whoami`, `create`, `publish` |
 | Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. Needs a CLI release first |
@@ -20,12 +21,15 @@ that has no release yet does not give you the unreleased tool.
 
 - Native Lite/Full metrics, a terminal UI, runtime adapters and symbolization.
 - Native `on`, `off`, `live`, `dump`, `analyze`, keyring commands and signed releases.
-- The local agent on **127.0.0.1:6767**, a token-authenticated local API and CLI sync.
+- Vapour CLI synchronization and simultaneous native/browser source orchestration for the local agent.
 - `vapour profiler ...`, `vapour scope ...` and the `vapour://` handler.
 - Live player wiring, a cross-origin telemetry bridge and native forwarding.
-- Native `.vpt` ingestion and analysis, and a browser UI for importing saved dumps.
+- Standalone file-analysis command; saved dumps can already be imported/analyzed in the local dashboard checkout.
 - A verified three-path demo and measured overhead targets.
 
 ## Update this page when code lands
+
+See [dashboard usage](telemetry/dashboard.md) for current instructions. Its native
+collection uses `/proc`; full eBPF frame/stack collection remains pending.
 
 Change a workflow's availability only when its command, route or hook actually exists.

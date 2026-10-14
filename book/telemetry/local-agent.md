@@ -1,57 +1,54 @@
 # Local agent and port 6767
 
-**Availability: planned architecture; no 6767 listener exists in the current code.**
-The native agent will run on the developer's machine, coordinated by the Vapour
-CLI. It will expose both native and optionally forwarded browser telemetry.
+**Implemented in the maintainer checkout; not yet a published profiler release.**
+`vapour-profiler dashboard` starts an authenticated local UI/API on
+`127.0.0.1:6767`. See [dashboard usage](dashboard.md) for launch, capture, dump,
+keyring and comparison instructions.
 
-## Planned startup
+## Current lifecycle
 
-```text
-vapour scope on <game-id>
-```
+Opening the explicit viewer starts no native collection. `--pid PID` authorizes
+one target; clicking Start begins 1Hz process CPU/RSS/PSS collection. Imported
+`.vpt` and `.folded` files start no probes. The viewer/API stays available until
+End session, TTL, signals or native target exit; shutdown flushes native data
+locally subject to the storage cap and closes the agent. No daemon is installed.
 
-The intended flow is:
+Every API request requires `Authorization: Bearer SESSION_TOKEN`. WebSockets
+use subprotocols `vapour.v1` and the token; the server selects `vapour.v1`.
+The exact loopback Host is checked, and browser Origin must match the local UI.
+No remote/Vapour origin is allowlisted in this version. A busy port is an error;
+the agent never kills the process occupying it.
 
-1. Resolve the game ID to a locally running Vapour game, without accepting a
-   remote raw PID or arbitrary executable path.
-2. Lazily download a pinned profiler release if needed, checking its checksum
-   and signature before execution.
-3. Request session privileges for the selected native probes.
-4. Start bounded collection and bind **127.0.0.1:6767**.
-5. Give the local CLI and authorized staging UI a session-authenticated connection.
+## Initial dashboard API
 
-Port 6767 replaces the original random-port proposal. A fixed port is not an
-authentication mechanism. Origin allowlisting and a session token remain required.
-A port conflict must produce an error; the agent must not terminate its owner.
+| Endpoint | Operation |
+| --- | --- |
+| `GET /api/status` | Session state/capabilities and most recent metric |
+| `GET /api/live` | Authenticated WebSocket updates, at most 1Hz |
+| `POST /api/start` | Capture the CLI-authorized PID only |
+| `POST /api/trace` | Raw UTF-8 `.vpt` import into an inactive viewer |
+| `GET /api/trace` | Export retained trace; active capture exports are partial |
+| `POST /api/analyze` | `{ "offline": true }` or `{ "offline": false, "model": "claude-sonnet-4-6" }` |
+| `POST /api/key` | Store key in OS keyring, never echo it |
+| `POST /api/key/remove` | Remove keyring entry; environment keys are separate |
+| `POST /api/off` | Flush native capture and end the local session |
 
-## Two sources, separate capture lifetimes
+Budgets: four WebSocket clients, eight in-flight HTTP handlers, one import/analysis
+at a time and a 30-second request deadline. Provider analysis has a 20-second
+timeout, 24KB summary cap and 256KiB response cap. Only explicit analysis sends
+a summary directly to Anthropic; there is no Vapour-server telemetry path.
 
-Native and browser metrics remain source-tagged. Browser-only capture must not
-load BPF. Each source has its own explicit toggle, buffers and TTL. The browser
-collector must still capture/export/analyze without the native agent installed.
+## Integration still pending
 
-The agent's future browser ingestion must validate the pinned `.vpt` data
-contract and bound clients, messages, queues and storage. The TypeScript package
-must not import Rust code or a Wasm build of the native analyzer.
+The intended `vapour scope` commands will resolve game IDs and coordinate the
+agent after lazy installation of verified releases. CLI synchronization, signed
+installation and the `vapour://` handler are not implemented by this dashboard.
 
-## Planned shutdown
+Automatic browser forwarding, simultaneous source toggles and the staging
+dashboard bridge remain pending. Browser data can currently be exported as `.vpt`
+and opened locally. Future forwarding must retain source labels and separate
+budgets; browser-only operation must never load BPF. The browser collector remains
+independent and can operate without the native agent.
 
-Off, TTL expiry or a native target exit ends the relevant capture and releases
-its resources. When the final capture ends, the agent closes 6767 and exits.
-There is no always-on daemon, systemd service, dormant socket or off-state poller.
-
-Native shutdown is intended to flush a bounded partial dump before detaching;
-that trace-flush behavior is not part of the current uprobe proof. Browser off
-currently discards its buffers, so export before stopping.
-
-## Security and integration boundaries
-
-- Vapour CLI will allowlist only the confirmed staging dashboard origin.
-- Production origins cannot opt themselves in through a feature flag.
-- A `vapour://` handler will strictly validate game IDs, profiles, flags and TTLs,
-  with a native confirmation for a first origin-triggered session.
-- Claude key submission will be token-authenticated and local-only; native keys
-  will use the OS keyring. No report/trace/key goes through a Vapour server.
-
-Exact endpoint/message schemas will be published with the API implementation.
-Do not hardcode guessed `/metrics`, `/set-key` or WebSocket paths today.
+Remote integration still needs staging-only builds/backend guards, real game-owner
+authorization and exact origin handling before it is enabled.

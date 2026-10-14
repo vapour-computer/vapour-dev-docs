@@ -1,7 +1,9 @@
 # Native profiler: current workflow
 
-**Availability: published BPF lifecycle proof.** The current executable is
-`vapour-profiler probe-test`; it is not yet the full `on/live/dump/analyze` profiler.
+**Availability: published BPF lifecycle proof, plus a local dashboard in the
+maintainer checkout.** This page covers `probe-test`. See [dashboard usage](dashboard.md)
+for process CPU/RSS/PSS capture and saved-dump analysis. The standalone
+`on/live/dump/analyze` command family remains pending.
 
 ## Build
 
@@ -20,8 +22,9 @@ time. Runtime capture does not download or compile BPF. Kernel BTF is expected
 at `/sys/kernel/btf/vmlinux`; supported initial target is Linux 5.15+.
 
 The workspace contains `vp-bpf`, `vp-agent`, `vp-adapters`, `vp-analyze` and the
-`vp-cli` directory housing the `vapour-profiler` binary. Adapter/analyzer crates
-are reserved for later work. Userspace is MIT/Apache-2.0; BPF C is GPL-2.0-only.
+`vp-cli` directory housing the `vapour-profiler` binary. Adapters remain pending;
+the new analyzer validates traces and generates dashboard reports. Userspace is
+MIT/Apache-2.0; BPF C is GPL-2.0-only.
 
 ## Run the actual lifecycle test
 

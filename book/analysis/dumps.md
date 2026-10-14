@@ -4,6 +4,16 @@ A game ZIP and a `.vpt` performance dump serve different purposes. Publish the
 game ZIP to Vapour; keep performance dumps local unless you deliberately share
 one outside the product workflow.
 
+## Open a saved dump in the local dashboard
+
+The implemented maintainer checkout now provides `vapour-profiler dashboard`.
+Open its full token-bearing URL in Chromium, click **Open dump**, and select
+`.vpt` or `.folded`. Use **Offline report** or **Analyze with Claude**; export
+the retained trace with **Export .vpt** and JSON findings with **Save report**.
+Imports start no probes. See [dashboard usage](../telemetry/dashboard.md) for
+charts, flamegraphs, budgets and before/after comparisons. This command is not
+yet part of a published profiler release.
+
 ## Browser export: available package API
 
 With an active authorized session:
@@ -84,8 +94,7 @@ console.log(ended ? 'Valid complete trace' : 'Valid partial trace: no end record
 JS
 ```
 
-This checks the shared schema and record ordering; it does not produce a report.
-The current Rust executable has **no dump/analyze command**, and the browser UI
-has no saved-dump importer. Analyze the current browser session before stopping,
-or retain the valid dump for the forthcoming file analyzer. Do not advertise a
-nonexistent `vapour-profiler analyze capture.vpt` as a working command.
+This checks schema/ordering without producing a report. Saved-dump analysis is
+now available through the local dashboard checkout. Standalone `vapour-profiler
+analyze capture.vpt` and `dump` subcommands remain pending. The independent
+browser collector still analyzes its active session rather than importing files.

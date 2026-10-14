@@ -19,6 +19,10 @@ representative hosting test.
 
 ## Packaging rules
 
+**Status: planned:** [chunked large-game delivery](large-games.md) will target
+50 GiB/game and 4 GiB/file. These higher limits are not current support; the
+existing ZIP limits below still apply. Chunking does not lift engine memory limits.
+
 The source-preview API accepts a ZIP up to **512 MiB**, with at most **5,000
 entries** and **1 GiB uncompressed**. It rejects path traversal, absolute paths,
 backslash paths and builds without `index.html`. A single wrapping top-level

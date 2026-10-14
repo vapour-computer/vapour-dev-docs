@@ -2,8 +2,9 @@
   "name": "vapour-dev-docs",
   "private": true,
   "scripts": {
-    "build": "honkit build ./book ../_book --reload && node scripts/check_site.mjs",
-    "check:site": "node scripts/check_site.mjs"
+    "build": "honkit build ./book ../_book --reload && node scripts/build_llms.mjs && node scripts/check_site.mjs",
+    "check:site": "node scripts/check_site.mjs",
+    "llms": "node scripts/build_llms.mjs"
   },
   "engines": {
     "node": ">=22"

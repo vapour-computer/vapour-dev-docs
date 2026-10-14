@@ -49,3 +49,44 @@ Edit the repository's Markdown and navigation as the source of truth. Once Git
 Sync is configured, GitBook imports the changes. Keep existing space keys stable:
 changing a key can create a new space rather than renaming the old one. See
 [GitBook setup](gitbook-setup.md) and the repository's contribution instructions.
+
+## Screenshots: how they are made
+
+Screenshots of web content are captured with a **headless Chromium** and no extra dependencies, using
+`scripts/shot.mjs` (it speaks the DevTools protocol over Node's built-in WebSocket). Images live in `book/assets/img/`.
+
+```sh
+# the controller preview page
+vapour controller preview --html --out /tmp/preview.html
+node scripts/shot.mjs --url file:///tmp/preview.html --out book/assets/img/preview.png --w 1000 --h 760 --full
+
+# a running game with the FPS overlay
+vapour test --no-open --no-profile --port 8765 &
+node scripts/shot.mjs --url http://127.0.0.1:8765/ --out book/assets/img/game.png --w 1280 --h 720 --wait 35000
+```
+
+Other options: `--mobile` (phone emulation), `--scale 2`, `--gl` (ask for the real GPU), `--waitfor "<js expression>"`,
+`--eval` / `--evalfile` (run JavaScript before the shot, for example to import a dump), `--clip x,y,w,h`.
+
+Rules we follow:
+
+- **Terminal output is never a screenshot.** Show commands and their real output in a `text` or `sh` code block.
+- **Say how a screenshot was made** in its caption when it could mislead. Headless Chromium renders in software, so an
+  FPS reading from it is low; the caption says so.
+- **Keep illustrative data labelled.** The dashboard screenshots of a trace use the book's sample fixture, and say so.
+- **Give every image descriptive alt text.** `llms-full.txt` turns it into `[Image: …]` for language models.
+- **Editor steps need a human.** We cannot capture Godot, Unity or Bevy tooling automatically. Those steps carry a dashed
+  `shot-slot` figure with the exact thing to capture. Replace it with an image when you can.
+
+## GitHub Pages
+
+`.github/workflows/pages.yml` builds the book and deploys it on every push to `main`. Do this once in the repository:
+**Settings → Pages → Build and deployment → Source: GitHub Actions**. The site address is
+`https://<owner>.github.io/<repository>/`. Cloudflare Pages keeps working from the same `npm run build` output; the GitHub
+Pages copy sets `SITE_URL` so `llms.txt` and the sitemap point at the right host.
+
+## Outputs for language models
+
+`npm run build` also runs `scripts/build_llms.mjs`, which writes `llms.txt`, `llms-full.txt`, `sitemap.xml`, `robots.txt` and
+a Markdown copy of every page under `md/` next to the HTML. See [use this handbook with an AI
+assistant](reference/ai-assistants.md). Nothing is hand-maintained: add a page to `SUMMARY.md` and it is included.

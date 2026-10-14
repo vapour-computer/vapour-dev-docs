@@ -66,6 +66,9 @@ The overlay can be changed with `session.setOverlay(true|false)`. No per-frame
 allocations are made in the collector's rAF callback; buffers are allocated on
 capture start and capped. Hidden-tab gaps are omitted rather than called spikes.
 
+> **Asset records:** the browser collector does not emit `asset` records, and its vendored schema predates them. See
+> [Find expensive assets](../analysis/assets.md) and [the two schema pins](../analysis/dumps.md#the-two-schema-pins).
+
 ## Export, analyze, stop
 
 ```ts

@@ -28,6 +28,9 @@ hover over the synchronized charts, and adjust the time-window sliders. Click
 a recorded spike to focus its surrounding window. Search the flamegraph by
 function name, click a frame to zoom, and select Reset zoom to return.
 
+If the trace has `asset` records, the **Asset load cost** panel ranks them by how hard they were to load: click a row or bar to zoom the
+timeline onto that load. A live native capture has none, so it shows "No recorded assets". See [Find expensive assets](../analysis/assets.md).
+
 Flame width means retained sample counts, not elapsed time or CPU utilization.
 Flat samples get no invented callers. Flamegraphs and reports use the **whole
 retained capture**, even when the timeline is zoomed. Unsupported metrics remain

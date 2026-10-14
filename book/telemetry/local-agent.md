@@ -28,6 +28,7 @@ the agent never kills the process occupying it.
 | `POST /api/start` | Capture the CLI-authorized PID only |
 | `POST /api/trace` | Raw UTF-8 `.vpt` import into an inactive viewer |
 | `GET /api/trace` | Export retained trace; active capture exports are partial |
+| `GET /api/assets` | Per-asset cost report from the retained trace's `asset` records, hardest first; empty without them. See [Find expensive assets](../analysis/assets.md#the-api) |
 | `POST /api/analyze` | `{ "offline": true }` or `{ "offline": false, "model": "claude-sonnet-4-6" }` |
 | `POST /api/key` | Store key in OS keyring, never echo it |
 | `POST /api/key/remove` | Remove keyring entry; environment keys are separate |

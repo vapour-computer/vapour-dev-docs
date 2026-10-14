@@ -56,6 +56,12 @@ Current proof: TTL default 30 seconds, maximum 300; one bounded per-CPU hit map
 and 1Hz reads. Planned profiler: TTL default 300, Lite 49Hz sampling, Full 99Hz,
 4MiB ring buffer and 50MiB dump. Planned overhead targets are not measurements.
 
+## Asset records
+
+An `asset` record's `id` is 1–256 characters and unique in the file; `name` is 1–1024. A texture is 1–65,536 pixels on each side with
+1–4,096 layers; its `format` is 1–64 characters. The dashboard's asset table shows the top 300 rows and its lane timeline up to 40
+lanes. The 50MiB file, 1MiB record and 150,000-record import limits apply. See [Find expensive assets](../analysis/assets.md).
+
 ## Terms
 
 - **Frame time:** interval between observed frame markers/rAF callbacks, in ms.

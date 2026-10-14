@@ -1,5 +1,7 @@
 # Bevy and Rust
 
+> **Prefer a walkthrough?** The [Bevy tutorial](../tutorials/bevy.md) takes a real sample project from export to a phone-ready build, step by step.
+
 Bevy web builds target `wasm32-unknown-unknown`. Trunk can package the Wasm output
 and generate browser-loading assets from an HTML entry point.
 

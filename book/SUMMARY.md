@@ -15,6 +15,13 @@
 * [Unity: a 2D platformer to WebGL](tutorials/unity.md)
 * [Profile your game locally](tutorials/profile-locally.md)
 
+## Templates
+
+* [Start from a template](templates/overview.md)
+* [Godot template](templates/godot.md)
+* [Bevy template](templates/bevy.md)
+* [Unity template](templates/unity.md)
+
 ## Accounts and credentials
 
 * [Accounts and developer access](auth/accounts.md)
@@ -40,6 +47,7 @@
 
 ## Telemetry and profiling
 
+* [Understand your game's performance](telemetry/guide.md)
 * [Use the local dashboard](telemetry/dashboard.md)
 * [Choose a capture path](telemetry/overview.md)
 * [Browser telemetry](telemetry/browser.md)

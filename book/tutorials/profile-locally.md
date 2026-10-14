@@ -1,25 +1,22 @@
-# Tutorial: profile your game locally with `vapour test`
+# Tutorial: test and measure your game locally
 
 <span class="badge badge-preview">Preview tools</span> <span class="badge">Works for Godot, Unity and Bevy</span> <span class="badge">About 10 minutes</span>
 
-`vapour test` runs your web build on your own machine, shows a live **FPS overlay**, and opens the **profiler** next to
-it. Everything stays local: nothing is uploaded, and none of it can end up in a published game.
-
-> **Local only, by design.** The overlay is added to the page while it is being served, and the build folder is never
-> modified, so `vapour publish` cannot include it. The Vapour website has no live profiling. See
-> [the lifecycle rules](../telemetry/lifecycle.md) for what the tools may and may not do.
+Before you publish, run your game on your own computer and see how it really performs. One command opens your game with a **live
+speed counter** and a **performance page** next to it. Everything stays on your computer: nothing is uploaded, and none of it
+ends up in the game you publish.
 
 ## What you need
 
 | You need | Why |
 | --- | --- |
-| A web build with `build.dir` in `vapour.toml` | `vapour test` serves that folder (or `.zip`) |
-| The `vapour` CLI with the `test` command | [Preview](../status.md): it is in an open pull request, not yet a release |
-| A Chromium-family browser (Chromium, Chrome, Brave, Edge) | The profiler needs to launch it on its own profile so it can find the browser's process. Firefox-based browsers are not used |
-| **Linux** and the `vapour-profiler` binary | For the profiler. On other systems you still get the overlay |
+| A browser version of your game (the folder named in `build.dir`) | That is what gets tested |
+| The `vapour` command with `test` | It is in [preview](../status.md): not in a release yet |
+| A Chromium-based browser (Chromium, Chrome, Brave or Edge) | The performance page needs one. Firefox is not used |
+| **Linux** and the `vapour-profiler` program | For the performance page. On other systems you still get the speed counter |
 
-Tell the CLI where the profiler is. It looks, in order, at `--profiler PATH`, the `VAPOUR_PROFILER` environment variable,
-a `vapour-profiler` file **next to the `vapour` binary**, and your `PATH`.
+Tell the command where `vapour-profiler` is by putting it next to the `vapour` program, adding it to your `PATH`, or passing
+`--profiler /path/to/vapour-profiler`.
 
 ## Run it
 
@@ -35,142 +32,89 @@ eBPF profiler attached to the game browser (CPU and memory, browser plus its pro
 Capture started automatically; open the profiler tab to watch it. The profiler session lasts 5 minutes. Close the browser to stop.
 ```
 
-A Chromium window opens with two tabs: **your game**, and **the profiler dashboard**. Capture has already started. To
-stop, close the browser or press Ctrl+C: the profiler, the browser and the temporary browser profile are all removed.
+A browser window opens with two tabs: **your game**, and **the performance page**. Measuring has already started. To stop, close the
+browser or press Ctrl+C. Everything is cleaned up.
 
-If the profiler or a suitable browser is missing, `vapour test` says why and carries on with just the overlay:
+If the performance page cannot start, the command says why and carries on with just the speed counter:
 
 ```text
 Profiler not started: vapour-profiler not found: pass --profiler /path/to/vapour-profiler, set VAPOUR_PROFILER, put it next to the vapour binary, or put it on PATH
 Continuing with the FPS overlay only.
 ```
 
-### Flags
+### Options
 
-| Flag | What it does |
+| Option | What it does |
 | --- | --- |
-| `--dir DIR` | The game folder holding `vapour.toml`. Default `.` |
-| `--port N` | Port on `127.0.0.1` for your game. Default: a free port |
-| `--no-telemetry` | Do not add the FPS overlay |
-| `--no-profile` | Do not start the profiler |
-| `--no-open` | Do not open a browser (this also skips the profiler, which needs to launch the browser itself) |
-| `--profiler PATH` | The `vapour-profiler` binary |
+| `--dir DIR` | The game folder that has `vapour.toml`. Default: the current folder |
+| `--port N` | The port for your game on this computer. Default: any free port |
+| `--no-telemetry` | Do not show the speed counter |
+| `--no-profile` | Do not open the performance page |
+| `--no-open` | Do not open a browser. This also skips the performance page |
+| `--profiler PATH` | Where `vapour-profiler` is |
 
-## The FPS overlay
+## The speed counter
 
-![The Godot TPS demo with the overlay in the top-left corner showing FPS, frame time, 1% low and worst frame](../assets/img/godot-tps-overlay.png)
+![The Godot TPS demo with the speed counter in the top-left corner showing FPS, frame time, 1 percent low and worst frame](../assets/img/godot-tps-overlay.png)
 
-*Captured in headless Chromium with software rendering, so the FPS is low. On a real GPU it will be far higher.*
+*Captured in a browser without a graphics card, so the numbers are low. On a real computer they will be much higher.*
 
 The four lines mean:
 
 | Line | Meaning |
 | --- | --- |
-| `FPS` | Frames drawn, averaged over the last half second |
-| `frame` | How long the most recent frame took, in milliseconds |
-| `1% low` | The speed of your worst frames: the slowest 1% of the last 1,200 frames (about 20 seconds at 60 FPS), shown as FPS. Shows `0` until 20 frames have been drawn |
+| `FPS` | Pictures drawn per second, over the last half second |
+| `frame` | How long the latest picture took, in milliseconds |
+| `1% low` | How fast your **worst** moments were: the slowest 1% of recent frames, shown as FPS. Shows `0` until 20 frames have been drawn |
 | `worst` | The longest single frame since the page loaded |
 
-Here is a real example. This is the Bevy sample game right after pressing **Play**:
+The **1% low** is the number players feel. A game can average 60 FPS and still stutter, and a low 1% low is how you spot it. Here is a
+real example, the Bevy sample game just after pressing **Play**:
 
-![The Bevy game with the overlay showing FPS 31, a 1 percent low of 4 fps and a worst frame of 900 milliseconds](../assets/img/bevy-gameplay.png)
+![The Bevy game with the speed counter showing FPS 31, a 1 percent low of 4 fps and a worst frame of 900 milliseconds](../assets/img/bevy-gameplay.png)
 
-*The average looks fine at 31 FPS, but the 1% low of 4 FPS and the 900 ms worst frame reveal the start-up hitch. The average hid it.*
+*The average looks fine at 31 FPS, but the 1% low of 4 FPS and the 900 ms worst frame reveal a hitch while the game starts. The average hid it.*
 
-The **1% low** is the number players feel. A game can average 60 FPS and still stutter; a low 1% low is how you spot it.
-Toggle the overlay with **Ctrl+Shift+F**.
+Press **Ctrl+Shift+F** to hide or show the counter. When you close the game tab, the command prints a one-line summary with the frame
+count, the average FPS, the 1% low and the worst frame.
 
-The overlay measures `requestAnimationFrame` timing, which is what the browser actually presents. It does **not** measure
-GPU time.
+You can also test at phone size. This is the same game in a phone-sized window:
 
-When the page is closed or the tab is hidden, the overlay sends a summary to the local `vapour test` process, which
-prints it:
+![The Bevy game in a phone-sized window with the speed counter showing FPS 58](../assets/img/bevy-phone.png)
 
-```text
-Session: <frames> frames, avg <n> fps, 1% low <n> fps, worst frame <n> ms
-```
+## The performance page
 
-(Switching to the profiler tab hides the game tab, so you will see this line then too.)
+The second tab shows how hard your computer is working while the game runs: processor, memory, and more.
 
-You can also test in a phone-sized window with your browser's device emulation. Here is the same game at 844 × 390 with touch enabled:
+[![The top of the performance page during a live test: Capturing, process CPU 773 percent, resident memory 1,765.8 MiB](../assets/img/telemetry-live-session.png)](../assets/img/telemetry-live-session.png)
 
-![The Bevy game in an emulated phone viewport with the overlay showing FPS 58](../assets/img/bevy-phone.png)
+*A real live test of the Godot sample game, in a browser without a graphics card.*
 
-## The profiler
+[Understand your game's performance](../telemetry/guide.md) walks through **every part** of the page, what each number means and
+what to do about it. A live test shows processor and memory. It does not show frame rate or which part of your code is slow yet; use
+the speed counter for frame rate.
 
-![The profiler dashboard in a Capturing state, with process CPU 717.8 percent of one core, resident memory 2,150 MiB, and live charts](../assets/img/dashboard-live-capture.png)
+A test lasts at most **five minutes**. Run `vapour test` again for another.
 
-*The profiler attached to the Godot TPS build while it ran in headless Chromium.*
+## Look at a saved recording
 
-What it measures **today**, once a second:
-
-| Tile | Meaning |
-| --- | --- |
-| **Process CPU · one core** | CPU time used by the browser *and all its child processes* (renderer, GPU, workers), as a percentage of one core. `717.8%` means about seven cores' worth. The small line underneath gives the share of the whole machine |
-| **Resident memory** | RAM the browser and its children are using. `PSS` is a fairer figure that counts shared memory once, where the system allows reading it |
-| **Frame rate** | Empty here: *No FPS data recorded*. The native profiler does not measure frames. Use the overlay, or import a trace that has them |
-| **Recorded spikes** | Frames more than twice the rolling median. Needs frame data |
-
-The dashboard also has an **Asset load cost** panel that ranks textures and other files by how hard they were to load. A live native
-capture leaves it empty, because nothing records `asset` events from a running game yet: see
-[Find expensive assets](../analysis/assets.md).
-
-What it does **not** do yet: it records no function-level stacks (so the flamegraph is empty for a live native capture),
-no GPU data and no FPS. Those are planned. The page says so itself, rather than inventing numbers.
-
-A session lasts at most **five minutes**. When it ends, run `vapour test` again.
-
-### Look at a trace
-
-You can open a saved trace (`.vpt`) or a folded-stacks file (`.folded`) with **Open dump**. Nothing is started when you do:
-a dump is only read. Using the book's small [sample trace](../.gitbook/assets/browser-sample.vpt) (illustrative data, not a
-real game), the dashboard shows the timeline:
-
-![The dashboard timeline for the sample trace: frame time with one spike to 48 ms, memory growing slowly, and the tiles above](../assets/img/dashboard-timeline.png)
-
-the flamegraph, where the width of a bar is the number of samples, not time:
-
-![A flamegraph with two bars: planted_slow_loop taking 94.1 percent of the samples and update 5.9 percent](../assets/img/dashboard-flamegraph.png)
-
-and an **offline report**, which ranks suspects from the evidence and never edits your code:
-
-![The offline report listing planted_slow_loop and update as hotspots and a memory-growth observation, each with a confidence level and a suggested next step](../assets/img/dashboard-report.png)
-
-See [Read a performance report](../analysis/worked-example.md) for how to read each part, and
-[Export and validate dumps](../analysis/dumps.md) for the file format.
-
-## How it works
-
-You do not need this to use it, but it explains the guarantees:
-
-1. `vapour test` reads `vapour.toml`, validates it, and starts a small web server on `127.0.0.1` (loopback only).
-2. It sends the cross-origin isolation headers (COOP and COEP) that threaded WebAssembly needs, and the right type for `.wasm`.
-3. When it serves `index.html` it adds one script tag, pointing at `/__vapour/fps.js`, **in memory**. Your files are untouched.
-4. It launches Chromium on a **private, temporary profile**. That makes it a separate process whose ID the CLI knows. (Reusing
-   your everyday browser would hand the page to an existing process and leave nothing to attach to.)
-5. It starts `vapour-profiler dashboard --pid <browser> --tree --autostart`. `--tree` adds up the browser's child processes;
-   `--autostart` starts capture straight away. Both exist only because you ran this command: the profiler never starts
-   anything on its own.
-6. It opens the dashboard as a second tab and waits. When you quit, it stops the profiler and the browser and deletes the
-   temporary profile.
-
-The overlay's summary goes to a local endpoint that only accepts posts from the same origin. The dashboard needs a random
-token that is printed only to the launching process. Nothing is sent to Vapour.
+You can open a saved recording (a `.vpt` file) with **Open dump** on the performance page. Nothing is measured when you do, it is only
+read. Try the [demo recording](../.gitbook/assets/demo-session.vpt) (made-up data) to see charts, a flamegraph and a report without
+needing a game.
 
 ## If it does not work
 
 | You see | Do this |
 | --- | --- |
-| `Profiler not started: vapour-profiler not found …` | Pass `--profiler`, set `VAPOUR_PROFILER`, or put the binary next to `vapour` |
+| `Profiler not started: vapour-profiler not found …` | Put the program next to `vapour`, or pass `--profiler` |
 | `no Chromium-family browser found` | Install Chromium or Chrome |
-| `profiler did not print a dashboard URL (is port 6767 already in use?)` | Another profiler session is running. Close it; the profiler never kills the process that holds the port |
-| `browser exited immediately` | The browser could not start on a fresh profile. Try launching it by hand to see its error |
-| FPS is 2 or 3 in a screenshot or CI | You are on software rendering with no GPU. The overlay is reporting the truth |
-| Nothing at all happens with `--no-open` | Expected: it only serves. Open the printed address yourself |
+| `profiler did not print a dashboard URL (is port 6767 already in use?)` | Another performance page is open. Close it first |
+| `browser exited immediately` | Try starting the browser by hand to see its message |
+| FPS is only 2 or 3 | Your browser has no graphics card to use, for example in a virtual machine. The counter is telling the truth |
+| Nothing opens with `--no-open` | That is expected. Open the address it printed |
 
 ## What you learned
 
-- `vapour test` is local only and never touches your build.
-- The overlay answers "is my game smooth for players?"; the profiler answers "where is the machine's time going?".
-- Use the **1% low**, not the average, to find stutter.
-- The profiler records CPU and memory today. Stacks and FPS in the profiler are future work.
+- `vapour test` is local only and never changes your game.
+- The speed counter tells you whether your game is **smooth**. The performance page tells you where the computer's time **goes**.
+- Watch the **1% low**, not the average, to find stutter.

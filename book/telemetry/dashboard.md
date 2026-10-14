@@ -1,5 +1,7 @@
 # Use the local dashboard
 
+> **New to this?** Start with [Understand your game's performance](guide.md): a plain-language tour of every part of the page.
+
 **Availability: implemented in the maintainer's profiler checkout; not yet a
 published profiler release.** Use a checkout whose `--help` lists `dashboard`.
 The earlier published BPF-only revision does not contain this command.

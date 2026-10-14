@@ -10,7 +10,7 @@ Global options: `--api <base-url>`, `--version`, and normal `--help`.
 | `vapour logout` | Removes the local saved credential file; does not revoke a PAT or unset env vars |
 | `vapour whoami` | Queries the selected API and prints identity/role/API base |
 | `vapour create <name>` | `--engine godot\|unity\|bevy\|other`, `--from <git-url>`, `--offline` |
-| `vapour template <engine> <name>` | **Preview: on the CLI main branch, not yet released.** `--org <name>` (default `vapour-computer`), `--offline`. Engines: `godot`, `bevy`, `unity`. Clones `vapour-template-<engine>`, removes `.git`, then does what `create` does. The templates are skeletons: see [Create or import a project](../games/create.md#start-from-an-official-template) |
+| `vapour template <engine> <name>` | **Preview: on the CLI main branch, not yet released.** `--org <name>` (default `vapour-computer`), `--offline`. Engines: `godot`, `bevy`, `unity`. Clones `vapour-template-<engine>`, removes `.git`, then does what `create` does. The templates are skeletons: see [Create or import a project](../templates/overview.md) |
 | `vapour publish` | `--dir <game-dir>`, `--version <value>`, `--notes <markdown>`, `--notes-file <path>`, `--skip-store`, `--dry-run`; publishes each version once |
 | `vapour store check` | `--dir <game-dir>`; validates page JSON, Markdown and media without uploading |
 | `vapour store push` | `--dir <game-dir>`; updates the store page without publishing a build version |

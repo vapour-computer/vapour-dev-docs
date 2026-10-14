@@ -3,7 +3,7 @@
 1. Start from a reviewed source revision and its actual behavior.
 2. Edit the matching page under `book/`; update references and status as needed.
 3. Add new pages once to `book/SUMMARY.md`.
-4. Run `python3 scripts/check_docs.py`.
+4. Run `python3 scripts/check_docs.py`, then `npm ci` and `npm run build` to check the rendered site.
 5. Review the diff for unsupported claims, accidental secrets and broken examples.
 6. Commit/push through the repository's normal review process.
 

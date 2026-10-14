@@ -4,6 +4,9 @@ This repository contains a complete GitBook-ready handbook. A live GitBook site
 still requires an authorized GitBook organization/account and its GitHub Sync
 connection. No live site was created merely by pushing these files.
 
+For Cloudflare Pages, use the [static hosting guide](cloudflare-pages.md)
+and `npm run build`. GitBook's hosted service uses the Git Sync flow below.
+
 ## Connect and import
 
 1. In your GitBook organization, create/select the documentation site or space.

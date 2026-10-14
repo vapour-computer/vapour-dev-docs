@@ -1,0 +1,11 @@
+{
+  "title": "Vapour Developer Handbook",
+  "description": "Build, publish and profile games on Vapour.",
+  "author": "Vapour contributors",
+  "language": "en",
+  "pluginsConfig": {
+    "theme-default": {
+      "showLevel": false
+    }
+  }
+}

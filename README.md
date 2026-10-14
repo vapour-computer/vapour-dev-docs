@@ -18,6 +18,23 @@ also supports a single-space Git Sync setup.
 Follow [Connect this repository to GitBook](book/gitbook-setup.md) to authorize
 GitHub Sync and publish a site. No GitBook account credentials are stored here.
 
+## Cloudflare Pages / static hosting
+
+Use the maintained HonKit builder on Node 22:
+
+```sh
+npm ci
+npm run build
+```
+
+Cloudflare settings: **framework preset None**, **build command `npm run build`**,
+**output directory `_book`**, repository root, production branch `main`.
+The build validates every generated page and local link. See the
+[Cloudflare Pages guide](book/cloudflare-pages.md).
+
+`gitbook-cli` is the obsolete legacy builder and crashes on current Node versions.
+GitBook's hosted service uses Git Sync; this static hosting path uses HonKit.
+
 ## Update and validate
 
 ```sh

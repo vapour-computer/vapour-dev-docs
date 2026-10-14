@@ -72,6 +72,6 @@ discovery polling happens while off.
 Only authorized staging game sessions should receive JS profiling policy
 permission. Before connecting any UI, implement the backend config, owner-only
 staging preferences, production preference denial and production 404 behavior
-described in [guardrails](../platform/production-guardrails.md). Restrict direct
+described by your platform operators. Restrict direct
 analysis connections with the intended staging CSP. The current package does
 not modify game-serving headers or deploy Firestore rules for you.

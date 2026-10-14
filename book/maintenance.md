@@ -36,8 +36,7 @@ against its current content-configuration documentation.
 
 The old CLI README's `go install .../vapour-cli@latest` does not guarantee the
 documented executable name or unpublished command set. Old CI examples reference
-an unverified `v1` tag. The infra README's health-check description lagged behind
-the deploy script, which uses public API/web pages on Cloud Run. These guides
+an unverified `v1` tag. These guides
 follow the audited code rather than silently copying those older recipes.
 
 Keep unknown runtime symbols, memory export hooks, origins and environment settings

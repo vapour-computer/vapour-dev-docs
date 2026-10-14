@@ -8,10 +8,8 @@ installing the native profiler.
 | Build/use the publishing CLI source preview | Go 1.24+, Git, implemented CLI checkout |
 | Export a game | Your engine plus its matching Web export tools/templates |
 | Work on the web app/browser package | Node.js 24+ for the new scripts, npm, Git |
-| Run local API services | Docker with Compose; Rust stable for direct API builds |
 | Build native profiler | Linux x86_64, Rust stable, clang BPF target, C compiler, pkg-config, libelf/zlib development files |
 | Run native BPF proof | Linux 5.15+, kernel BTF, bpftool and explicitly authorized BPF/perf privileges |
-| Deploy the platform | Terraform 1.9+, gcloud, Docker, Git, curl; configured cloud projects |
 
 ## Publishing CLI from an implemented checkout
 
@@ -29,7 +27,7 @@ vapour --help
 Building with `-o .../vapour` gives the documented executable name. Do not assume
 that `go install .../vapour-cli@latest` installs an executable named `vapour` or
 contains unpublished commands. Once releases exist, use their platform-specific
-archive and published checksum. See [releases](../platform/releases.md).
+archive and published checksum.
 
 ## Browser package checkout
 
@@ -57,5 +55,4 @@ Debian/Ubuntu package names vary by release; install a BPF-capable clang,
 `build-essential`, `pkg-config`, `libelf-dev`, `zlib1g-dev`, Linux UAPI headers and
 bpftool. Build as your normal user. Privileged capture is a separate action.
 
-Continue with [native profiling](../telemetry/native.md) or
-[local development](local-development.md).
+Continue with [native profiling](../telemetry/native.md).

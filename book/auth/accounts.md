@@ -1,6 +1,6 @@
 # Accounts and developer access
 
-**Availability: source-preview platform/API integration.** Check
+**Availability: staging.** Check
 [status](../status.md) for source publication and live wiring.
 
 ## Account flow

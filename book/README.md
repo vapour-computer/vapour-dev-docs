@@ -16,7 +16,6 @@ workflows, from credentials and engine exports to trace analysis and deployment.
 | Work on Linux/eBPF profiling | [Native profiler](telemetry/native.md) |
 | Understand port 6767 and the two collectors | [Local agent](telemetry/local-agent.md) |
 | Export or inspect a performance dump | [Dumps](analysis/dumps.md) |
-| Bring up the platform or deploy staging | [Local development](getting-started/local-development.md), [deployment](platform/deployment.md) |
 
 ## Read availability before running commands
 

@@ -58,4 +58,4 @@ for 409 the slug, and for 400/413 archive validation/limits.
 
 Republishing uploads a build again; it is not an atomic “select an old version”
 command. Keep known-good release artifacts if you want to upload a rollback build.
-See [game management](manage.md) and [releases](../platform/releases.md).
+See [game management](manage.md).

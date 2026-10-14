@@ -59,10 +59,3 @@ in a bug report.
 | Uprobe symbol lookup failure | Correct target executable, unstripped/available symbol and matching PID |
 | Apparent bpftool residual maps | Use the provided two-scan test; bpftool creates temporary inspection objects itself |
 
-## Deployment
-
-Check `WEB_DIR` contains the integrated Dockerfile, the correct environment tfvars,
-cloud project/account and current API/web image revisions. Default Cloud Run
-`/healthz` behavior differs from local health checks; use the script's actual
-`/home?limit=1` and web `/` probes. Treat production guard failures as a build/
-deployment failure rather than disabling the checker.

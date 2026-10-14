@@ -4,9 +4,7 @@
 
 * [Vapour Developer Handbook](README.md)
 * [What is available today](status.md)
-* [Architecture and repository map](architecture.md)
 * [Prerequisites and installation](getting-started/prerequisites.md)
-* [Local development](getting-started/local-development.md)
 * [First game: build to publish](getting-started/first-game.md)
 
 ## Accounts and credentials
@@ -44,14 +42,6 @@
 * [Export and validate dumps](analysis/dumps.md)
 * [Offline and Claude reports](analysis/reports.md)
 * [Read a performance report](analysis/worked-example.md)
-
-## Platform operations
-
-* [Environments and Firebase projects](platform/environments.md)
-* [Build and deploy the platform](platform/deployment.md)
-* [Production exclusion guardrails](platform/production-guardrails.md)
-* [Tests and verification](platform/testing.md)
-* [Releases and rollback](platform/releases.md)
 
 ## Reference and maintenance
 

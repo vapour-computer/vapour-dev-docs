@@ -80,4 +80,3 @@ not silently restarted. Off/TTL/pagehide clears buffers, observers, timers,
 channels and the overlay, and aborts pending provider analysis. Another capture
 requires a document reload.
 
-For the actual browser smoke test, see [verification](../platform/testing.md).

@@ -1,0 +1,18 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+site:
+  title: Vapour Developer Handbook
+  structure:
+    - type: section
+      key: vapour-documentation
+      title: Developer documentation
+      path: documentation
+      default: true
+      children:
+        - type: space
+          key: vapour-developer-handbook
+          title: Handbook
+          path: handbook
+          default: true
+          content:
+            directory: ./book
+            language: en

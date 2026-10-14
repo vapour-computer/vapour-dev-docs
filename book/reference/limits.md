@@ -18,6 +18,19 @@ The archive rejects path traversal, absolute/backslash paths and missing root
 entry points. The CLI directory packer also rejects common native binary files
 and symlinks. A prebuilt ZIP still needs server validation.
 
+## Store-page media
+
+| Media | Formats | Minimum | File-size limit |
+| --- | --- | --- | --- |
+| Banner | PNG, JPEG, WebP | 960×300 and 2:1 or wider | 4 MiB |
+| Cover | PNG, JPEG, WebP | 460×215 | 2 MiB |
+| Screenshots | PNG, JPEG, WebP; up to 8 | 640×360 | 4 MiB each |
+| Trailer | MP4, WebM | — | 30 MiB |
+
+Formats are checked by file content, not by name. SVG and GIF are rejected. One
+store-page media upload has a 30 MiB combined media budget. See the full
+[store-page guide](../games/store-page.md) for dimensions and page limits.
+
 ## Browser capture
 
 TTL: 1–300 seconds. Frames: 32,768 retained. Series and memory events: 300 each.

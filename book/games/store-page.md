@@ -176,3 +176,20 @@ warning: section "story" has no matching "## " heading in the content file, so i
 ```
 
 Fix all reported errors before using `vapour store push` or publishing a build.
+
+## Media rules
+
+Put media beside `page.json` or use paths relative to it. The CLI identifies file
+formats from their contents, not their names or extensions.
+
+| Media | Accepted formats | Minimum dimensions | Maximum dimensions | File-size limit |
+| --- | --- | --- | --- | --- |
+| Banner | PNG, JPEG or WebP | 960×300 and at least 2:1 | 8192×4096 | 4 MiB |
+| Cover | PNG, JPEG or WebP | 460×215 | 4096×4096 | 2 MiB |
+| Screenshot (up to 8) | PNG, JPEG or WebP | 640×360 | 8192×8192 | 4 MiB each |
+| Trailer | MP4 or WebM | — | — | 30 MiB |
+
+SVG, GIF and other image formats are rejected. Renaming an unsupported file to
+`.png`, `.jpg` or `.webp` does not make it valid. All media sent in one store-page
+upload must fit within a 30 MiB media budget, so compress the trailer or
+screenshots when their combined size is too large.

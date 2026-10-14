@@ -1,11 +1,14 @@
 {
   "title": "Vapour Developer Handbook",
-  "description": "Build, publish and profile games on Vapour.",
+  "description": "Build, publish and profile games on Vapour. Tutorials for Godot, Unity and Bevy.",
   "author": "Vapour contributors",
   "language": "en",
   "pluginsConfig": {
     "theme-default": {
       "showLevel": false
     }
+  },
+  "styles": {
+    "website": "styles/website.css"
   }
 }

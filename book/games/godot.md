@@ -1,5 +1,7 @@
 # Godot
 
+> **Prefer a walkthrough?** The [Godot tutorial](../tutorials/godot.md) takes a real sample project from export to a phone-ready build, step by step.
+
 Use a Godot version and export templates that match your project. The existing
 sample/templates target Godot 4; check your chosen release's Web support before
 depending on platform-specific features or a .NET export.

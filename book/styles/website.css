@@ -1,0 +1,84 @@
+/* Vapour handbook theme. Loaded by book.json -> styles.website. */
+:root {
+  --v-accent: #2f7d5b;
+  --v-accent-soft: #e6f4ed;
+  --v-warn: #9a6700;
+  --v-warn-soft: #fff4d6;
+  --v-ink: #1c2330;
+  --v-muted: #5b6575;
+  --v-line: #e3e8ef;
+  --v-code-bg: #f4f6f9;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal {
+  color: var(--v-ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.book .book-body .page-wrapper .page-inner section.normal.markdown-section { max-width: 54rem; }
+.book .book-body .page-wrapper .page-inner section.normal table { font-size: 14.5px; }
+.book .book-body .page-wrapper .page-inner section.normal pre,
+.book .book-body .page-wrapper .page-inner section.normal code { font-size: 13.5px; }
+
+/* Headings */
+.markdown-section h1 { font-weight: 750; letter-spacing: -0.02em; border-bottom: 0; margin-bottom: 0.6em; }
+.markdown-section h2 { margin-top: 2.2em; padding-bottom: 0.25em; border-bottom: 1px solid var(--v-line); }
+.markdown-section h3 { margin-top: 1.8em; }
+
+/* Links */
+.markdown-section a { color: var(--v-accent); text-decoration: none; border-bottom: 1px solid rgba(47,125,91,.3); }
+.markdown-section a:hover { border-bottom-color: var(--v-accent); }
+
+/* Code */
+.markdown-section code { background: var(--v-code-bg); border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.9em; }
+.markdown-section pre { background: var(--v-code-bg); border: 1px solid var(--v-line); border-radius: 8px; padding: 0.9em 1.1em; }
+.markdown-section pre code { background: transparent; padding: 0; }
+
+/* Tables */
+.markdown-section table { display: table; width: 100%; border-collapse: collapse; font-size: 0.94em; }
+.markdown-section table th { background: var(--v-code-bg); text-align: left; }
+.markdown-section table th, .markdown-section table td { border: 1px solid var(--v-line); padding: 0.55em 0.75em; vertical-align: top; }
+.markdown-section table tr:nth-child(2n) td { background: #fbfcfd; }
+
+/* Callouts: every blockquote is a callout */
+.markdown-section blockquote {
+  margin: 1.4em 0; padding: 0.9em 1.2em; border-left: 4px solid var(--v-accent);
+  background: var(--v-accent-soft); color: var(--v-ink); border-radius: 0 8px 8px 0;
+}
+.markdown-section blockquote p:first-child { margin-top: 0; }
+.markdown-section blockquote p:last-child { margin-bottom: 0; }
+
+/* Images: soft frame so screenshots sit on the page */
+.markdown-section img {
+  display: block; max-width: 100%; height: auto; margin: 1.2em auto 0.4em;
+  border: 1px solid var(--v-line); border-radius: 10px; box-shadow: 0 6px 24px rgba(20, 30, 50, .08);
+}
+.markdown-section img + em { display: block; text-align: center; color: var(--v-muted); font-size: 0.88em; margin-bottom: 1.6em; }
+
+/* Badges: <span class="badge badge-preview">Preview</span> */
+.badge {
+  display: inline-block; padding: 0.15em 0.65em; margin: 0 0.25em 0.4em 0; border-radius: 999px;
+  background: var(--v-code-bg); color: var(--v-muted); border: 1px solid var(--v-line);
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.01em;
+}
+.badge-preview { background: var(--v-accent-soft); color: var(--v-accent); border-color: rgba(47,125,91,.25); }
+.badge-warn { background: var(--v-warn-soft); color: var(--v-warn); border-color: rgba(154,103,0,.3); }
+
+/* Screenshot slots: an intentional, visible placeholder for a screenshot still to be added */
+figure.shot-slot { margin: 1.4em 0; }
+.shot-slot__box {
+  display: flex; flex-direction: column; gap: 0.35em; align-items: center; justify-content: center; text-align: center;
+  min-height: 150px; padding: 1.2em; border: 2px dashed #b8c2d1; border-radius: 12px;
+  background: repeating-linear-gradient(135deg, #f8fafc, #f8fafc 12px, #f2f5f9 12px, #f2f5f9 24px);
+  color: var(--v-muted);
+}
+.shot-slot__box strong { color: var(--v-ink); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; }
+figure.shot-slot figcaption { color: var(--v-muted); font-size: 0.86em; margin-top: 0.5em; text-align: center; }
+
+/* Tutorial cards on the tutorials index */
+.tutorial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; margin: 1.4em 0; }
+.tutorial-card { border: 1px solid var(--v-line); border-radius: 12px; padding: 1.1em 1.2em; background: #fff; box-shadow: 0 2px 10px rgba(20,30,50,.05); }
+.tutorial-card h3 { margin: 0 0 0.3em; font-size: 1.05rem; }
+.tutorial-card p { margin: 0.3em 0; color: var(--v-muted); font-size: 0.92em; }
+
+@media (max-width: 600px) { .markdown-section { padding: 0 0.4rem; } }

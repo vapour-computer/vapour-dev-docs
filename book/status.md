@@ -1,6 +1,6 @@
 # What is available today
 
-A snapshot of what you can use, written on **14 October 2026**. Preview items are labelled; a merge or a
+A snapshot of what you can use, written on **14 October 2026** and updated on **15 October 2026** for the tutorials. Preview items are labelled; a merge or a
 source preview is not a deployment.
 
 ## Availability
@@ -11,6 +11,9 @@ source preview is not a deployment.
 | Local performance dashboard | Implemented maintainer checkout; not yet a published release | `dashboard`, authenticated loopback API, CPU/RSS/PSS capture, dump viewer, flamegraphs, offline/Claude reports and comparisons |
 | Browser telemetry | Staging-only preview | Metrics, overlay, `.vpt` export and offline or direct-Claude analysis through an explicit integration API. Not wired into the player yet |
 | Publishing CLI (`vapour-cli`) | Preview, not yet released | `login`, `logout`, `whoami`, `create`, `publish`, store-page/media validation and upload, and one-time version publishing |
+| Local testing (`vapour test`) | Preview: open pull request, not yet released | A local web server for your build, an FPS overlay, and (Linux) the profiler launched on a private browser profile. See [Profile locally](tutorials/profile-locally.md) |
+| Touch controls (`vapour controller`, `[controller]`) | Implemented in a maintainer checkout; not yet released | Layout, validation and preview in the CLI. The player-side overlay is a preview we have not tested on a device |
+| Engine builds (`vapour build`, `[build]` command/boot/split) | Preview, on the CLI main branch; not yet released | Godot, Unity and Bevy exporters, custom commands, boot-file metadata |
 | Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. Needs a CLI release first |
 | Vapour platform (hosted) | Staging | Accounts, tokens, store pages, media, versions, publishing and play on the staging site. Production is not open |
 

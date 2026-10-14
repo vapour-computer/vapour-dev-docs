@@ -4,7 +4,7 @@ GitBook-ready documentation for building, publishing and profiling games on Vapo
 
 **Canonical handbook: [https://vapour-dev-docs.pages.dev/](https://vapour-dev-docs.pages.dev/)**
 
-[Repository chapters](book/SUMMARY.md) · [Implementation status](book/status.md)
+[Repository chapters](book/SUMMARY.md) · [Implementation status](book/status.md) · [Tutorials](book/tutorials/overview.md)
 
 The handbook covers the CLI, tokens, engine exports, publishing, CI, local
 development, deployment, browser telemetry, native profiling, traces and analysis.
@@ -19,6 +19,22 @@ also supports a single-space Git Sync setup.
 
 Follow [Connect this repository to GitBook](book/gitbook-setup.md) to authorize
 GitHub Sync and publish a site. No GitBook account credentials are stored here.
+
+## Tutorials
+
+Step-by-step walkthroughs for [Godot](book/tutorials/godot.md), [Bevy](book/tutorials/bevy.md) and
+[Unity](book/tutorials/unity.md), plus [local profiling](book/tutorials/profile-locally.md). Each uses a sample project
+forked into the `vapour-computer` organization (branch `vapour-tutorial`). Every page says what was verified and what was not.
+
+## GitHub Pages
+
+`.github/workflows/pages.yml` deploys the book on every push to `main`. Enable it once under
+**Settings → Pages → Source: GitHub Actions**. The site is then at `https://<owner>.github.io/<repository>/`.
+
+## For language models
+
+The build also writes `llms.txt`, `llms-full.txt`, `sitemap.xml` and a Markdown copy of every page under `md/`. See
+[use this handbook with an AI assistant](book/reference/ai-assistants.md).
 
 ## Cloudflare Pages / static hosting
 

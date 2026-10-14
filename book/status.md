@@ -10,9 +10,9 @@ source preview is not a deployment.
 | Standalone profiler (`vapour-profiler`) | Public, early | `probe-test`, the BPF build pipeline, the lifecycle test harness, the `.vpt` v1 trace specification |
 | Local performance dashboard | Implemented maintainer checkout; not yet a published release | `dashboard`, authenticated loopback API, CPU/RSS/PSS capture, dump viewer, flamegraphs, offline/Claude reports and comparisons |
 | Browser telemetry | Staging-only preview | Metrics, overlay, `.vpt` export and offline or direct-Claude analysis through an explicit integration API. Not wired into the player yet |
-| Publishing CLI (`vapour-cli`) | Preview, not yet released | `login`, `logout`, `whoami`, `create`, `publish` |
+| Publishing CLI (`vapour-cli`) | Preview, not yet released | `login`, `logout`, `whoami`, `create`, `publish`, store-page/media validation and upload, and one-time version publishing |
 | Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. Needs a CLI release first |
-| Vapour platform (hosted) | Staging | Accounts, tokens, publishing and play on the staging site. Production is not open |
+| Vapour platform (hosted) | Staging | Accounts, tokens, store pages, media, versions, publishing and play on the staging site. Production is not open |
 
 When a guide says "from your checkout" it means a checkout that contains that implementation. Cloning a repository
 that has no release yet does not give you the unreleased tool.

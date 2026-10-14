@@ -75,8 +75,8 @@ Rules we follow:
   FPS reading from it is low; the caption says so.
 - **Keep illustrative data labelled.** The dashboard screenshots of a trace use the book's sample fixture, and say so.
 - **Give every image descriptive alt text.** `llms-full.txt` turns it into `[Image: …]` for language models.
-- **Editor steps need a human.** We cannot capture Godot, Unity or Bevy tooling automatically. Those steps carry a dashed
-  `shot-slot` figure with the exact thing to capture. Replace it with an image when you can.
+- **Editor steps.** The Godot editor can be captured on a virtual display (see below). Unity cannot, without an editor and license, so its
+  steps carry a dashed `shot-slot` figure that says exactly what to capture. Replace it with an image when you can.
 
 ## GitHub Pages
 
@@ -90,3 +90,26 @@ Pages copy sets `SITE_URL` so `llms.txt` and the sitemap point at the right host
 `npm run build` also runs `scripts/build_llms.mjs`, which writes `llms.txt`, `llms-full.txt`, `sitemap.xml`, `robots.txt` and
 a Markdown copy of every page under `md/` next to the HTML. See [use this handbook with an AI
 assistant](reference/ai-assistants.md). Nothing is hand-maintained: add a page to `SUMMARY.md` and it is included.
+
+## Publishing the official template repositories
+
+The three repositories (`vapour-template-godot`, `-bevy`, `-unity`) are generated from the CLI's own starter files in
+`internal/scaffold/templates/<engine>/`, so they stay in step with `vapour create`. `scripts/publish-template-repos.sh [org]`
+needs `git` and a signed-in `gh`. For each engine it fills in the README title ("Bevy Starter", "Godot Starter", "Unity Starter"),
+makes a one-commit repository, and either creates `<org>/vapour-template-<engine>` (public) or pushes to `main` of an existing one
+with `git push --force-with-lease`. Each run builds a fresh history, so it is meant to **replace** the template's contents. We have
+not run it: it changes live repositories, and because the new local repository has not fetched the remote's history, Git may reject
+the push as stale. If that happens, resolve it on purpose instead of forcing blindly.
+
+## Capturing the Godot editor
+
+The editor can be captured without touching your desktop by running it on a virtual display (`Xvfb`) and clicking with `xdotool`:
+
+```sh
+Xvfb :99 -screen 0 1600x1000x24 &
+DISPLAY=:99 godot --editor --path . --rendering-driver opengl3 --resolution 1600x1000 --position 0,0 &
+DISPLAY=:99 xdotool mousemove 91 21 click 1        # the Project menu
+DISPLAY=:99 import -window root shot.png
+```
+
+Unity cannot be captured this way unless a Unity editor and license are installed.

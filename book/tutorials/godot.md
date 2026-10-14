@@ -38,6 +38,10 @@ git checkout vapour-tutorial
 To follow along from scratch instead, fork `godotengine/tps-demo` and make a `vapour-tutorial` branch. The upstream
 project is about 1.3 GB with its history, and the web export is about 600 MB.
 
+Open it in Godot. Our added files, `export_presets.cfg`, `VAPOUR.md` and `vapour.toml`, sit in the file list:
+
+![The Godot 4.7 editor with the TPS demo project open: the scene tree, the 3D view and the file list showing export_presets.cfg, VAPOUR.md and vapour.toml](../assets/img/godot-editor-project.png)
+
 You need **Godot 4.7.2** and its **Web export templates** (Editor → Manage Export Templates). The editor and the
 templates must be the same version.
 
@@ -46,13 +50,15 @@ templates must be the same version.
 Godot only exports what a preset describes. Open **Project → Export…**, choose **Add… → Web**, and keep the name
 `Web`.
 
-<figure class="shot-slot">
-  <div class="shot-slot__box">
-    <strong>Screenshot slot</strong>
-    <span>Godot editor: Project → Export…, with the Web preset selected and “Thread Support” unchecked.</span>
-  </div>
-  <figcaption>To fill this slot, save a screenshot as <code>book/assets/img/godot-export-dialog.png</code> and replace this block with an image.</figcaption>
-</figure>
+Open **Project → Export…** in the editor:
+
+![The Godot Project menu open, with Export highlighted among Project Settings, Version Control, Pack Project as ZIP and others](../assets/img/godot-project-menu.png)
+
+Then the export window. Here is the finished `Web` preset, with **Thread Support** off:
+
+![The Godot export window with the Web preset selected, showing Extensions Support and Thread Support switched off and VRAM compression for desktop on](../assets/img/godot-export-dialog.png)
+
+*The real export window for the sample game.*
 
 We saved the preset as `export_presets.cfg`. These are the entries that matter:
 
@@ -115,13 +121,9 @@ We fixed that in the Input Map by giving each a key:
 | `view_left` / `view_right` | **J** / **L** |
 | `view_up` / `view_down` | **I** / **K** |
 
-<figure class="shot-slot">
-  <div class="shot-slot__box">
-    <strong>Screenshot slot</strong>
-    <span>Godot editor: Project → Project Settings → Input Map, with <code>shoot</code> expanded to show the new F key.</span>
-  </div>
-  <figcaption>Save as <code>book/assets/img/godot-input-map.png</code>.</figcaption>
-</figure>
+![The Godot Input Map filtered to the shoot action, showing three inputs: the F key, the left mouse button and a gamepad trigger](../assets/img/godot-input-map.png)
+
+*Project → Project Settings → Input Map, filtered to `shoot`. The **F** key is the one we added. The mouse and gamepad inputs were already there.*
 
 In the Input Map editor, click **+** next to each action, choose **Key**, and press the key. The mouse and gamepad bindings stay, so
 desktop play is unchanged. Godot writes the result into `project.godot`. GitHub's comparison of our branch with upstream shows the whole

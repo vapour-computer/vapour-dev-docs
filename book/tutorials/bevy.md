@@ -164,7 +164,7 @@ Press **Play** and the game starts. This is where the overlay earns its keep:
 ![The Bevy game after pressing Play: a bird logo between a red and a green circle, with the overlay showing FPS 31 but a 1 percent low of 4 fps and a worst frame of 900 milliseconds](../assets/img/bevy-gameplay.png)
 
 *The average is a healthy-looking 31 FPS, but the **1% low is 4 FPS** and the worst frame is 900 ms. Those are the start-up hitches as the game
-loads. This is exactly why the [1% low, not the average](profile-locally.md#the-fps-overlay), is the number to watch.*
+loads. This is exactly why the [1% low, not the average](profile-locally.md#the-speed-counter), is the number to watch.*
 
 In an emulated phone viewport (844 × 390, touch enabled):
 

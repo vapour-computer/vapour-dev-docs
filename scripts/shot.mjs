@@ -2,7 +2,7 @@
 // DevTools protocol over Node's built-in WebSocket.
 //
 //   node shot.mjs --url URL --out file.png [--w 1280] [--h 800] [--scale 1] [--mobile]
-//                 [--wait 3000] [--eval "js to run before the shot"] [--evalfile file.js] [--clicks "x,y;x,y"] [--afterclick 5000] [--waitfor "js expr that becomes truthy"]
+//                 [--wait 3000] [--eval "js to run before the shot"] [--evalfile file.js] [--clicks "x,y;x,y"] [--afterclick 5000] [--plan plan.json] [--waitfor "js expr that becomes truthy"]
 //                 [--timeout 60000] [--gl] [--clip "x,y,w,h"] [--full]
 import { spawn } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -86,9 +86,38 @@ try {
   }
   if (args.eval) { await evalJs(args.eval); await sleep(800); }
   if (args.evalfile) { await evalJs(readFileSync(args.evalfile, "utf8")); await sleep(1500); }
+  if (args.plan) {
+    // Each step: { out, eval?, wait?, selector?, closest?, pad?, clip? }. Runs in the same page, in order.
+    const steps = JSON.parse(readFileSync(args.plan, "utf8"));
+    for (const step of steps) {
+      if (step.eval) { await evalJs(step.eval); }
+      await sleep(step.wait ?? 800);
+      let clip;
+      if (step.selector) {
+        const rect = await evalJs(`(() => {
+          const nodes = [...document.querySelectorAll(${JSON.stringify(step.selector)})]
+            .map(n => ${step.closest ? `n.closest(${JSON.stringify(step.closest)}) || n` : "n"});
+          if (!nodes.length) return null;
+          nodes[0].scrollIntoView({ block: "start" });
+          let x0 = 1e9, y0 = 1e9, x1 = 0, y1 = 0;
+          for (const n of nodes) { const r = n.getBoundingClientRect(); x0 = Math.min(x0, r.left); y0 = Math.min(y0, r.top + scrollY); x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom + scrollY); }
+          return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+        })()`);
+        if (!rect) { console.error("plan: selector not found: " + step.selector); continue; }
+        const pad = step.pad ?? 0;
+        clip = { x: Math.max(0, rect.x - pad), y: Math.max(0, rect.y - pad), width: rect.w + 2 * pad, height: rect.h + 2 * pad, scale: 1 };
+      } else if (step.clip) {
+        const [x, y, cw, ch] = step.clip; clip = { x, y, width: cw, height: ch, scale: 1 };
+      }
+      const { data } = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true, ...(clip ? { clip } : {}) });
+      writeFileSync(step.out, Buffer.from(data, "base64"));
+      console.log("wrote " + step.out);
+    }
+    throw { planDone: true };
+  }
   const shot = { format: "png", captureBeyondViewport: !!args.full };
   if (args.clip) { const [x, y, cw, ch] = args.clip.split(",").map(Number); shot.clip = { x, y, width: cw, height: ch, scale: 1 }; }
   const { data } = await send("Page.captureScreenshot", shot);
   writeFileSync(out, Buffer.from(data, "base64"));
   console.log(`wrote ${out}`);
-} finally { ws.close(); done(); }
+} catch (e) { if (!e || !e.planDone) throw e; } finally { ws.close(); done(); }

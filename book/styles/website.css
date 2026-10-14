@@ -15,7 +15,8 @@
   font-size: 16px;
   line-height: 1.7;
 }
-.book .book-body .page-wrapper .page-inner section.normal.markdown-section { max-width: 54rem; }
+.book .book-body .page-wrapper .page-inner { max-width: 1080px; }
+.book .book-body .page-wrapper .page-inner section.normal.markdown-section { max-width: 1040px; }
 .book .book-body .page-wrapper .page-inner section.normal table { font-size: 14.5px; }
 .book .book-body .page-wrapper .page-inner section.normal pre,
 .book .book-body .page-wrapper .page-inner section.normal code { font-size: 13.5px; }
@@ -82,3 +83,6 @@ figure.shot-slot figcaption { color: var(--v-muted); font-size: 0.86em; margin-t
 .tutorial-card p { margin: 0.3em 0; color: var(--v-muted); font-size: 0.92em; }
 
 @media (max-width: 600px) { .markdown-section { padding: 0 0.4rem; } }
+
+/* An image that links to its full-size version */
+.markdown-section a:has(> img) { border-bottom: 0; cursor: zoom-in; }

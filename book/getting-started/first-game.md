@@ -40,7 +40,7 @@ cd my-game
 ```
 
 You can also start from an official skeleton with `vapour template godot "My Game"` (or `bevy`, `unity`). Be aware the
-templates contain no engine project yet: see [Start from an official template](../games/create.md#start-from-an-official-template).
+templates contain no engine project yet: see [Start from an official template](../templates/overview.md).
 
 The current CLI scaffold supplies a README and manifest, not a complete engine
 project. Create the actual game in that directory with your engine, or use

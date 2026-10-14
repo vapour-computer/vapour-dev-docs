@@ -61,7 +61,7 @@ The [status page](../status.md) is kept up to date as things ship.
 
 `vapour template <engine> <name>` gives you an empty starter folder with `vapour.toml` and `store/` ready. It is a skeleton,
 not a working game: you still create the engine project. See
-[Start from an official template](../games/create.md#start-from-an-official-template). The tutorials are the better
+[Start from an official template](../templates/overview.md). The tutorials are the better
 route when you want something that already builds.
 
 ## Before you start
@@ -83,6 +83,6 @@ route when you want something that already builds.
 
 ## Screenshots with a dashed border
 
-Where a step happens inside an engine's editor, we cannot capture it automatically. Those places have a **dashed
-"Screenshot slot"** box that says exactly what to capture. They are real gaps, not decoration. If you run the tutorial,
-a screenshot there is a welcome contribution. See [maintaining the handbook](../maintenance.md).
+The Unity tutorial has a few **dashed "Screenshot slot"** boxes. They mark steps inside the Unity editor, which we could not capture
+because no Unity editor was available. They are real gaps, not decoration, and a screenshot there is a welcome contribution. See
+[maintaining the handbook](../maintenance.md).

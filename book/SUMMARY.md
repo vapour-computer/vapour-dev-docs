@@ -15,11 +15,36 @@
 * [Unity: a 2D platformer to WebGL](tutorials/unity.md)
 * [Profile your game locally](tutorials/profile-locally.md)
 
+## Templates
+
+* [Start from a template](templates/overview.md)
+* [Godot template](templates/godot.md)
+* [Bevy template](templates/bevy.md)
+* [Unity template](templates/unity.md)
+
 ## Accounts and credentials
 
 * [Accounts and developer access](auth/accounts.md)
 * [Vapour tokens](auth/tokens.md)
 * [Claude keys](auth/claude-keys.md)
+
+## Telemetry and profiling
+
+* [Understand your game's performance](telemetry/guide.md)
+* [Use the local dashboard](telemetry/dashboard.md)
+* [Choose a capture path](telemetry/overview.md)
+* [Browser telemetry](telemetry/browser.md)
+* [Connect the web player](telemetry/player-integration.md)
+* [Native profiler: current workflow](telemetry/native.md)
+* [Local agent and port 6767](telemetry/local-agent.md)
+* [Capture lifecycle and budgets](telemetry/lifecycle.md)
+
+## Dumps and analysis
+
+* [Export and validate dumps](analysis/dumps.md)
+* [Offline and Claude reports](analysis/reports.md)
+* [Read a performance report](analysis/worked-example.md)
+* [Find expensive assets](analysis/assets.md)
 
 ## Build and publish games
 
@@ -37,23 +62,6 @@
 * [Publish and verify a build](games/publish.md)
 * [Manage, unpublish and restore games](games/manage.md)
 * [Game publishing from CI](games/ci-cd.md)
-
-## Telemetry and profiling
-
-* [Use the local dashboard](telemetry/dashboard.md)
-* [Choose a capture path](telemetry/overview.md)
-* [Browser telemetry](telemetry/browser.md)
-* [Connect the web player](telemetry/player-integration.md)
-* [Native profiler: current workflow](telemetry/native.md)
-* [Local agent and port 6767](telemetry/local-agent.md)
-* [Capture lifecycle and budgets](telemetry/lifecycle.md)
-
-## Dumps and analysis
-
-* [Export and validate dumps](analysis/dumps.md)
-* [Offline and Claude reports](analysis/reports.md)
-* [Read a performance report](analysis/worked-example.md)
-* [Find expensive assets](analysis/assets.md)
 
 ## Reference and maintenance
 

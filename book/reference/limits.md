@@ -2,6 +2,10 @@
 
 ## Game publishing
 
+**Status: planned:** [large-game delivery](../games/large-games.md) targets 50 GiB
+logical builds and 4 GiB/file with a warning above 1 GiB/file. Those are future
+chunk-path quotas, not the current values in this table.
+
 | Limit | Current source value |
 | --- | --- |
 | Build ZIP upload | 512MiB |

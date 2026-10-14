@@ -19,6 +19,7 @@
 * [vapour.toml reference](games/manifest.md)
 * [Create a store page](games/store-page.md)
 * [Web export requirements](games/web-export.md)
+* [Large-game delivery plan](games/large-games.md)
 * [Supported engines and frameworks](games/frameworks.md)
 * [Godot](games/godot.md)
 * [Unity](games/unity.md)

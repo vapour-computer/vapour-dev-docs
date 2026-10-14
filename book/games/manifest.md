@@ -61,7 +61,7 @@ Media paths *inside* `store/page.json` are relative to that JSON file.
 
 | Command | Reads | Validates |
 | --- | --- | --- |
-| `vapour create` | writes a starter file | |
+| `vapour create`, `vapour template` | write a starter file | |
 | `vapour build` | `project.engine`, `build.*` | `build.dir` rules below |
 | `vapour test` | `project.title`, `project.version`, `build.dir` | the whole manifest (see [validation](#validation-errors)) |
 | `vapour publish` | `project.*`, `build.dir`, `store.*`, `controller` | the whole manifest, then the build folder and store page |

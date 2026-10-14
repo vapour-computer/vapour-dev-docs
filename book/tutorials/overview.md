@@ -57,6 +57,13 @@ would rather tell you "not run" than imply it works.
 
 The [status page](../status.md) is kept up to date as things ship.
 
+## Starting a brand-new game instead?
+
+`vapour template <engine> <name>` gives you an empty starter folder with `vapour.toml` and `store/` ready. It is a skeleton,
+not a working game: you still create the engine project. See
+[Start from an official template](../games/create.md#start-from-an-official-template). The tutorials are the better
+route when you want something that already builds.
+
 ## Before you start
 
 - Install the `vapour` CLI from a checkout (see [prerequisites](../getting-started/prerequisites.md)).

@@ -48,6 +48,7 @@ These are mistakes an assistant is likely to make, and the page that corrects ea
 | Puts the profiler or overlay in the published build | They exist only under `vapour test` and never enter your build | [Profile locally](../tutorials/profile-locally.md) |
 | Uses `build/web` as a Bevy output folder | In the Bevy template that folder holds source files | [Bevy tutorial](../tutorials/bevy.md) |
 | Maps touch controls to mouse actions | Controls can only press **keys**, so each action needs a key | [Godot tutorial](../tutorials/godot.md) |
+| Says `vapour template` gives you a working game | The templates are skeletons with no engine project, so `vapour build` fails until you add one | [Create or import a project](../games/create.md#start-from-an-official-template) |
 | Assumes a Unity build was run | Not built by us | [Unity tutorial](../tutorials/unity.md) |
 
 ## How the pages are written for machines

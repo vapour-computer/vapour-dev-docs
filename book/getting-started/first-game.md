@@ -39,6 +39,9 @@ vapour create "My Game" --engine godot
 cd my-game
 ```
 
+You can also start from an official skeleton with `vapour template godot "My Game"` (or `bevy`, `unity`). Be aware the
+templates contain no engine project yet: see [Start from an official template](../games/create.md#start-from-an-official-template).
+
 The current CLI scaffold supplies a README and manifest, not a complete engine
 project. Create the actual game in that directory with your engine, or use
 `--from` to import an existing game. Export for Web into `build/web/`. Follow the

@@ -38,21 +38,28 @@ Dump before off/TTL; stopped browser sessions release their data.
 Version 1 is UTF-8 JSON Lines, one JSON object per line:
 
 1. One `metadata` record with `format: "vpt"`, `version: 1`, source and start time.
-2. `metrics`, `frame`, `memory`, `stack`, contextual `spike` and optional `probe` records.
+2. `metrics`, `frame`, `memory`, `stack`, contextual `spike`, `asset` (profiler `main` branch only, see [below](#the-two-schema-pins)) and optional `probe` records.
 3. A completed dump ends with `end`, containing duration and dropped-record counts.
 
 Unsupported values are missing or null. CPU units, observer occupancy and memory
 types are not interchangeable. Times are relative milliseconds, memory is bytes.
 A partial interrupted trace may omit `end`; a reader must label it partial.
 
-Canonical contract: [trace-format.md](https://github.com/vapour-computer/vapour-profiler/blob/a019f0293c99ff00c6449468be12d3737d1cf14e/docs/trace-format.md).
-Pinned schema SHA-256:
+### The two schema pins
 
-```text
-673c9c4755898fff77e8c6c80f6acd80943a7f3020594cb53d25ee205eb2c36e
-```
+The v1 contract exists in two states, and you may meet either:
 
-The browser package vendors that schema and immutable provenance. It has no code
+| Where | Commit | Has the `asset` record | Schema SHA-256 |
+| --- | --- | --- | --- |
+| The browser telemetry package's pin | [`a019f02`](https://github.com/vapour-computer/vapour-profiler/blob/a019f0293c99ff00c6449468be12d3737d1cf14e/docs/trace-format.md) | **No** | `673c9c4755898fff77e8c6c80f6acd80943a7f3020594cb53d25ee205eb2c36e` |
+| The profiler's `main` branch | [`3a7fdb3`](https://github.com/vapour-computer/vapour-profiler/blob/3a7fdb3535e1c43889bc59d49a3808b037bae063/docs/trace-format.md) | **Yes** | `97d85531f1d4fc87ba3fa1f9faa6d45b5a1270813368b40f2ff67faa36a6a9e9` |
+
+The `asset` record was added to version 1 **additively** ([vapour-profiler#2](https://github.com/vapour-computer/vapour-profiler/pull/2)),
+so a trace without assets is valid under both. The browser package still vendors the older schema, so its dumps never contain `asset`
+records, and it must be re-pinned before a producer there can emit them. The dashboard's importer accepts `asset` records and rejects
+a duplicate `id` or an `endMs` before `startMs`. See [Find expensive assets](assets.md).
+
+The browser package vendors its schema and immutable provenance. It has no code
 dependency on the profiler. An [illustrative trace](../.gitbook/assets/browser-sample.vpt)
 is included in this documentation repo.
 

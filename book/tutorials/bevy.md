@@ -28,6 +28,12 @@ cd tutorial-bevy-template
 git checkout vapour-tutorial
 ```
 
+GitHub's comparison of the branch with upstream shows everything we added:
+
+![GitHub's compare view for the Bevy fork: three commits and five changed files between upstream main and the vapour-tutorial branch](../assets/img/github-bevy-compare.png)
+
+*The red crosses are earlier CI runs that failed or were cancelled while we fixed the workflow (see [CI](#6-ci)).*
+
 You need a recent stable **Rust**, the WebAssembly target, and **Trunk**:
 
 ```sh
@@ -44,18 +50,11 @@ compile it without trouble, which is why the CI build below works.
 
 ## 2. Look at how the template builds
 
-The template already knows how to build for the web: `Trunk.toml` sets the public URL to `./`, and `index.html` has
-Trunk directives that copy the `assets` and `credits` folders and **inline two files from `build/web/`**:
+The template already knows how to build for the web. `Trunk.toml` sets the public URL to `./`, and its `index.html` tells Trunk to copy
+the `assets` and `credits` folders and to **inline two files from `build/web/`**: `styles.css` and `sound.js`.
 
-```html
-<link data-trunk rel="copy-dir" href="assets"/>
-<link data-trunk rel="inline" href="build/web/styles.css"/>
-...
-<link data-trunk rel="inline" href="build/web/sound.js"/>
-```
-
-That detail decides everything that follows. In this template, **`build/web/` is a source folder** (it holds `styles.css` and
-`sound.js`), and Trunk's default output is `dist/`. The template's own CI runs `trunk build --release` and uploads `dist/`.
+That detail decides everything that follows. In this template, **`build/web/` is a source folder**, and Trunk's default output is
+`dist/`. The template's own CI runs `trunk build --release` and uploads `dist/`.
 
 > **A trap we hit:** the generic `vapour-ci` Bevy workflow builds with `--dist build/web`, and a first guess for
 > `build.dir` is also `build/web`. Here that would write build output into the folder that holds your source files. Use
@@ -100,26 +99,10 @@ Every `vapour.toml` entry is explained in the [reference](../games/manifest.md).
 
 ## 4. Touch controls
 
-Open `src/gameplay/actions/mod.rs`. The template handles input in two ways:
+The template handles input in two ways (both in `src/gameplay/actions/`):
 
-```rust
-let mut player_movement = Vec2::new(
-    get_movement(GameControl::Right, &keyboard_input)
-        - get_movement(GameControl::Left, &keyboard_input),
-    get_movement(GameControl::Up, &keyboard_input)
-        - get_movement(GameControl::Down, &keyboard_input),
-);
-
-if let Some(touch_position) = touch_input.first_pressed_position()
-    && let Ok((camera, camera_transform)) = camera.single()
-    && let Ok(touch_position) = camera.viewport_to_world_2d(camera_transform, touch_position)
-{
-    // tap-to-follow: the player walks towards the finger
-    ...
-}
-```
-
-Keyboard: **W A S D** and the arrow keys (`game_control.rs`). Touch: tap anywhere and the player walks to your finger.
+- **Keyboard:** **W A S D** and the arrow keys.
+- **Touch:** tap anywhere and the player walks towards your finger.
 
 So this game already works on a phone, in a way. Why add controls? A tap-to-follow game feels different from a stick: the
 player cannot hold a direction while looking at where they are going. We added one stick that presses the keys the game
@@ -154,9 +137,11 @@ Controller config looks good.
 Tip: run `vapour controller preview` to see the layout.
 ```
 
-> **Something to check on a real phone.** Look at the code above: when a touch exists, tap-to-follow **replaces** the
+![The controller layout preview for the Bevy game: a single MOVE stick on the left with the keys w, s, a, d](../assets/img/bevy-controller-preview.png)
+
+> **Something to check on a real phone.** In the template, when a touch exists, tap-to-follow **replaces** the
 > keyboard movement. If touching the on-screen stick also counts as a touch inside the game, the two inputs would fight. We
-> could not test this. If you see it, the simplest fix is a small change in `set_movement_actions` to skip the touch branch
+> could not test this. If you see it, the simplest fix is a small change in the game's movement code to ignore touches
 > while the keyboard direction is non-zero.
 
 ## 5. Run it locally
@@ -174,6 +159,18 @@ your assets, so watch **memory** in the profiler as well as FPS.
 *The bundle GitHub Actions built, served by `vapour test` and captured in headless Chromium. The FPS is low (12) because
 headless Chromium renders in software; on real hardware it will be far higher.*
 
+Press **Play** and the game starts. This is where the overlay earns its keep:
+
+![The Bevy game after pressing Play: a bird logo between a red and a green circle, with the overlay showing FPS 31 but a 1 percent low of 4 fps and a worst frame of 900 milliseconds](../assets/img/bevy-gameplay.png)
+
+*The average is a healthy-looking 31 FPS, but the **1% low is 4 FPS** and the worst frame is 900 ms. Those are the start-up hitches as the game
+loads. This is exactly why the [1% low, not the average](profile-locally.md#the-fps-overlay), is the number to watch.*
+
+In an emulated phone viewport (844 × 390, touch enabled):
+
+![The Bevy game menu in an emulated phone viewport, with the overlay showing FPS 58](../assets/img/bevy-phone.png)
+
+
 ## 6. CI
 
 Two workflows live in `.github/workflows/`:
@@ -183,15 +180,13 @@ Two workflows live in `.github/workflows/`:
   downloadable artifact for 7 days.
 - **`vapour-publish.yml`** runs when you push a tag such as `v0.1.0` and publishes with `vapour-computer/vapour-ci@v1`.
 
-```yaml
-- uses: dtolnay/rust-toolchain@stable
-  with: { targets: wasm32-unknown-unknown }
-- uses: Swatinem/rust-cache@v2
-- name: Install trunk
-  run: cargo install trunk --locked
-- name: Build for web
-  run: trunk build --release --public-url ./ --dist dist
-```
+Its steps, in order: check out the code, install stable Rust with the `wasm32-unknown-unknown` target, restore a build cache, install Trunk,
+run `trunk build --release --public-url ./ --dist dist`, check `dist/index.html`, and upload `dist/`.
+
+![GitHub's page for the successful vapour-check run on the Bevy fork: status Success, 13 minutes 28 seconds, one artifact](../assets/img/github-bevy-ci.png)
+
+*GitHub's record of the build: green, 13 min 28 s, with the bundle kept as the one artifact. We downloaded that artifact to take the
+screenshots above.*
 
 > **A trap we hit:** `vapour-ci@v1` is not released yet, and GitHub resolves every action in a job *before* running any
 > step, so one unresolved action fails the whole job even behind an `if`. That is why publishing is its own tag-only

@@ -71,6 +71,12 @@ The four lines mean:
 | `1% low` | The speed of your worst frames: the slowest 1% of the last 1,200 frames (about 20 seconds at 60 FPS), shown as FPS. Shows `0` until 20 frames have been drawn |
 | `worst` | The longest single frame since the page loaded |
 
+Here is a real example. This is the Bevy sample game right after pressing **Play**:
+
+![The Bevy game with the overlay showing FPS 31, a 1 percent low of 4 fps and a worst frame of 900 milliseconds](../assets/img/bevy-gameplay.png)
+
+*The average looks fine at 31 FPS, but the 1% low of 4 FPS and the 900 ms worst frame reveal the start-up hitch. The average hid it.*
+
 The **1% low** is the number players feel. A game can average 60 FPS and still stutter; a low 1% low is how you spot it.
 Toggle the overlay with **Ctrl+Shift+F**.
 
@@ -86,6 +92,10 @@ Session: <frames> frames, avg <n> fps, 1% low <n> fps, worst frame <n> ms
 
 (Switching to the profiler tab hides the game tab, so you will see this line then too.)
 
+You can also test in a phone-sized window with your browser's device emulation. Here is the same game at 844 × 390 with touch enabled:
+
+![The Bevy game in an emulated phone viewport with the overlay showing FPS 58](../assets/img/bevy-phone.png)
+
 ## The profiler
 
 ![The profiler dashboard in a Capturing state, with process CPU 717.8 percent of one core, resident memory 2,150 MiB, and live charts](../assets/img/dashboard-live-capture.png)
@@ -100,6 +110,10 @@ What it measures **today**, once a second:
 | **Resident memory** | RAM the browser and its children are using. `PSS` is a fairer figure that counts shared memory once, where the system allows reading it |
 | **Frame rate** | Empty here: *No FPS data recorded*. The native profiler does not measure frames. Use the overlay, or import a trace that has them |
 | **Recorded spikes** | Frames more than twice the rolling median. Needs frame data |
+
+The dashboard also has an **Asset load cost** panel that ranks textures and other files by how hard they were to load. A live native
+capture leaves it empty, because nothing records `asset` events from a running game yet: see
+[Find expensive assets](../analysis/assets.md).
 
 What it does **not** do yet: it records no function-level stacks (so the flamegraph is empty for a live native capture),
 no GPU data and no FPS. Those are planned. The page says so itself, rather than inventing numbers.

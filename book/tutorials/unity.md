@@ -27,19 +27,17 @@ branch `vapour-tutorial`. It is a fork of [`ta-david-yu/2D-Platformer-Hunter`](h
 | The WebGL build, `vapour build`, `vapour test` | Not run |
 | The CI workflow | Not run: it needs Unity license secrets |
 
+GitHub's comparison of the fork's branch with upstream shows exactly what we added: a single hidden folder.
+
+![GitHub's compare view for the Unity fork: the vapour-tutorial branch adds files under the Vapour~ folder compared with upstream](../assets/img/github-unity-compare.png)
+
 ## 1. Understand the sample
 
 The repository is a Unity **package**, not a complete project. That is why this tutorial starts by creating a project.
 It contains two playable scenes, `00-BasicController` and `01-AdvancedLevel`, in a sample called **Playground Samples**.
 
-Its player script reads Unity's **legacy Input Manager**:
-
-```csharp
-var horizontal = Input.GetAxisRaw("Horizontal");
-var vertical   = Input.GetAxisRaw("Vertical");
-var jump       = Input.GetButtonDown("Jump");
-var dash       = Input.GetButtonDown("Fire3");
-```
+Its player script (`PlayerBasicMovementInput.cs`) reads Unity's **legacy Input Manager**: two axes, `Horizontal` and `Vertical`, and
+two buttons, `Jump` and `Fire3`.
 
 In a default Unity input setup those names mean:
 
@@ -109,41 +107,9 @@ headers from the server.
 ## 6. Add the Vapour build script
 
 Copy `Vapour~/Assets/Editor/VapourBuild.cs` from the sample repository into your project at
-`Assets/Editor/VapourBuild.cs`. It is the same script `vapour create --engine unity` writes. This is all of it:
+`Assets/Editor/VapourBuild.cs`. It is the same script `vapour create --engine unity` writes, and you do not need to edit it.
 
-```csharp
-using System;
-using System.Linq;
-using UnityEditor;
-using UnityEditor.Build.Reporting;
-
-namespace Vapour
-{
-    public static class Build
-    {
-        [MenuItem("Vapour/Build")]
-        public static void Perform()
-        {
-            var args = Environment.GetCommandLineArgs();
-            var index = Array.IndexOf(args, "-vapourOutput");
-            var output = index >= 0 && index + 1 < args.Length ? args[index + 1] : "build/web";
-            var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
-            if (scenes.Length == 0) throw new Exception("Enable at least one scene in Build Settings.");
-            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
-            {
-                scenes = scenes,
-                locationPathName = output,
-                target = BuildTarget.WebGL,
-                options = BuildOptions.None
-            });
-            if (report.summary.result != BuildResult.Succeeded)
-                throw new Exception("Vapour WebGL export failed: " + report.summary.result);
-        }
-    }
-}
-```
-
-What it does, line by line in plain words:
+What it does:
 
 - It reads the output folder from the `-vapourOutput` argument that `vapour build` passes, and falls back to `build/web`.
 - It builds every scene you ticked in Build Settings, for the WebGL target.
@@ -261,32 +227,13 @@ You get your build in a Chromium window with an FPS overlay, and the profiler in
 Copy `Vapour~/vapour-publish.yml` to `.github/workflows/vapour-publish.yml` in your project. It builds with
 [GameCI](https://game.ci) and publishes when you push a tag such as `v0.1.0`:
 
-```yaml
-name: vapour-publish
-on:
-  push:
-    tags: ["v*"]
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { lfs: true }
-      - uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: WebGL
-          buildsPath: build
-      - name: Move build into place
-        run: mkdir -p build/web && cp -r build/WebGL/WebGL/. build/web/
-      - uses: vapour-computer/vapour-ci@v1
-        with:
-          token: ${{ secrets.VAPOUR_TOKEN }}
-          version: ${{ github.ref_name }}
-```
+The workflow, in order:
+
+1. Runs when you push a tag that starts with `v`, such as `v0.1.0`.
+2. Checks out your project, including Git LFS files.
+3. Builds the `WebGL` target with GameCI's `unity-builder`, using your Unity license secrets.
+4. Copies the build from `build/WebGL/WebGL/` to `build/web/`, where `vapour.toml` expects it.
+5. Publishes with `vapour-computer/vapour-ci@v1`, using your `VAPOUR_TOKEN` secret and the tag as the version.
 
 You need four repository secrets: `UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD` (see
 [GameCI activation](https://game.ci/docs/github/activation)) and `VAPOUR_TOKEN`

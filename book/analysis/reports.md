@@ -13,6 +13,8 @@ hotspots. No unavailable native frames or stacks are invented. Native analysis
 uses the provider trait and keyring/environment key; browser analysis retains its
 independent TypeScript implementation and browser key storage.
 
+When the trace has `asset` records, reports also cite the hardest assets: see [Find expensive assets](assets.md#in-reports).
+
 Use **Save report** for JSON and the comparison-baseline button for before/after
 summaries. Reports and flamegraphs cover the whole retained capture, not just
 the visible chart range. See [dashboard usage](../telemetry/dashboard.md).

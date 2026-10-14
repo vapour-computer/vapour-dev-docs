@@ -53,6 +53,7 @@
 * [Export and validate dumps](analysis/dumps.md)
 * [Offline and Claude reports](analysis/reports.md)
 * [Read a performance report](analysis/worked-example.md)
+* [Find expensive assets](analysis/assets.md)
 
 ## Reference and maintenance
 

@@ -2,7 +2,7 @@
 // DevTools protocol over Node's built-in WebSocket.
 //
 //   node shot.mjs --url URL --out file.png [--w 1280] [--h 800] [--scale 1] [--mobile]
-//                 [--wait 3000] [--eval "js to run before the shot"] [--evalfile file.js] [--waitfor "js expr that becomes truthy"]
+//                 [--wait 3000] [--eval "js to run before the shot"] [--evalfile file.js] [--clicks "x,y;x,y"] [--afterclick 5000] [--waitfor "js expr that becomes truthy"]
 //                 [--timeout 60000] [--gl] [--clip "x,y,w,h"] [--full]
 import { spawn } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -71,6 +71,18 @@ try {
     const t0 = Date.now();
     while (Date.now() - t0 < timeout) { try { if (await evalJs(args.waitfor)) break; } catch {} await sleep(400); }
     if (Date.now() - t0 >= timeout) console.error("warning: --waitfor timed out; capturing anyway");
+  }
+  if (args.clicks) {
+    for (const pair of String(args.clicks).split(";")) {
+      const [x, y] = pair.split(",").map(Number);
+      await send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y });
+      await sleep(250);
+      await send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+      await sleep(120);
+      await send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+      await sleep(600);
+    }
+    await sleep(+(args.afterclick || 3000));
   }
   if (args.eval) { await evalJs(args.eval); await sleep(800); }
   if (args.evalfile) { await evalJs(readFileSync(args.evalfile, "utf8")); await sleep(1500); }

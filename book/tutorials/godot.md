@@ -56,19 +56,15 @@ Godot only exports what a preset describes. Open **Project → Export…**, choo
 
 We saved the preset as `export_presets.cfg`. These are the entries that matter:
 
-```ini
-[preset.0]
-name="Web"
-platform="Web"
-export_filter="all_resources"
-
-[preset.0.options]
-variant/thread_support=false
-variant/extensions_support=false
-vram_texture_compression/for_desktop=true
-vram_texture_compression/for_mobile=false
-progressive_web_app/enabled=false
-```
+| Setting in the Export dialog | Value |
+| --- | --- |
+| Preset name | `Web` |
+| Platform | `Web` |
+| Export filter | All Resources |
+| Thread Support | **off** |
+| Extensions Support | off |
+| VRAM Texture Compression | For Desktop on, For Mobile off |
+| Progressive Web App | off |
 
 - **Thread support is off.** Threaded Godot builds need cross-origin isolation headers. `vapour test` sends them, but
   keep the first build simple.
@@ -127,20 +123,14 @@ We fixed that in the Input Map by giving each a key:
   <figcaption>Save as <code>book/assets/img/godot-input-map.png</code>.</figcaption>
 </figure>
 
-In `project.godot` this is one extra key event at the front of each action's `events` list. For `shoot`:
+In the Input Map editor, click **+** next to each action, choose **Key**, and press the key. The mouse and gamepad bindings stay, so
+desktop play is unchanged. Godot writes the result into `project.godot`. GitHub's comparison of our branch with upstream shows the whole
+change at a glance: two commits, seven files.
 
-```ini
-shoot={
-"deadzone": 0.2,
-"events": [Object(InputEventKey, … "physical_keycode":70, … "unicode":102 …)
-, Object(InputEventMouseButton, … "button_index":1 …)
-, Object(InputEventJoypadButton, … "button_index":5 …)
-]
-}
-```
+![GitHub's compare view for the Godot fork: two commits and seven changed files between upstream master and the vapour-tutorial branch](../assets/img/github-godot-compare.png)
 
-The mouse and gamepad bindings stay, so desktop play is unchanged. `70` is the physical key code for **F**. You
-can make these edits in the editor and let Godot write the file.
+*GitHub's comparison of `vapour-tutorial` with upstream `master`. The red cross on the first commit is the run that failed
+because `vapour-ci@v1` does not exist yet, described in [CI](#6-ci). The second commit's green tick is the fix.*
 
 ## 4. Describe the controls in `vapour.toml`
 
@@ -294,7 +284,18 @@ The port is chosen for you and differs each run. When you close the game tab, on
 frame count, the average FPS, the 1% low and the worst frame time.
 
 You get a Chromium window with the game and, in a second tab, the profiler. Details of what each shows are in
-[Profile your game locally](profile-locally.md). Here is the profiler attached to this exact build while it ran
+[Profile your game locally](profile-locally.md). Press **Play** and the real level loads. This is the same build, captured in headless Chromium (software rendering, so it crawls):
+
+![The Godot TPS demo in a level, a robot standing in an industrial corridor, with the overlay showing FPS 0 and a worst frame of 13,783 milliseconds](../assets/img/godot-gameplay.png)
+
+*The overlay reports the truth: on software rendering the frame time is 7.8 seconds. On a real GPU it is a different game. The text
+under the overlay is the game's own debug readout.*
+
+In a phone-sized window the menu looks like this (an emulated 844 × 390 phone viewport):
+
+![The Godot TPS demo menu in an emulated phone viewport with the overlay in the corner](../assets/img/godot-phone.png)
+
+Here is the profiler attached to this exact build while it ran
 (captured headless, so CPU is high and there is no GPU):
 
 ![The profiler dashboard in a Capturing state, showing process CPU, resident memory and live charts for the TPS demo](../assets/img/dashboard-live-capture.png)
@@ -310,6 +311,10 @@ Two workflows live in `.github/workflows/`:
   container and checks that `index.html` and `index.wasm` exist. It needs no secrets. It passes on the sample repo.
 - **`vapour-publish.yml`** runs when you push a tag such as `v0.1.0`. It exports the build and publishes with
   `vapour-computer/vapour-ci@v1`.
+
+![GitHub's page for the successful vapour-check run on the Godot fork: status Success, 1 minute 41 seconds, one job named export](../assets/img/github-godot-ci.png)
+
+*GitHub's record of the export check passing on the fork.*
 
 > **A trap we hit:** our first version put the publish step inside the push workflow behind an `if`. GitHub resolves an
 > action *before* it evaluates any step, and `vapour-ci@v1` is not released yet, so **every** push failed with

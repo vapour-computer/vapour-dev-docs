@@ -22,7 +22,7 @@ The current package accepts this shape from a trusted loader:
 ```ts
 type Authorization = {
   environment: "staging";
-  firebaseProjectId: "vapour-computer-stag";
+  firebaseProjectId: "YOUR-STAGING-PROJECT-ID";
   devtoolsEnabled: true;
   authenticatedUid: string;
   ownerUid: string;

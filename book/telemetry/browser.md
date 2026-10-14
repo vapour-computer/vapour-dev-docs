@@ -13,7 +13,7 @@ npm ci
 npm run typecheck:browser-telemetry
 npm run test:browser-telemetry
 VAPOUR_ENV=staging \
-FIREBASE_PROJECT_ID=vapour-computer-stag \
+FIREBASE_PROJECT_ID=YOUR-STAGING-PROJECT-ID \
 VAPOUR_DEVTOOLS_ENABLED=true \
 VAPOUR_STAGING_PLAYER_ORIGIN=https://YOUR-STAGING-GAME-ORIGIN \
 npm run build:browser-telemetry
@@ -79,4 +79,3 @@ Save exports before off. Dumping function data ends the optional sampler; it is
 not silently restarted. Off/TTL/pagehide clears buffers, observers, timers,
 channels and the overlay, and aborts pending provider analysis. Another capture
 requires a document reload.
-

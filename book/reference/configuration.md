@@ -55,7 +55,7 @@ refer to the correct environment and be protected by backend/rules authorization
 | --- | --- |
 | `VAPOUR_ENV` | `staging`, `production`/`prod`, or `local`; default production |
 | `VAPOUR_DEVTOOLS_ENABLED` | `true`/`false`; true allowed only on staging |
-| `FIREBASE_PROJECT_ID` | Must equal `vapour-computer-stag` for staging build |
+| `FIREBASE_PROJECT_ID` | Must equal the configured staging project for a staging build |
 | `VAPOUR_STAGING_PLAYER_ORIGIN` | Exact HTTPS origin of the actual game document |
 | `CHROMIUM_PATH` | Test-only browser executable override for the smoke script |
 

@@ -6,6 +6,14 @@ in a bug report.
 
 ## CLI and publishing
 
+Every CLI error ends with this support line:
+
+```text
+Need help? https://vapour-dev-docs.pages.dev/
+```
+
+Use that canonical handbook address to find the current workflow and limits.
+
 | Symptom | Check and next action |
 | --- | --- |
 | Repository has no expected CLI commands | Read [status](status.md); implemented source may not be on public main yet |

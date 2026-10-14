@@ -312,10 +312,6 @@ Two workflows live in `.github/workflows/`:
 - **`vapour-publish.yml`** runs when you push a tag such as `v0.1.0`. It exports the build and publishes with
   `vapour-computer/vapour-ci@v1`.
 
-![GitHub's page for the successful vapour-check run on the Godot fork: status Success, 1 minute 41 seconds, one job named export](../assets/img/github-godot-ci.png)
-
-*GitHub's record of the export check passing on the fork.*
-
 > **A trap we hit:** our first version put the publish step inside the push workflow behind an `if`. GitHub resolves an
 > action *before* it evaluates any step, and `vapour-ci@v1` is not released yet, so **every** push failed with
 > "Unable to resolve action". Splitting publish into its own tag-only workflow fixed it.

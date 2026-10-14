@@ -183,11 +183,6 @@ Two workflows live in `.github/workflows/`:
 Its steps, in order: check out the code, install stable Rust with the `wasm32-unknown-unknown` target, restore a build cache, install Trunk,
 run `trunk build --release --public-url ./ --dist dist`, check `dist/index.html`, and upload `dist/`.
 
-![GitHub's page for the successful vapour-check run on the Bevy fork: status Success, 13 minutes 28 seconds, one artifact](../assets/img/github-bevy-ci.png)
-
-*GitHub's record of the build: green, 13 min 28 s, with the bundle kept as the one artifact. We downloaded that artifact to take the
-screenshots above.*
-
 > **A trap we hit:** `vapour-ci@v1` is not released yet, and GitHub resolves every action in a job *before* running any
 > step, so one unresolved action fails the whole job even behind an `if`. That is why publishing is its own tag-only
 > workflow. (Details in the [Godot tutorial](godot.md).)

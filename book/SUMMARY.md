@@ -30,6 +30,7 @@
 
 ## Telemetry and profiling
 
+* [Use the local dashboard](telemetry/dashboard.md)
 * [Choose a capture path](telemetry/overview.md)
 * [Browser telemetry](telemetry/browser.md)
 * [Connect the web player](telemetry/player-integration.md)

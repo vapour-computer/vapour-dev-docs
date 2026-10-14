@@ -16,13 +16,15 @@ workflows, from credentials and engine exports to trace analysis and deployment.
 | Work on Linux/eBPF profiling | [Native profiler](telemetry/native.md) |
 | Understand port 6767 and the two collectors | [Local agent](telemetry/local-agent.md) |
 | Export or inspect a performance dump | [Dumps](analysis/dumps.md) |
+| Use charts, flamegraphs and optimization reports locally | [Local dashboard](telemetry/dashboard.md) |
 
 ## Read availability before running commands
 
 The project is under active implementation. The publishing CLI and backend have
 working source in the maintainer workspace, but that implementation was not yet
 on their public `main` branches at this documentation snapshot. The native
-profiler currently provides an attach/detach proof. Browser telemetry is on a
+profiler's published revision provides an attach/detach proof; the newer maintainer
+checkout adds the local dashboard and reports. Browser telemetry is on a
 published feature branch and is not wired into the live player.
 
 Every workflow is grounded in the [implementation status](status.md). A source

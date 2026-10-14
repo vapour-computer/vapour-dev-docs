@@ -52,10 +52,12 @@ in a bug report.
 | Symptom | Check and next action |
 | --- | --- |
 | `on`, `live` or `analyze` missing | Current native binary is `probe-test` only |
-| Nothing listening on 6767 | Expected: the local agent API is not implemented |
+| Nothing listening on 6767 | Start `vapour-profiler dashboard` from the implemented checkout; no listener exists before explicit launch |
+| Dashboard is locked after reload | Open the original full terminal URL with its `#token=...` fragment |
+| Keyring save fails | Install `secret-tool` and unlock Secret Service; environment keys are an alternative |
+| Native dashboard has no FPS/flamegraph | Current live mode collects CPU/RSS/PSS only; those views require recorded frames/stacks in an imported trace |
 | clang/BPF compilation failure | BPF-capable clang, UAPI headers, libelf/zlib and `CLANG` selection |
 | Kernel BTF missing | `/sys/kernel/btf/vmlinux` and a supported BTF-enabled kernel |
 | Permission denied | Explicit session/test authorization and kernel security policy; don't run builds as root |
 | Uprobe symbol lookup failure | Correct target executable, unstripped/available symbol and matching PID |
 | Apparent bpftool residual maps | Use the provided two-scan test; bpftool creates temporary inspection objects itself |
-

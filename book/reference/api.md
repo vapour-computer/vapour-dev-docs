@@ -1,7 +1,7 @@
 # Platform API reference
 
 **Availability: source-preview Rust API.** This is the publishing/account API,
-not the planned native localhost API. Choose an explicit base URL; no region or
+not the local dashboard API. Choose an explicit base URL; no region or
 live production endpoint is assumed here.
 
 ## Authentication
@@ -61,7 +61,6 @@ or unpublished games return 404. Verify those headers on the actual deployment.
 
 ## Not yet available
 
-No dedicated Devtools-preference/owner-grant API or native localhost endpoint
-schema is implemented. The browser package does not upload metrics to any of
-these publishing endpoints. The local agent's port is planned as 6767; paths and
-message versions must come from its future documented API, not this table.
+No dedicated Devtools-preference/owner-grant API is implemented. The browser package does not upload metrics to any of
+these publishing endpoints. The new local dashboard checkout listens on 6767;
+its token-authenticated endpoints are documented in [Local agent](../telemetry/local-agent.md).

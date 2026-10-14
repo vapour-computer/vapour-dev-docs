@@ -42,7 +42,7 @@ only skips that check; it does not create a valid token or change server permiss
 The file is `$XDG_CONFIG_HOME/vapour/credentials`, or
 `~/.config/vapour/credentials` when XDG is unset. The CLI uses mode 0600 for the
 file and 0700 when creating the directory. This is a plaintext credential file,
-not the native profiler's planned OS keyring.
+not the local dashboard's OS keyring.
 
 ## Override for CI
 

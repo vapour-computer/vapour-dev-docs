@@ -31,17 +31,28 @@ separate key-test endpoint or dashboard Test button. 401/403 produces a rejected
 message, 429 a rate-limit message, and network/invalid-response failures fall back
 to the offline report. Actual network use requires an explicit analyze action.
 
-## Native keyring: planned
+## Local dashboard keyring: implemented checkout
 
-The intended native flow uses an OS keyring/Secret Service, with
-`ANTHROPIC_API_KEY` as an environment source. The following command family is
+Open **Claude key & model** in the [local dashboard](../telemetry/dashboard.md).
+Save to keyring uses `secret-tool`/Secret Service; the input is cleared immediately.
+Remove key deletes the keyring entry. No key is saved in browser storage by this
+local-agent UI. `ANTHROPIC_API_KEY` in the launching environment takes precedence;
+unset it separately to stop using that credential.
+
+The keyring/provider flow requires your environment; automated UI tests intercept
+key saving and do not make a live Claude call. Direct requests contain only a
+bounded summary, with no redirects/cookies and a 20-second provider deadline.
+
+## Standalone key subcommands: planned
+
+The dashboard implements the OS keyring/environment sources, but the following command family is
 **not implemented** in today's profiler:
 
 ```text
 vapour-profiler key set|test|remove
 ```
 
-Native key delivery from a staging UI will use a token-authenticated localhost
+Future key delivery from a remote staging UI will use a token-authenticated localhost
 connection and immediate field clearing. No existing dashboard currently provides
 that flow. Do not store a native key in Firestore while waiting for it.
 

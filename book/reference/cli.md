@@ -24,6 +24,18 @@ project management.
 
 ## Standalone native executable — implemented proof
 
+The newer maintainer checkout also implements:
+
+```sh
+vapour-profiler dashboard
+vapour-profiler dashboard --pid 12345 --ttl 300 --port 6767
+```
+
+Default/maximum dashboard TTL is 300 seconds. Open the printed token-bearing
+URL in Chromium. A viewer starts no collection; use Start native capture for
+the CLI-authorized PID. See [dashboard usage](../telemetry/dashboard.md). This
+command is not yet part of a published profiler release.
+
 ```text
 vapour-profiler probe-test --pid <positive-pid> --binary <target-executable> --symbol <ELF-symbol> [--ttl <1..300>]
 ```

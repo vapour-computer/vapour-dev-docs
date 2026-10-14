@@ -30,6 +30,11 @@ promise of identical memory usage or overhead on every device.
 
 ## Native capture
 
+The new dashboard viewer/capture session has a 300s default/maximum TTL, at most
+300 live buckets, a 200MiB automatic-dump storage cap, and import limits of 50MiB,
+1MiB per record and 150,000 records. Flamegraph display caps at 4096 nodes/64 levels.
+Native Claude calls use a 24KB summary, 256KiB response cap and 20s timeout.
+
 Current proof: TTL default 30 seconds, maximum 300; one bounded per-CPU hit map
 and 1Hz reads. Planned profiler: TTL default 300, Lite 49Hz sampling, Full 99Hz,
 4MiB ring buffer and 50MiB dump. Planned overhead targets are not measurements.

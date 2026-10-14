@@ -63,9 +63,10 @@ validate the exact parent/frame origin and `event.source`, then transport only
 bounded telemetry over a MessagePort/postMessage contract. The dashboard can
 redistribute locally over its own BroadcastChannel.
 
-Do not invent an agent wire protocol: the port-6767 API is still planned. The
-current `onMetrics` callback is an explicit consumer boundary; no reconnect or
-discovery polling happens while off.
+The new [port-6767 API](local-agent.md) currently permits only its own local
+dashboard origin. Automatic remote-player forwarding is not connected; do not
+bypass its origin gate to attach a staging frame. The `onMetrics` callback remains
+an explicit consumer boundary; no reconnect or discovery polling happens while off.
 
 ## Headers and production gate
 

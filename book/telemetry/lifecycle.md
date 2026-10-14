@@ -39,6 +39,12 @@ the no-allocation constraint applies to the hot rAF callback.
 
 ## Current native proof
 
+The separate [local dashboard](dashboard.md) now has an explicit viewer session:
+default/maximum TTL 300s, no process reads until Start, at most 300 live buckets,
+four WebSocket clients and eight in-flight HTTP handlers. End session, TTL,
+signals or target exit closes it and flushes native data subject to a 200MiB
+storage cap. Its `/proc` collection is independent of the BPF proof below.
+
 One selected uprobe and bounded per-CPU hit counters, read at most 1Hz. Default
 TTL is 30 seconds, maximum 300. RAII closes the link before program/map objects;
 kernel FD cleanup handles forced termination. No listener, ring buffer or trace

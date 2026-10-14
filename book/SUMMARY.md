@@ -62,3 +62,4 @@
 * [Troubleshooting](troubleshooting.md)
 * [Documentation maintenance](maintenance.md)
 * [Connect GitBook](gitbook-setup.md)
+* [Host the handbook on Cloudflare Pages](cloudflare-pages.md)

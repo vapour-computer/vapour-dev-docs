@@ -1,0 +1,14 @@
+{
+  "name": "vapour-dev-docs",
+  "private": true,
+  "scripts": {
+    "build": "honkit build ./book ../_book --reload && node scripts/check_site.mjs",
+    "check:site": "node scripts/check_site.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "honkit": "6.2.2"
+  }
+}

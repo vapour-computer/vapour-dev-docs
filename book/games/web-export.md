@@ -33,7 +33,7 @@ The CLI checks and ZIPs a build directory. If given a prebuilt ZIP, it uploads i
 as-is after ZIP/size checks; it does not repeat every server extraction check.
 `--dry-run` is useful but not a promise that every ZIP will be accepted remotely.
 
-Optional cover upload: maximum **5 MiB**; use a supported image such as PNG, JPEG
+Optional cover upload: maximum **2 MiB**; use a supported image such as PNG, JPEG
 or WebP. Keep covers separate from the engine's runtime asset bundle when practical.
 
 ## Browser hosting details

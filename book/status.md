@@ -1,6 +1,6 @@
 # What is available today
 
-A snapshot of what you can use, written on **14 October 2026** and updated on **15 October 2026** for the tutorials. Preview items are labelled; a merge or a
+A snapshot of what you can use, written on **14 October 2026** and updated on **16 October 2026** for the tutorials. Preview items are labelled; a merge or a
 source preview is not a deployment.
 
 ## Availability
@@ -17,6 +17,8 @@ source preview is not a deployment.
 | Touch controls (`vapour controller`, `[controller]`) | **Released** in CLI v0.1.1 | Layout, validation and preview in the CLI. The player-side overlay is a preview we have not tested on a device |
 | Engine builds (`vapour build`, `[build]` command/boot/split) | **Released** in CLI v0.1.1 | Godot, Unity and Bevy exporters, custom commands, boot-file metadata |
 | Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. The CLI it needs is now released |
+| Zip scan and signing (`vapour scan`, `vapour verify`, signed publish) | Preview, not yet released (CLI v0.2) | Local scan, signed attestation, async server check recorded as `pending`/`verified`/`rejected`/`unverified`. See [.zip verification](games/zip-verification.md) |
+| Version review and approval | Preview, not yet deployed | Every version waits for an admin review before it is playable. See [Review and approval](games/review-and-approval.md) |
 | Vapour platform (hosted) | Staging | Accounts, tokens, store pages, media, versions, publishing and play on the staging site. Production is not open |
 
 When a guide says "from your checkout" it means a checkout that contains that implementation. Cloning a repository

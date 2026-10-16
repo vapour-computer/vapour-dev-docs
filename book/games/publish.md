@@ -45,6 +45,16 @@ ZIP. Updating the store first prevents rejected media from consuming a version.
 The service checks ownership and the archive before publishing. The CLI prints
 the public game-page URL.
 
+## After you upload
+
+The upload is accepted right away, and the server verifies the zip in the
+background. The version is not live until an admin approves it. Run
+`vapour verify --remote --version <version> <zip>` to see the zip check result,
+and watch the game list on the dashboard for the review badge. While a new
+version waits, players keep playing the previous approved version. Read
+[.zip verification](zip-verification.md) for the zip check and
+[Review and approval](review-and-approval.md) for the review step.
+
 ## Versions and release notes
 
 Each version value can be published only once. Before the next release, change

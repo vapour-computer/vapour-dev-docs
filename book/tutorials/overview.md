@@ -35,7 +35,7 @@ see the whole change.
     <p><span class="badge badge-warn">Not measured yet</span></p>
   </div>
   <div class="tutorial-card">
-    <h3><a href="ladakh-hills.html">Summit Run</a></h3>
+    <h3><a href="ladakh-hills.html">Ladakh Hills</a></h3>
     <p>A 3D Godot driving game: <code>vapour.toml</code>, export presets, load-time optimisations, a joystick for phones and a frame-rate bug found by profiling. <a href="https://vapour-web-637456171586.asia-south1.run.app/games/ladakh-hills">Play it</a>.</p>
     <p><span class="badge badge-preview">Published, phone untested</span></p>
   </div>

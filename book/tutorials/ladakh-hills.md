@@ -1,4 +1,4 @@
-# Tutorial: Summit Run, a Godot driving game on desktop and phones
+# Tutorial: Ladakh Hills, a Godot driving game on desktop and phones
 
 <span class="badge badge-preview">Preview tools</span> <span class="badge">Godot 4.7.2</span> <span class="badge">About 25 minutes</span>
 
@@ -157,8 +157,25 @@ ten seconds at 0.5 FPS.
 
 ## 5. How the mobile controls were added
 
-The controls are one script, `scripts/touch_controls.gd`, a full-screen `Control` added over the HUD. Nothing about the
-driving code changed: the controls press the same **input actions** the keyboard does.
+The controls are one script, `scripts/touch_controls.gd` (158 lines), a full-screen `Control` added over the HUD. Nothing
+about the driving code changed: the controls press the same **input actions** the keyboard does (`accelerate`, `brake`,
+`steer_left`, `steer_right`), and call the same functions the keys call (`toggle_handbrake()`, `recover_to_checkpoint()`).
+That is why one `Web` export serves both desktop and phones.
+
+### The design in one picture
+
+```text
+ touch event (InputEventScreenTouch / ScreenDrag)
+        │
+        ▼
+ touch_controls._input()  ── touch lands in a button or the joystick? ──▶ claim it, set_input_as_handled()
+        │ no
+        ▼
+ expedition_game._unhandled_input()  ──▶ drag orbits the camera
+```
+
+Because `_input()` runs before `_unhandled_input()`, a finger that lands on a control never reaches the camera, and a finger
+that lands anywhere else always does. Nothing has to arbitrate between the two.
 
 ### Turn it on
 
@@ -171,30 +188,73 @@ if OS.has_feature("web"):
 if mobile_mode: settings["render_scale"] = 0.85
 ```
 
-When `mobile_mode` is true it adds the controls to the UI, enlarges HUD text, swaps the starting guide for touch wording,
-and tells the player to **Tap SKIP** instead of "Press Enter". The same `Web` export therefore serves desktop and phones.
+`(pointer: coarse)` is the browser's way of saying the main input is a finger, and `maxTouchPoints > 0` rules out a
+touch-less machine that merely reports a coarse pointer. A laptop with a touchscreen also has a fine pointer (the trackpad),
+so it stays in desktop mode. The `Mobile Web` preset sets the `mobile_port` feature, which forces the mode on for a
+standalone build.
+
+When `mobile_mode` is true, the game also:
+
+- creates the controls and adds them to the UI (`TouchControls.new()`, `touch_controls.game = self`);
+- widens the HUD and shifts the start card and radio captions so the controls do not cover them;
+- replaces the start guide with touch wording ("Joystick: drive and steer", "Pull back: brake / reverse", ...);
+- changes "Press Enter" prompts to **Tap SKIP**;
+- plays a different radio line (`welcome_mobile`) that talks about the joystick, not the keys;
+- skips mouse look and pointer-lock capture, so a touch is never also read as a mouse event;
+- changes the lookout hint to "LOOKOUT · P to park · VIEW to enjoy".
+
+The web page itself helps: `index.html` sets `user-scalable=no` in its viewport tag and `touch-action: none` on the canvas,
+so the browser does not zoom or scroll when a thumb drags.
 
 ### Layout
 
-`layout_buttons()` builds a dictionary of `Rect2` zones from the screen size. One `unit` (the shorter side divided by 720)
-scales every size, so the layout holds on any phone:
+`layout_buttons()` runs on startup and again whenever the control resizes (`resized.connect(layout_buttons)`), so rotating a
+phone relays everything out. It builds a dictionary of `Rect2` hit zones from the screen size. One `unit` (the shorter side
+divided by 720) scales every size, so the layout holds on any phone:
 
-| Control | Place | Does |
+```gdscript
+unit = maxf(1.0,minf(size.x,size.y)/720.0)
+var b: float = 108.0*unit       # button size
+var gap: float = 18.0*unit
+var margin: float = 26.0*unit   # distance from the screen edge
+```
+
+| Control | Zone (all multiplied by `unit`) | Does |
 | --- | --- | --- |
-| Joystick | Bottom left | Steer and accelerate; pull back to brake or reverse |
-| `2WD` / `4WD` | Bottom right, upper | Toggles traction mode |
-| `P` | Bottom right, lower | Toggles the latched handbrake |
-| `RECOVER`, `VIEW` | Above the joystick | Return to the last gate; enjoy a parked lookout |
-| `CAM`, `MENU` | Top right | Recenter the camera; open settings |
-| `SKIP` / `RESTART` | Bottom right | Shown only during a panorama / at the summit |
+| Joystick | 216 × 216 at the bottom-left corner | Steer and accelerate; pull back to brake or reverse |
+| `2WD` / `4WD` | 108 × 108, bottom-right, upper | Toggles traction mode. The label shows the current mode |
+| `P` | 108 × 108, bottom-right, lower | Toggles the latched handbrake. The label reads `P ON` when engaged |
+| `RECOVER`, `VIEW` | 108 × 108 each, above the joystick | Return to the last gate; enjoy a parked lookout |
+| `CAM`, `MENU` | 108 × 76, top-right | Recenter the camera; open settings |
+| `SKIP` | 180 × 86, bottom-right | Shown only while a panorama plays |
 
-`available_actions()` returns only the controls that make sense right now, so during a panorama the screen shows just
-`SKIP` and `MENU`. In portrait the game asks you to rotate the phone.
+The steering and pedals go on the left thumb and the mode switches on the right, so your right thumb is free to drag the
+view. Buttons are reachable at the edges where a phone is held.
+
+`available_actions()` returns only the controls that make sense right now. This one function drives both what is **drawn**
+and what can be **touched**, so a hidden button can never be tapped by accident:
+
+| Game state | Controls on screen |
+| --- | --- |
+| Driving | joystick, `2WD`/`4WD`, `P`, `RECOVER`, `VIEW`, `CAM`, `MENU` |
+| Panorama playing | `SKIP`, `MENU` |
+| Summit reached | `MENU` (the summit postcard has its own **Drive again** button) |
+| Settings open | none: the controls hide and release everything |
+
+In portrait (`size.y > size.x`) the game draws "Rotate your phone for the wider valley view" over the screen. A test checks
+that every zone fits inside both a 1280×720 and a 720×1280 screen.
 
 ### How the joystick works
 
-Each finger has an index. The script remembers which finger owns the stick (`stick_finger`) and which owns each button
-(`fingers`). That is what lets you steer with one thumb and tap `4WD` with another.
+Each finger has an **index**, a number the engine gives that touch and keeps until the finger lifts. The script remembers which
+finger owns the stick (`stick_finger`) and which finger owns each button (the `fingers` dictionary, index to action). That is
+what lets you steer with one thumb and tap `4WD` with another.
+
+**Pressing.** `_input()` checks each available zone. A touch that lands in the joystick's rectangle calls
+`activate(index, "joystick", position)`. If no finger owns the stick yet, that finger becomes `stick_finger`. A second finger
+landing on the stick is ignored.
+
+**Dragging.** While the owner moves, every `InputEventScreenDrag` with the same index calls `update_stick()`:
 
 ```gdscript
 func update_stick(point: Vector2) -> void:
@@ -207,33 +267,104 @@ func update_stick(point: Vector2) -> void:
 		else: Input.action_release(action)
 ```
 
-1. The thumb's offset from the stick centre becomes a vector, capped at length 1.
-2. A **dead zone** of 12% ignores tiny movements, and the rest is rescaled to 0 to 1.
-3. Up is `accelerate`, down is `brake`, left and right are `steer_left` and `steer_right`, each with an **analog strength**.
-   The game already read `Input.get_axis("brake","accelerate")`, so partial pushes give partial throttle.
-4. Lifting the finger calls `release_stick()`, which releases all four actions.
+1. **Offset.** The thumb's distance from the stick centre is divided by 82 px (at `unit` 1), then capped at length 1. Pulling
+   further than 82 px gives full deflection, and the thumb can wander outside the circle without the stick breaking.
+2. **Dead zone.** A length under 0.12 counts as zero, and the rest is rescaled to 0 to 1. A resting thumb does not creep the car.
+3. **Four actions at once.** Up is `accelerate`, down is `brake`, left and right are `steer_left` and `steer_right`. Pushing
+   up-left presses two actions together, each with its own **analog strength** (the second argument of
+   `Input.action_press`). The game already read `Input.get_axis("brake","accelerate")`, so a half push gives half throttle.
+4. **Release a single action** when its value drops to zero, so sliding from left to right switches steering cleanly.
+5. **Lift.** The touch-up event with the stick's index calls `release_stick()`, which clears `stick_finger`, centres the knob
+   and releases all four actions.
+
+The knob is drawn 78 px from the centre at full deflection, inside a 108 px ring, and turns amber while a finger holds it.
+The word `DRIVE` sits under the ring.
+
+### How the buttons work
+
+Buttons fall into three kinds, handled in `activate()`:
+
+| Kind | Buttons | Behaviour |
+| --- | --- | --- |
+| **Toggle** | `2WD`/`4WD`, `P` | Acts once on touch-down, then waits for the next tap. The finger is remembered so the button stays lit until it lifts |
+| **One-shot** | `CAM`, `VIEW`, `MENU`, `SKIP`, `RECOVER` | Calls the same function the key calls, once per tap |
+| **Hold** | the joystick actions | Presses an input action and releases it on lift |
+
+Details that were worth getting right:
+
+- `CAM` and `VIEW` do not call new code. They build an `InputEventAction` for `recenter` or `enjoy_view` and pass it to
+  the game's `_unhandled_input()`, exactly what the `V` and `E` keys would do.
+- `RECOVER` respects the game's one-second `recovery_cooldown`, so tapping it repeatedly cannot teleport the car in a loop.
+- `MENU` calls `release_all()` before it opens the settings, so a car does not keep driving behind the panel.
+- A button is drawn in the pressed colour when its finger is down, **or** when the state it controls is on. That is why `P`
+  and `4WD` stay amber after the finger leaves.
+- The `P` handbrake is latched by the touch-down event. The test sends press and release within one frame and still expects
+  the brake to engage, which is what a fast tap does on a phone.
 
 ### Making touches safe
 
-- `_input()` handles `InputEventScreenTouch` and `InputEventScreenDrag`. A touch inside a zone is claimed and marked handled.
-  A touch **outside every zone is left alone**, and the game uses it to orbit the camera (`InputEventScreenDrag` changes the
-  camera yaw and pitch).
-- Buttons that toggle (`4WD`, handbrake) act once on press. Hold-style actions press an input action and release it on lift.
-- The controls release everything when settings open, a panorama starts, the run ends, the app loses focus, or the node
-  leaves the tree. This stops a car that keeps driving because a finger lifted while the phone was busy.
-- Mouse look and pointer-lock capture are skipped in mobile mode, so a touch is never read twice.
+A touch controller fails in the same few ways, usually "the car keeps driving". Each rule below prevents one:
+
+- **Claim and pass on.** A touch inside a zone is claimed with `set_input_as_handled()`. A touch **outside every zone is left
+  alone**, and the game uses its `InputEventScreenDrag` to change the camera yaw and pitch (`yaw -= relative.x * 0.003`, pitch
+  clamped between 0.08 and 0.85 rad). Dragging also turns off `camera_follow`, which is why `CAM` exists.
+- **Drags stay with their owner.** A drag whose index belongs to the stick or a button is consumed, so a thumb that slides off
+  the joystick does not suddenly start spinning the camera.
+- **Release on state changes.** `_process()` calls `release_all()` when settings are open, a panorama starts, or the run ends.
+- **Release on lost focus.** `NOTIFICATION_APPLICATION_FOCUS_OUT` calls `release_all()`, which covers a notification pulling
+  down, an app switch or a call, where the browser never delivers the touch-up.
+- **Release on exit.** `_exit_tree()` also calls `release_all()`, so freeing the node (or restarting) cannot leave a pedal pressed.
+- **Reference counting.** `release_finger()` only releases an input action if no *other* finger still holds the same action.
+- **Hide when closed.** `visible = not game.settings_panel.visible`, and `_input()` returns early while settings are open, so
+  the menu receives its own touches.
+
+### Tuning knobs
+
+If the feel is wrong on your own game, these are the numbers to change, all in `touch_controls.gd`:
+
+| Number | Now | Effect |
+| --- | --- | --- |
+| `82.0 * unit` in `update_stick` | 82 px | Smaller = a short throw reaches full power |
+| `0.12` dead zone | 12% | Larger = steadier at rest, less fine control |
+| `b = 108.0 * unit` | 108 px | Button size. Keep it above about 9 mm on a phone (roughly 44 px CSS) |
+| `0.003` / `0.002` in `expedition_game.gd` | rad per px | Camera drag sensitivity for yaw and pitch |
+| `settings["render_scale"]` | 0.85 | Phones draw at 85% resolution to hold frame rate |
 
 ### Test it without a phone
 
-`tests/touch_controls_test.gd` creates the controls and feeds them synthetic events:
+`tests/touch_controls_test.gd` loads the real `main.tscn`, adds the controls and feeds them synthetic `InputEventScreenTouch`
+events with chosen finger indexes:
 
 ```sh
 godot --headless --path . --script tests/touch_controls_test.gd
 ```
 
-It checks that `SKIP` dismisses the opening, that the joystick steers and accelerates at once and really moves the car,
-that tapping `4WD` with a second finger does not cancel the stick, that pulling back brakes, and that releasing the stick
-releases every action. This is the logic check. Try the real thing on a phone before you tell players it works.
+It checks that:
+
+1. `SKIP` dismisses the opening panorama.
+2. The joystick steers and accelerates at once, and the car really moves (velocity above 0.3 m/s).
+3. Tapping `4WD` with a **second finger** engages 4WD and does not cancel the stick.
+4. Pulling back brakes and does not accelerate.
+5. Releasing the stick releases every driving action.
+6. A press and release inside one frame still latches the handbrake.
+7. Opening the menu releases held pedals.
+8. Dragging scenery orbits the camera, and `CAM` restores following.
+9. Every button fits on screen in landscape and portrait.
+
+The output ends with `Mobile multitouch tests: 0 failures`, and the process exits 1 if any check fails, so it works in CI.
+This is the logic check. It cannot tell you whether the buttons feel too small or too close to your thumb, which is why this
+tutorial marks phone controls as **not verified** until someone records a run on a real device.
+
+### A phone checklist
+
+Before you tell players it works, try these on one or two real phones:
+
+1. Load the hosted link in landscape. The buttons should not overlap the HUD or the radio caption.
+2. Steer with one thumb while you tap `4WD` and `P` with the other.
+3. Drag the scenery to look around, then tap `CAM`.
+4. Pull down the notification shade mid-drive, then return. The car should not keep accelerating.
+5. Open `MENU`, change a setting and close it.
+6. Rotate to portrait and back.
 
 ## 6. Check the published build
 

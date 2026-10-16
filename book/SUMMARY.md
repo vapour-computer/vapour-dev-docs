@@ -15,7 +15,7 @@
 * [Unity: a 2D platformer to WebGL](tutorials/unity.md)
 * [Profile your game locally](tutorials/profile-locally.md)
 * [Make your web build fast](tutorials/fast-web-builds.md)
-* [Summit Run: a Godot driving game](tutorials/ladakh-hills.md)
+* [Ladakh Hills: a Godot driving game](tutorials/ladakh-hills.md)
 
 ## Templates
 

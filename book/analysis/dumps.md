@@ -25,6 +25,10 @@ metrics and (optionally) the full retained trace:
 For a smaller metrics-only output, omit `trace` (`/api/report?trace=0` or
 `vapour-profiler report --no-trace`).
 
+For `vapour test`, frame/FPS signals in this report come from the injected FPS
+overlay (`/__vapour/fps.js`) which sends periodic frame records during the
+session.
+
 The schema is
 [`docs/schema/vp-report-v1.schema.json`](https://github.com/vapour-computer/vapour-profiler/blob/main/docs/schema/vp-report-v1.schema.json),
 and field details are in

@@ -189,7 +189,7 @@ Current limits (source values):
 - Store tagline: 140 characters
 - Tags: max 5, each 1–24 characters
 
-Zip scan and signing (preview, CLI v0.2):
+Zip scan and signing (CLI v0.1.6; upload gate on staging, not a production guarantee):
 - `vapour scan <zip|dir>` (also `--dir`, `--json`) checks a build locally; exit 1 on any error finding. It writes no attestation.
 - `vapour verify <zip> [--attestation <file>] [--json]` checks a zip against its attestation locally.
 - `vapour publish` (including `--dry-run`) scans, signs and locally verifies the exact ZIP; it writes `.vapour/build.zip.attestation.json`. There is no flag to skip verification. `--experimental-chunks` supports dry runs but cannot upload without an attestation.

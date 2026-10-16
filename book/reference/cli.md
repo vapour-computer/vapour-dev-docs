@@ -39,8 +39,8 @@ Global flags: `--api <base-url>`, `-v, --version`, `-h, --help`. Run
 | `vapour controller init` | `--dir`, `--mode keyboard-map\|dedicated\|action-map`, `--preset default\|shooter\|dpad-only`, `--force`. Writes a starter `[controller]` and backs up `vapour.toml` first when replacing |
 | `vapour controller check` | `--dir`. Validates `[controller]` and lists each control |
 | `vapour controller preview` | `--dir`, `--html`, `--out <file>` (default `controller-preview.html`). ASCII layout, or an HTML page with `--html` |
-| `vapour scan` | Path or `--dir <game-dir>` (default `build.dir`), `--json`. Static zip scan without uploading; exits 1 on any error finding. Writes no attestation. Preview, not yet released (CLI v0.2). See [.zip verification](../games/zip-verification.md) |
-| `vapour verify` | `<zip>`, `--attestation <file>`, `--dir <game-dir>`, `--json`. With `--remote --version <semver>` (needs a login) also compares the server's recorded SHA-256 and status for that version; exits 1 on a mismatch, a bad signature or a server status other than `verified`. Preview, not yet released (CLI v0.2). See [.zip verification](../games/zip-verification.md) |
+| `vapour scan` | Path or `--dir <game-dir>` (default `build.dir`), `--json`. Static zip scan without uploading; exits 1 on any error finding. Writes no attestation. Available in CLI v0.1.6. See [.zip verification](../games/zip-verification.md) |
+| `vapour verify` | `<zip>`, `--attestation <file>`, `--dir <game-dir>`, `--json`. With `--remote --version <semver>` (needs a login) also compares the server's recorded SHA-256 and status for that version; exits 1 on a mismatch, a bad signature or a server status other than `verified`. Available in CLI v0.1.6. See [.zip verification](../games/zip-verification.md) |
 
 ### Publish
 

@@ -1,6 +1,6 @@
 # What is available today
 
-A snapshot of what you can use, written on **14 October 2026** and updated on **16 October 2026** for the tutorials. Preview items are labelled; a merge or a
+A snapshot of what you can use, written on **14 October 2026** and updated on **17 October 2026** for the CLI verification gate. Preview items are labelled; a merge or a
 source preview is not a deployment.
 
 ## Availability
@@ -10,14 +10,14 @@ source preview is not a deployment.
 | Standalone profiler (`vapour-profiler`) | Public, early | `probe-test`, the BPF build pipeline, the lifecycle test harness, the `.vpt` v1 trace specification |
 | Local performance dashboard | Implemented maintainer checkout; not yet a published release | `dashboard`, authenticated loopback API, CPU/RSS/PSS capture, dump viewer, flamegraphs, offline/Claude reports and comparisons |
 | Browser telemetry | Staging-only preview | Metrics, overlay, `.vpt` export and offline or direct-Claude analysis through an explicit integration API. Not wired into the player yet |
-| Publishing CLI (`vapour-cli`) | **Released** (v0.1.1) | Install with `curl` or `go install`; see [installation](getting-started/prerequisites.md). `login`, `logout`, `whoami`, `create`, `template`, `build`, `perf`, `test`, `publish`, `store check`/`push`, `controller`, `llm`, `update` and `completion`. See the [command reference](reference/cli.md) |
+| Publishing CLI (`vapour-cli`) | **Released** (v0.1.6) | Install with `curl` or `go install`; see [installation](getting-started/prerequisites.md). Includes signed publish, `scan` and `verify`. See the [command reference](reference/cli.md) |
 | Per-asset load cost (`asset` records, dashboard panel, `/api/assets`) | Preview: merged to the profiler main branch, not yet released | The format, analyzer ranking and dashboard panel. **No producer emits `asset` records yet**, so a live capture shows none. See [Find expensive assets](analysis/assets.md) |
 | Starter templates (`vapour template`) | **Released** in CLI v0.1.1. The three template repos are public in the `vapour-computer` org | Clones a skeleton repo and sets up `vapour.toml` and `store/`. The skeletons contain no engine project yet, so a build still needs one added |
 | Local testing (`vapour test`) | **Released** in CLI v0.1.1 | A local web server for your build, an FPS overlay, and (Linux) the profiler launched on a private browser profile. See [Profile locally](tutorials/profile-locally.md) |
 | Touch controls (`vapour controller`, `[controller]`) | **Released** in CLI v0.1.1 | Layout, validation and preview in the CLI. The player-side overlay is a preview we have not tested on a device |
 | Engine builds (`vapour build`, `[build]` command/boot/split) | **Released** in CLI v0.1.1 | Godot, Unity and Bevy exporters, custom commands, boot-file metadata |
 | Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. The CLI it needs is now released |
-| Zip scan and signing (`vapour scan`, `vapour verify`, signed publish) | Preview, not yet released (CLI v0.2) | Local scan, signed attestation, async server check recorded as `pending`/`verified`/`rejected`/`unverified`. See [.zip verification](games/zip-verification.md) |
+| Zip scan and signing (`vapour scan`, `vapour verify`, signed publish) | CLI v0.1.6 released; mandatory attestation gate deployed to staging | Local scan and verification before upload; staging API rejects missing, forged or mismatched attestations before storage. Independent archive scan remains asynchronous. See [.zip verification](games/zip-verification.md) |
 | Version review and approval | Preview, not yet deployed | Every version waits for an admin review before it is playable. See [Review and approval](games/review-and-approval.md) |
 | Vapour platform (hosted) | Staging | Accounts, tokens, store pages, media, versions, publishing and play on the staging site. Production is not open |
 

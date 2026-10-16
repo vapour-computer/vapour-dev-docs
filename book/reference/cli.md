@@ -28,6 +28,10 @@ then `https://api.vapour.ink`. The default string is a source default, not a
 deployment/availability guarantee. Token precedence is `VAPOUR_TOKEN`, then the
 saved credential. Explicitly select the target for staging and local work.
 
+Outside CI, the CLI checks GitHub releases at most once per 24 hours and prints
+`vapour X.Y.Z is available (you have A.B.C). Run: vapour update` when newer.
+Set `VAPOUR_NO_UPDATE_CHECK=1` to opt out.
+
 `publish --dry-run` validates and packs without authenticating, registering or
 uploading. It checks the store page unless `--skip-store` is supplied. `--version`
 and release notes are still required in dry run.

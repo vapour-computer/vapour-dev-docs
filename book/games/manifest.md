@@ -221,7 +221,7 @@ These are the messages the CLI prints, with the fix.
 ## Overrides
 
 ```sh
-vapour publish --dir ./my-game --version 0.2.0
+vapour publish --dir ./my-game --version 0.2.0 --notes "Release 0.2.0"
 ```
 
 `--version` changes that publication only. It normally does not rewrite your manifest, but on the **first**

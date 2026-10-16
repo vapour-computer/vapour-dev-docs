@@ -37,7 +37,7 @@ the generic path, not additional audited Vapour integrations or CLI flags.
 1. Export to a new clean directory using a browser target.
 2. Verify a root `index.html` and every referenced asset.
 3. Set `engine = "other"` and `build.dir` to that export directory.
-4. Run `vapour publish --dry-run` with the implemented CLI.
+4. Run `vapour publish --dry-run --version 0.1.0 --notes "Dry run"` with the implemented CLI.
 5. Publish to the intended test environment and play the hosted build.
 6. Verify graphics, input, audio, workers, storage and external network requests.
 

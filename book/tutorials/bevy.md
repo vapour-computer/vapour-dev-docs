@@ -15,7 +15,7 @@ branch `vapour-tutorial`. It is a fork of [`NiklasEi/bevy_game_template`](https:
 | The web bundle builds | **Verified** on GitHub Actions: the `vapour-check` workflow passes. The bundle is 35 MB |
 | `vapour controller check` accepts the layout | **Verified** |
 | `vapour test` serves that bundle with the FPS overlay | **Verified.** We downloaded the exact bundle CI built and ran it (screenshot below) |
-| `vapour publish --dry-run` packs it | **Verified**: 9.5 MiB |
+| `vapour publish --dry-run --version 0.1.0 --notes "Dry run"` packs it | **Verified**: 9.5 MiB |
 | The profiler, and `vapour build` on this project | **Not run.** We could not install Trunk locally (see [the Trunk trap](#a-trap-we-hit-installing-trunk)), and `vapour build` calls it |
 | The stick working on a real phone | **Not verified.** Preview feature, not tested on a device |
 | Publishing to Vapour | **Not run.** Needs your token and a released `vapour-ci` |
@@ -193,7 +193,7 @@ run `trunk build --release --public-url ./ --dist dist`, check `dist/index.html`
 ## 7. Check the size
 
 ```text
-$ vapour publish --dry-run --skip-store
+$ vapour publish --dry-run --version 0.1.0 --notes "Dry run" --skip-store
 Packed dist (9.5 MiB) as version 0.1.0
 Dry run: nothing uploaded.
 ```

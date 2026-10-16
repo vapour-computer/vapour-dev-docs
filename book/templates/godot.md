@@ -61,8 +61,8 @@ Your game opens in a browser with a live speed counter. See [Understand your gam
 ## 6. Publish
 
 ```sh
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 The first command tells you the size and checks everything. The current upload limit is **512 MiB**, and a Godot game's data file is usually the biggest part.

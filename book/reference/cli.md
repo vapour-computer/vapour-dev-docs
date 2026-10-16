@@ -11,7 +11,7 @@ Global options: `--api <base-url>`, `--version`, and normal `--help`.
 | `vapour whoami` | Queries the selected API and prints identity/role/API base |
 | `vapour create <name>` | `--engine godot\|unity\|bevy\|other`, `--from <git-url>`, `--offline` |
 | `vapour template <engine> <name>` | **Preview: on the CLI main branch, not yet released.** `--org <name>` (default `vapour-computer`), `--offline`. Engines: `godot`, `bevy`, `unity`. Clones `vapour-template-<engine>`, removes `.git`, then does what `create` does. The templates are skeletons: see [Create or import a project](../templates/overview.md) |
-| `vapour publish` | `--dir <game-dir>`, `--version <value>`, `--notes <markdown>`, `--notes-file <path>`, `--skip-store`, `--dry-run`; publishes each version once |
+| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`, plus `--skip-store`, `--dry-run`; publishes each version once |
 | `vapour store check` | `--dir <game-dir>`; validates page JSON, Markdown and media without uploading |
 | `vapour store push` | `--dir <game-dir>`; updates the store page without publishing a build version |
 | `vapour build` | `--dir <game-dir>`; runs the engine's web exporter or your `build.command`, checks `index.html`, writes `.vapour/build.json`. See [`[build]`](../games/manifest.md#build) |
@@ -27,8 +27,8 @@ deployment/availability guarantee. Token precedence is `VAPOUR_TOKEN`, then the
 saved credential. Explicitly select the target for staging and local work.
 
 `publish --dry-run` validates and packs without authenticating, registering or
-uploading. It checks the store page unless `--skip-store` is supplied. Release
-notes come from `--notes-file`, then `--notes`, then `store.notes` in the manifest.
+uploading. It checks the store page unless `--skip-store` is supplied. `--version`
+and release notes are still required in dry run.
 
 No currently implemented Go command lists/deletes projects, starts a profiler or
 registers a `vapour://` handler. Use the [API reference](api.md) for project

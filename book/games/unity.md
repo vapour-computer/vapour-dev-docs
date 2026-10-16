@@ -16,8 +16,8 @@ versions use Build Settings.
 4. Confirm that `index.html` and the generated `Build/` assets are present.
 
 ```sh
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 These commands require the [source-preview CLI](../status.md). Do not assume the

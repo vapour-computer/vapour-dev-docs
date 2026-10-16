@@ -25,8 +25,8 @@ Run from the Godot project root after configuring the `Web` preset:
 ```sh
 mkdir -p build/web
 godot --headless --export-release "Web" build/web/index.html
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 The publishing commands require the [source-preview CLI](../status.md). If CI

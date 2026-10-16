@@ -19,7 +19,7 @@ vapour store check
 5. Run the dry run:
 
 ```sh
-vapour publish --dry-run
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
 ```
 
 The CLI validates the manifest, store text, layout and media, packs a directory
@@ -30,13 +30,13 @@ not load the game in a browser, test ownership, or run all server-side checks.
 ## Upload
 
 ```sh
-vapour publish --version 0.2.0
+vapour publish --version 0.2.0 --notes "Release 0.2.0"
 ```
 
 For a different game directory:
 
 ```sh
-vapour publish --dir ./games/my-game --version 0.2.0
+vapour publish --dir ./games/my-game --version 0.2.0 --notes "Release 0.2.0"
 ```
 
 If the project has no ID, the CLI registers it first and saves the assigned ID.
@@ -51,19 +51,18 @@ Each version value can be published only once. Before the next release, change
 `project.version` in `vapour.toml` or override it for one command:
 
 ```sh
-vapour publish --version 0.2.1
+vapour publish --version 0.2.1 --notes "Release 0.2.1"
 ```
 
 Add Markdown release notes inline or from a file:
 
 ```sh
-vapour publish --notes "Added gamepad controls"
-vapour publish --notes-file release-notes.md
+vapour publish --version 0.2.1 --notes "Added gamepad controls"
+vapour publish --version 0.2.1 --notes-file release-notes.md
 ```
 
-`--notes-file` takes precedence over `--notes`; when neither supplies text, the
-CLI reads the file configured by `store.notes`. Release notes are limited to
-5,000 characters.
+Pass exactly one of `--notes` or `--notes-file`. The selected notes must be
+non-empty after trimming. Release notes are limited to 5,000 characters.
 
 Use `--skip-store` to publish only the build and leave the existing page as it
 is. A dry run still checks the store page unless `--skip-store` is also present.

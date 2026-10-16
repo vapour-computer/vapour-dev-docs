@@ -55,8 +55,8 @@ These are the same six steps for every engine. Your engine's page has the detail
 6. **Check, then publish.** The first command checks and packs your game without uploading anything.
 
    ```sh
-   vapour publish --dry-run
-   vapour publish
+   vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+   vapour publish --version 0.1.0 --notes "First release"
    ```
 
 Before you publish, fill in your store page: see [Create a store page](../games/store-page.md).
@@ -77,7 +77,7 @@ $ vapour template godot "Doc Check" --offline
 Cloning into 'doc-check'...
 Created Doc Check in ./doc-check
 Next: write your store text in doc-check/store/template.md and edit doc-check/store/page.json,
-export your game for Web into doc-check/build/web, then run `vapour publish` from ./doc-check
+export your game for Web into doc-check/build/web, then run `vapour publish --version 0.1.0 --notes "Doc check"` from ./doc-check
 ```
 
 and the folder it makes:

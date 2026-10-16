@@ -22,7 +22,7 @@ it is far higher. The overlay measures what the browser really does.*
 | Web export builds with Godot 4.7.2 | **Verified** locally, and on GitHub Actions (the `vapour-check` workflow passes) |
 | `vapour test` serves it with the FPS overlay | **Verified** |
 | Profiler attaches and records CPU and memory | **Verified** (screenshot below) |
-| `vapour publish --dry-run` packs it | **Verified**: 255.1 MiB, under the 512 MiB limit |
+| `vapour publish --dry-run --version 0.1.0 --notes "Dry run"` packs it | **Verified**: 255.1 MiB, under the 512 MiB limit |
 | Touch controls validate and preview | **Verified** with `vapour controller check` and `preview` |
 | Touch controls working on a real phone | **Not verified.** The player-side overlay is a preview feature we did not test on a device |
 | Publishing to Vapour | **Not run.** It needs your token and a released `vapour-ci` (see [status](../status.md)) |
@@ -323,7 +323,7 @@ To publish, add a `VAPOUR_TOKEN` secret to the repository ([create a token](../a
 ## 7. Check the size, then publish
 
 ```text
-$ vapour publish --dry-run --skip-store
+$ vapour publish --dry-run --version 0.1.0 --notes "Dry run" --skip-store
 Packed build/web (255.1 MiB) as version 0.1.0
 Dry run: nothing uploaded.
 ```
@@ -335,7 +335,7 @@ When you are ready:
 
 ```sh
 vapour login --token vpr_...
-vapour publish --notes "First tutorial build"
+vapour publish --version 0.1.0 --notes "First tutorial build"
 ```
 
 ## What you learned

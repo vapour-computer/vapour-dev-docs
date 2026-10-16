@@ -55,8 +55,8 @@ See [Understand your game's performance](../telemetry/guide.md).
 ## 5. Publish
 
 ```sh
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 Unity builds can be large. The upload limit is **512 MiB**, and `vapour build` warns you if big content should be split up.

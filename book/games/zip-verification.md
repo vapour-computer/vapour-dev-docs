@@ -21,28 +21,46 @@ being minified.
    will upload and writes a signed attestation at
    `.vapour/build.zip.attestation.json`.
 4. **Upload.** The attestation is sent with the zip as the `attestation` part
-   of the publish request.
-5. **Server check.** The server recomputes the hash of the bytes it received,
-   verifies the signature, compares the hash, and runs its own scan. On any
-   failure the upload is rejected automatically with HTTP 422 and error code
-   `zip_verification_failed`. The version number is not used up and the build
-   is never made playable.
+   of the publish request. The upload is accepted right away. Only a malformed
+   request fails immediately, with HTTP 400 and error code `invalid_upload`
+   (for example invalid attestation JSON or an attestation over 64 KiB).
+6. **Server check.** The server verifies the zip in the background: it
+   recomputes the hash of the bytes it received, verifies the signature,
+   compares the hash, and runs its own scan. It records a verification status
+   for the version: `pending` while the check is queued, then `verified`
+   or `rejected`.
 6. **Verify later.** Anyone with the zip and the attestation can check them
    offline. With `--remote`, the CLI also compares the hash with the one the
-   server recorded for that version.
-7. **Dashboard.** The "Your games" list shows a **.zip verification** column.
+   server recorded for that version and shows the server status.
+7. **Dashboard.** The "Your games" list shows a **.zip verification** column
+   beside a review badge. See [Review and approval](review-and-approval.md).
 
-Each version records a verification status: `verified`, `rejected` or
-`unverified`. `unverified` means the version was published before this feature,
-or without an attestation.
+Each version records a verification status: `pending`, `verified`, `rejected`
+or `unverified`.
+
+| Status | Meaning |
+| --- | --- |
+| `pending` | The zip check is queued or running |
+| `verified` | Signature valid, SHA-256 and size match the bytes the server received, and the server's own scan passed |
+| `rejected` | Signature, hash, size or the server's scan failed. The version is taken offline automatically and can never be approved. Fix the problem and publish a new version. |
+| `unverified` | No attestation was sent, for example by an older CLI, and the server scan passed |
+
+Rejection reasons you can see on the dashboard: `bad_signature`,
+`hash_mismatch`, `size_mismatch`, `bad_key_id`, `bad_key`,
+`unsupported_version`, `unknown_key`, `bad_attestation`, or any scan code.
+
+`unknown_key` means the signature was valid but the key was not yours: the
+first valid key a developer account uses is remembered, and a zip signed by a
+different key on the same account is rejected. If you lose your signing key,
+ask the platform team to reset the remembered key.
 
 ## What the scan checks
 
 | Code | Severity | Meaning | How to fix |
 | --- | --- | --- | --- |
 | `too_many_entries` | error | Over 5,000 files in the archive. | Reduce file count; pack data into fewer files. |
-| `zip_bomb_total` | error | Over 2 GiB unpacked in total. | Shrink the build; see [large-game delivery](large-games.md). |
-| `file_too_large` | error | One file unpacks to over 1 GiB. | Split or compress the large file. |
+| `zip_bomb_total` | error | Over 1 GiB unpacked in total. | Shrink the build; see [large-game delivery](large-games.md). |
+| `file_too_large` | error | One file unpacks to over 512 MiB. | Split or compress the large file. |
 | `zip_bomb_ratio` | error | A file of 1 MiB or more unpacks to more than 200 times its packed size. | Re-export the asset so packed and unpacked sizes are closer. |
 | `size_mismatch` | error | An entry header lies about its true size. | Re-zip the build with a current zip tool. |
 | `nested_archive` | warn | A `.zip`, `.7z`, `.rar`, `.tar` or `.tgz` inside the build. Nested archives are never expanded. | Ship the files directly instead of an archive inside the build. |
@@ -51,7 +69,7 @@ or without an attestation.
 | `path_traversal` | error | A path contains `..`, an absolute path, a drive letter, backslashes, or control characters. | Re-zip with a tool that writes clean relative paths. |
 | `path_too_long` | error | A path is over 240 characters. | Shorten folder and file names. |
 | `path_too_deep` | error | A path is over 20 folders deep. | Flatten the build output. |
-| `duplicate_path` | error | Two entries differ only in letter case. | Rename so every path differs in more than case. |
+| `duplicate_path` | error | Two names are equal ignoring letter case or extra slashes. | Rename so every path differs without ignoring case or slashes. |
 | `symlink` | error | An entry is a symlink, device or pipe. | Export a build with only regular files. |
 | `native_executable` | error | ELF, Windows PE or Mach-O program, even when renamed to `.png`. `.wasm` is allowed. | Remove the native binary; web builds ship Wasm, not native programs. |
 | `native_extension` | error | An `.exe`, `.dll`, `.so`, `.dylib`, `.msi`, `.scr`, `.bat`, `.cmd`, `.ps1`, `.vbs`, `.jar` or `.apk` file. | Remove the native file from the export. |
@@ -80,11 +98,14 @@ Exit status is 1 if any error finding exists. Example output:
 
 ```text
 $ vapour scan ./build/my-game.zip
-Scanning my-game.zip (143 entries)...
-WARN  nested_archive     cutscenes.tgz (not expanded)
-ERROR native_extension  win/redist/msvcp140.dll
-1 error, 1 warning. Fix errors before publishing.
+Scanned 143 files (12.4 MiB packed, 40.1 MiB unpacked)
+  error native_extension [win/redist/msvcp140.dll]: File has a ".dll" extension, which does not belong in a web bundle.
+  warn  nested_archive [cutscenes.tgz]: Entry looks like a nested archive; publish bundles should contain flat web files.
+error: build rejected: 1 problem(s) found in the zip. Nothing was uploaded and no version number was used. Fix them and publish again (see the docs: games/zip-verification)
 ```
+
+`scan` checks only. It does not write an attestation; only `vapour publish`
+writes `.vapour/build.zip.attestation.json`.
 
 ### vapour verify
 
@@ -100,29 +121,45 @@ vapour verify <zip> --json
 
 Without `--attestation`, the CLI looks for `<zip>` with `.attestation.json`
 appended, then `.vapour/build.zip.attestation.json`. `--remote` needs a login;
-with `--dir` and `--version <semver>` it compares the server's recorded SHA-256
-and status for that version. Exit status is 1 on any mismatch or bad signature.
-Example output:
+with `--version <semver>` it compares the server's recorded SHA-256 and status
+for that version. Exit status is 1 on any mismatch, bad signature, or server
+status other than `verified`. Example output:
+
+```text
+$ vapour verify my-game.zip
+OK: signature valid, SHA-256 9d1e…aa7b matches (key 6f0b1c2d3e4f5a6b, scan pass)
+```
 
 ```text
 $ vapour verify my-game.zip --remote --version 0.2.0
-SHA-256 9d1e...aa7b matches attestation and server record
-Signature OK (key 6f0b1c2d3e4f5a6b)
-Server status: verified
+OK: signature valid, SHA-256 9d1e…aa7b matches (key 6f0b1c2d3e4f5a6b, scan pass)
+OK: the server recorded the same hash and marked the version verified
 ```
+
+When the server status is not `verified`, `--remote` prints the status and
+exits with status 1, for example `the server marked version 0.2.0 as
+"pending"`, `as "rejected"` or `as "unverified"`. When the hash differs it
+prints `the server recorded SHA-256 … for version …, but your zip is …`.
 
 ### vapour publish
 
 `publish` runs the scan and signing automatically. There is no flag to skip the
-scan. `--dry-run` scans and signs but uploads nothing:
+scan. `--dry-run` scans and signs but uploads nothing; it writes the attestation
+exactly like a real publish:
 
 ```text
 vapour publish --dry-run --version 0.2.0 --notes "Dry run"
 ```
 
 If the scan reports errors, publish stops before authentication and no version
-number is used. See [Publish and verify a build](publish.md) for the rest of
-the publish flow.
+number is used. After the upload, publish prints that server verification is
+pending and tells you to run `vapour verify --remote --version <v> <zip>` to
+see the result. The new version is not live until an admin approves it; see
+[Review and approval](review-and-approval.md).
+
+With `--experimental-chunks`, the scan runs on the folder before upload, but no
+attestation is sent. See [Publish and verify a build](publish.md) for the rest
+of the publish flow.
 
 ## Attestation file
 
@@ -147,31 +184,38 @@ The key is created on first use at `~/.config/vapour/signing.key`, mode `0600`,
 honoring `XDG_CONFIG_HOME`. It signs every attestation your machine produces.
 
 - Never share it or commit it to a repository.
-- **Lost:** delete the file and publish again. A new key is created and
-  registered on the next publish.
+- **Lost:** do not just re-create it. The first valid key a developer account
+  uses is remembered and a zip signed by a different key is rejected with
+  `unknown_key`. Ask the platform team to reset the remembered key.
 - **Leaked:** tell the platform team.
 
 ## Dashboard
 
-The developer dashboard "Your games" list has a **.zip verification** column.
-It shows the status and the first 12 characters of the SHA-256.
+The developer dashboard "Your games" list has a **.zip verification** column,
+shown beside a review badge. It shows the status and the first 12 characters of
+the SHA-256.
 
 | Status | Meaning |
 | --- | --- |
 | `Verified` | The attestation signed the upload and the server check passed |
-| `Rejected` | The server check failed; the version is not playable |
-| `Unverified` | Published before this feature, or without an attestation |
+| `Rejected` | The server check failed; the version is taken offline automatically |
+| `Unverified` | Published without an attestation, for example by an older CLI |
+| `Pending` | The server check is queued or running |
+
+The zip check is not the whole story: every version still waits for an admin
+review before it is playable. See [Review and approval](review-and-approval.md).
 
 ## Troubleshooting
 
 | Symptom | Cause and fix |
 | --- | --- |
-| `zip_bomb_ratio` on a large texture pack | Highly compressible data misses 200:1. Re-export with a format that packs better, or split the pack so no single file misses the ratio. |
+| `zip_bomb_ratio` on a large texture pack | Very repetitive data can pack more than 200 to 1. Convert large uniform images or audio to a compressed format (WebP, Ogg) before export. |
 | `native_executable` on a renamed file | A native program renamed to `.png` is still detected by content. Remove it; detection is by header, not name. |
-| `verify` says hash mismatch | You are checking a different or modified zip than the attestation covers. Re-run `scan` to write a fresh attestation, or re-publish. |
-| Publish fails with HTTP 422, `zip_verification_failed` | The server check failed. Verify locally with `vapour verify`, rebuild, and publish again under the same plan; the version number was not used. |
-| `duplicate_path` that you cannot see | Two files differ only by letter case. This is harmless on Windows or macOS but breaks the archive check; rename one of them. |
-| Attestation missing | Run `vapour publish --dry-run` or `vapour scan`; both write the attestation for the current build. |
+| `verify` says hash mismatch | You are checking a different or modified zip than the attestation covers. Re-run `vapour publish --dry-run` to write a fresh attestation for the current build, or re-publish. |
+| `duplicate_path` that you cannot see | Two names are equal ignoring letter case or extra slashes, such as `Assets/Hit.png` and `assets/hit.png`. This is harmless on Windows or macOS but breaks the archive check; rename one of them. |
+| Attestation missing | Only `vapour publish` writes the attestation, including `--dry-run`. `vapour scan` does not write one; run `vapour publish --dry-run` to get the attestation for the current build. |
+| `unknown_key` after a publish with your usual key | The signature was valid but the key is not the one remembered for your developer account, for example after switching machines. Ask the platform team to reset the remembered key. |
+| Publish accepted, but the dashboard says `Rejected` | The server verifies the zip after the upload, not during it. The version was taken offline automatically and can never be approved. Fix the problem shown in the reason and publish a new version. |
 
 ## Limits and honesty
 

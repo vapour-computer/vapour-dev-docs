@@ -63,6 +63,7 @@
 * [Other HTML5 and Wasm frameworks](games/other-frameworks.md)
 * [Publish and verify a build](games/publish.md)
 * [.zip verification](games/zip-verification.md)
+* [Review and approval](games/review-and-approval.md)
 * [Manage, unpublish and restore games](games/manage.md)
 * [Game publishing from CI](games/ci-cd.md)
 

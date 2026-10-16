@@ -39,20 +39,24 @@ Global flags: `--api <base-url>`, `-v, --version`, `-h, --help`. Run
 | `vapour controller init` | `--dir`, `--mode keyboard-map\|dedicated\|action-map`, `--preset default\|shooter\|dpad-only`, `--force`. Writes a starter `[controller]` and backs up `vapour.toml` first when replacing |
 | `vapour controller check` | `--dir`. Validates `[controller]` and lists each control |
 | `vapour controller preview` | `--dir`, `--html`, `--out <file>` (default `controller-preview.html`). ASCII layout, or an HTML page with `--html` |
+| `vapour scan` | Path or `--dir <game-dir>` (default `build.dir`), `--json`. Static zip scan without uploading; exits 1 on any error finding. Writes no attestation. Preview, not yet released (CLI v0.2). See [.zip verification](../games/zip-verification.md) |
+| `vapour verify` | `<zip>`, `--attestation <file>`, `--dir <game-dir>`, `--json`. With `--remote --version <semver>` (needs a login) also compares the server's recorded SHA-256 and status for that version; exits 1 on a mismatch, a bad signature or a server status other than `verified`. Preview, not yet released (CLI v0.2). See [.zip verification](../games/zip-verification.md) |
 
 ### Publish
 
 | Command | Options and behavior |
 | --- | --- |
-| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`. Also `--skip-store` (build only), `--dry-run`, `--no-perf-hints` and `--experimental-chunks`. Checks everything first, then uploads the store page (text, banner, screenshots, trailer) and the web export as a new version. Each version can be published once |
+| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`. Also `--skip-store` (build only), `--dry-run`, `--no-perf-hints` and `--experimental-chunks`. Checks everything first, uploads the store page (text, banner, screenshots, trailer) and the web export as a new version, then runs a signed zip scan and sends the attestation with the upload. There is no flag to skip the scan. Each version can be published once |
 | `vapour store push` | `--dir <game-dir>`. Updates the store page without publishing a build version |
 
 `publish --dry-run` validates and packs without authenticating, registering or
-uploading. It checks the store page unless `--skip-store` is supplied. `--version`
+uploading. It checks the store page unless `--skip-store` is supplied, and it
+writes `.vapour/build.zip.attestation.json` like a real publish. `--version`
 and release notes are still required in dry run.
 
 `--experimental-chunks` uses the experimental v1 chunk protocol and needs a
-compatible server. Release notes are not sent with it. Do not use it unless the
+compatible server. Release notes are not sent with it, and neither is the
+attestation; the scan still runs on the folder. Do not use it unless the
 platform team asked you to.
 
 ### Assistants, updates and shell setup

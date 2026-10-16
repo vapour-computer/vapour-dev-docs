@@ -45,6 +45,7 @@ Pointer-lock behavior:
 - Folder publish can inject a pointer-lock helper script into uploaded `index.html` (not your source files).
 - `auto`: retry pointer lock on real mouse click.
 - `pause`: same, plus sends Escape on lock loss (pause-menu friendly).
+- Script skips touch-only interaction paths and filters short startup movement spikes after lock is regained.
 - `off`: do not inject.
 - Prebuilt `.zip` uploads are not modified.
 
@@ -170,6 +171,7 @@ CI action status:
 - Serves `build.dir` on `127.0.0.1`.
 - Injects FPS overlay at serve time only (not written into build files).
 - Sends cross-origin isolation headers for threaded wasm behavior.
+- Uses a local dev player shell with `runtime.on_quit` handling and a quit panel for `stay` mode.
 
 Profiler integration (Linux path):
 - Launches private Chromium-family session.

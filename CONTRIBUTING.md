@@ -7,6 +7,8 @@
 5. Review the diff for unsupported claims, accidental secrets and broken examples.
 6. Commit/push through the repository's normal review process.
 
+When behavior changes, update `book/llm.txt` in the same PR.
+
 Use fenced `text` blocks, not runnable shell recipes, for planned commands.
 Never publish real PATs, provider keys, Firebase ID tokens, private tfvars or
 credential-file contents. Use explicit placeholders for environment-specific

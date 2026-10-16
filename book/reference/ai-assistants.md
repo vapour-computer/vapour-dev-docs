@@ -7,6 +7,7 @@ there are two machine-readable indexes.
 | --- | --- |
 | `/llms.txt` | A short index in the [llms.txt](https://llmstxt.org) format: every page, one line each, linking to its Markdown |
 | `/llms-full.txt` | The whole handbook as **one Markdown file**, in navigation order, for a single large-context paste |
+| `/llm.txt` | A curated plain-text shipping guide used by `vapour llm` (CLI fetch + cache + fallback) |
 | `/md/<page>.md` | The Markdown source of one page, for example `/md/games/manifest.md` |
 | `/sitemap.xml` | Every page address, for crawlers |
 
@@ -22,6 +23,7 @@ Pick whichever fits your tool:
 - **A chat assistant without web access:** paste `llms-full.txt`, or only the pages for your task.
 - **A coding agent in your game's repository:** save `llms-full.txt` next to your code (for example `docs/vapour.md`) and
   reference it from your agent's instructions file.
+- **A coding assistant on your machine:** run `vapour llm` and pipe the output into your prompt/tooling.
 
 ## A prompt that works
 

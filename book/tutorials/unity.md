@@ -134,6 +134,9 @@ version = "0.1.0"
 [build]
 dir = "build/web"
 
+[runtime]
+on_quit = "store"
+
 [controller]
 mode = "keyboard-map"
 
@@ -189,6 +192,15 @@ Tip: run `vapour controller preview` to see the layout.
 
 > **Check the key name.** `Shift` is our best guess for how the player names Left Shift. If dash does not respond on
 > a phone, this is the first thing to try changing. We could not test it against the player.
+
+### Quitting and the mouse
+
+On WebGL, do not call `Application.Quit()` directly from gameplay code. Use the Vapour bridge method from the package
+(`VapourBridge.Quit()`), which signals the player runtime and lets `runtime.on_quit` choose what happens next
+(`store`, `home`, `reload`, `stay`).
+
+For mouse capture, request pointer lock from a real click in gameplay. If the browser drops lock (Esc/tab switch), the
+player shows a click-to-resume prompt. On touch-only devices, this prompt is skipped.
 
 ## 8. Build from the command line
 

@@ -40,6 +40,7 @@ threads = false
 webgpu = false
 coep = "require-corp"      # require-corp | credentialless
 entry = "index.html"       # relative HTML entry path
+on_quit = "store"          # store | home | reload | stay
 
 # Preview: phone player hints
 [mobile]
@@ -148,6 +149,7 @@ Hints for player/runtime behavior published with the build metadata.
 | `webgpu` | bool | no | Declares WebGPU requirement/intent. |
 | `coep` | string | no | `require-corp` (default) or `credentialless` (opt-in compatibility path). |
 | `entry` | string | no | Relative HTML entry path when not `index.html`. Must not be absolute or contain `..`. |
+| `on_quit` | string | no | What the player does after a game quit signal (`get_tree().quit()`, `Application.Quit()`, `AppExit`). Allowed values: `store` (default), `home`, `reload`, `stay`. URLs are not allowed. |
 
 ## `[mobile]` (Preview)
 
@@ -164,6 +166,9 @@ Phone-only player hints (coarse pointer and short-side under 600 CSS px).
 Touch controls for phones. They are **drawn by the Vapour player on top of your game** and turn finger movement into
 the keys your game already understands. Nothing is added to your build. See the
 [Godot tutorial](../tutorials/godot.md) for a worked example.
+
+On touch-only devices, the player skips the pointer-lock prompt so touch games are not
+blocked by a "Click to play" overlay.
 
 | Entry | Type | Required | Meaning |
 | --- | --- | --- | --- |
@@ -184,6 +189,19 @@ Each `[[controller.controls]]` table is one on-screen control.
 | `sensitivity` | number | `joystick` | Greater than `0`. Recommended `0.8`–`1.6`. `controller check` shows `1.0` when unset. |
 | `repeat_hz` | integer | `joystick` | How often a held key is re-sent, 1 to 240. Recommended `30`–`90`. `controller check` shows `30` when unset. A joystick is not an analogue input: its deflection becomes a key press duty cycle. |
 | `pwm_hz` | integer | `joystick` | Older name for `repeat_hz`. If you set both they must be equal. |
+
+Example `menu` button for pause/settings screens:
+
+```toml
+[[controller.controls]]
+id = "menu"
+type = "button"
+x = 0.93
+y = 0.08
+w = 0.10
+h = 0.10
+key = "Escape"
+```
 
 Run `vapour controller check` to validate and `vapour controller preview --html` to see the layout. Keep controls from
 overlapping each other: the preview makes overlaps obvious, and a thumb cannot tell two touching controls apart.
@@ -209,6 +227,7 @@ These are the messages the CLI prints, with the fix.
 | `split_warn_mib must be between 0 (default 1024) and 4096` | Pick a value in range. |
 | `runtime.coep must be require-corp or credentialless` | Use one of the two supported values. |
 | `runtime.entry must be a relative safe path` | Use a relative path such as `index.html` or `Build/MyGame.html`. |
+| `runtime.on_quit must be one of store, home, reload, stay` | Use one of the four supported values. URL redirects are not allowed. |
 | `mobile.orientation must be any, landscape or portrait` | Pick one of the supported orientation hints. |
 | `mobile.render_scale must be between 0.25 and 1.0` | Keep phone downscale within range. |
 | `mobile.max_dpr must be > 0` | Use a positive cap value. |

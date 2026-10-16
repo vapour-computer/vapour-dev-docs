@@ -74,6 +74,9 @@ version = "0.1.0"
 command = "custom"
 args = ["trunk", "build", "--release", "--public-url", "./", "--dist", "dist"]
 dir = "dist"
+
+[runtime]
+on_quit = "store"
 ```
 
 - **`engine = "bevy"`** tells Vapour how to treat the files. For example, nothing under `assets/` is marked as needed at boot.
@@ -143,6 +146,14 @@ Tip: run `vapour controller preview` to see the layout.
 > keyboard movement. If touching the on-screen stick also counts as a touch inside the game, the two inputs would fight. We
 > could not test this. If you see it, the simplest fix is a small change in the game's movement code to ignore touches
 > while the keyboard direction is non-zero.
+
+### Quitting and the mouse
+
+Bevy exits with `AppExit`. On web builds, wire that to Vapour's JS bridge (`vapour_quit()` from the template runtime
+helper) so the player receives a quit signal and applies `runtime.on_quit` (`store`, `home`, `reload`, `stay`).
+
+If your game uses pointer lock for camera look, request it from user input. The player handles click-to-resume when
+lock is dropped and suppresses first-move spikes. On touch-only devices, the pointer-lock prompt is skipped.
 
 ## 5. Run it locally
 

@@ -137,7 +137,7 @@ because `vapour-ci@v1` does not exist yet, described in [CI](#6-ci). The second 
 
 ## 4. Describe the controls in `vapour.toml`
 
-Now map the on-screen controls onto those keys. We used two sticks and three buttons:
+Now map the on-screen controls onto those keys. We used two sticks and four buttons:
 
 | Control | Type | Sends |
 | --- | --- | --- |
@@ -146,6 +146,7 @@ Now map the on-screen controls onto those keys. We used two sticks and three but
 | `jump` | button | `Space` |
 | `shoot` | button | `f` |
 | `aim` | button | `q` |
+| `menu` | button | `Escape` |
 
 ```toml
 [project]
@@ -157,6 +158,9 @@ version = "0.1.0"
 
 [build]
 dir = "build/web"
+
+[runtime]
+on_quit = "store"
 
 [controller]
 mode = "keyboard-map"
@@ -217,6 +221,15 @@ y = 0.30
 w = 0.11
 h = 0.11
 key = "q"
+
+[[controller.controls]]
+id = "menu"
+type = "button"
+x = 0.93
+y = 0.08
+w = 0.10
+h = 0.10
+key = "Escape"
 ```
 
 Every entry is explained in the [`vapour.toml` reference](../games/manifest.md).
@@ -233,6 +246,7 @@ Controller mode: keyboard-map
   jump         button   at (0.58, 0.48) size (0.13, 0.13)
   shoot        button   at (0.88, 0.46) size (0.13, 0.13)
   aim          button   at (0.74, 0.30) size (0.11, 0.11)
+  menu         button   at (0.93, 0.08) size (0.10, 0.10)
 Controller config looks good.
 Tip: run `vapour controller preview` to see the layout.
 ```
@@ -269,6 +283,70 @@ Preview (D=dpad, J=joystick, B=button)
 > **A mistake the preview caught.** Our first layout put `jump` at `y = 0.58`, and the ASCII preview showed it
 > overlapping the look stick (`JBJJ`). On a phone a thumb could not tell them apart. We moved the buttons up until no
 > two controls touched.
+
+Phone-controls changes still in review are listed here so you can track rollout status:
+
+| Item | State |
+| --- | --- |
+| Runtime script required on play pages (`/__vapour/runtime.js`) | **Current behavior** |
+| Stick hold/hysteresis and 50 ms minimum press | **Current behavior** |
+
+### Quitting and the mouse
+
+Use `get_tree().quit()` as normal. The player handles quit with `runtime.on_quit` (`store`, `home`, `reload`, `stay`).
+For this tutorial we use `store`.
+
+In the TPS sample, keep pointer lock out of `_ready()`. Capture on a real mouse click only, ignore touch-emulated
+mouse clicks, and require capture before mouse-driven shooting:
+
+```gdscript
+if input_event.is_action_pressed(&"shoot"):
+	shoot_from_touch_or_controller = _is_touch_or_controller_input(input_event)
+elif input_event.is_action_released(&"shoot"):
+	shoot_from_touch_or_controller = false
+
+if _is_real_mouse_button_press(input_event) and Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if OS.has_feature("web"):
+		ignore_next_web_mouse_motion = true
+	skip_shoot_frame = Engine.get_process_frames()
+	get_viewport().set_input_as_handled()
+	return
+
+var shoot_pressed: bool = Input.is_action_pressed("shoot")
+if not shoot_pressed:
+	shoot_from_touch_or_controller = false
+
+shooting = shoot_pressed and (Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED or shoot_from_touch_or_controller)
+if Engine.get_process_frames() == skip_shoot_frame:
+	shooting = false
+
+func _is_real_mouse_button_press(input_event: InputEvent) -> bool:
+	if not (input_event is InputEventMouseButton):
+		return false
+	var mouse_event := input_event as InputEventMouseButton
+	if not mouse_event.is_pressed():
+		return false
+	return mouse_event.device != InputEvent.DEVICE_ID_EMULATION
+
+func _is_touch_or_controller_input(input_event: InputEvent) -> bool:
+	if input_event.device == InputEvent.DEVICE_ID_EMULATION:
+		return true
+	return input_event is InputEventScreenTouch or input_event is InputEventScreenDrag or input_event is InputEventJoypadButton or input_event is InputEventJoypadMotion
+```
+
+The in-level Esc settings panel now uses its own scene (`menu/settings_panel.tscn`) instead of instancing the whole
+main menu scene.
+
+For look controls driven by stick/touch, make look frame-rate independent and clamp pitch:
+
+```gdscript
+look_yaw += look_input.x * look_speed * delta
+look_pitch = clampf(look_pitch + look_input.y * look_speed * delta, deg_to_rad(-80.0), deg_to_rad(80.0))
+```
+
+If your `.pck` is very large, expect high memory pressure and slower startup on phones. Reduce texture/audio size,
+strip unused assets, and test on a real mid-range device.
 
 ## 5. Run it locally
 

@@ -284,24 +284,59 @@ Preview (D=dpad, J=joystick, B=button)
 > overlapping the look stick (`JBJJ`). On a phone a thumb could not tell them apart. We moved the buttons up until no
 > two controls touched.
 
-For phone controls to work at all, the play page must load `/__vapour/runtime.js`. If runtime injection is disabled,
-the overlay can draw but buttons/sticks do nothing.
+Phone-controls changes still in review are listed here so you can track rollout status:
 
-The current stick behavior is hold-based: direction engages when deflection reaches about 50%, releases below about
-35% (hysteresis), and button presses are held for at least 50 ms so a tap reaches at least one game frame.
+| Item | State |
+| --- | --- |
+| Runtime script required on play pages (`/__vapour/runtime.js`) | **Coming in the next release** |
+| Stick hold/hysteresis and 50 ms minimum press | **Coming in the next release** |
 
 ### Quitting and the mouse
 
 Use `get_tree().quit()` as normal. The player handles quit with `runtime.on_quit` (`store`, `home`, `reload`, `stay`).
 For this tutorial we use `store`.
 
-In the TPS sample, keep pointer lock out of `_ready()`. Capture on first click in-level, and skip capture on touch
-devices so phones are playable:
+In the TPS sample, keep pointer lock out of `_ready()`. Capture on a real mouse click only, ignore touch-emulated
+mouse clicks, and require capture before mouse-driven shooting:
 
 ```gdscript
-if not DisplayServer.is_touchscreen_available() or OS.has_feature("pc"):
+if input_event.is_action_pressed(&"shoot"):
+	shoot_from_touch_or_controller = _is_touch_or_controller_input(input_event)
+elif input_event.is_action_released(&"shoot"):
+	shoot_from_touch_or_controller = false
+
+if _is_real_mouse_button_press(input_event) and Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if OS.has_feature("web"):
+		ignore_next_web_mouse_motion = true
+	skip_shoot_frame = Engine.get_process_frames()
+	get_viewport().set_input_as_handled()
+	return
+
+var shoot_pressed: bool = Input.is_action_pressed("shoot")
+if not shoot_pressed:
+	shoot_from_touch_or_controller = false
+
+shooting = shoot_pressed and (Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED or shoot_from_touch_or_controller)
+if Engine.get_process_frames() == skip_shoot_frame:
+	shooting = false
+
+func _is_real_mouse_button_press(input_event: InputEvent) -> bool:
+	if not (input_event is InputEventMouseButton):
+		return false
+	var mouse_event := input_event as InputEventMouseButton
+	if not mouse_event.is_pressed():
+		return false
+	return mouse_event.device != InputEvent.DEVICE_ID_EMULATION
+
+func _is_touch_or_controller_input(input_event: InputEvent) -> bool:
+	if input_event.device == InputEvent.DEVICE_ID_EMULATION:
+		return true
+	return input_event is InputEventScreenTouch or input_event is InputEventScreenDrag or input_event is InputEventJoypadButton or input_event is InputEventJoypadMotion
 ```
+
+The in-level Esc settings panel now uses its own scene (`menu/settings_panel.tscn`) instead of instancing the whole
+main menu scene.
 
 For look controls driven by stick/touch, make look frame-rate independent and clamp pitch:
 

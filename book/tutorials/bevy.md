@@ -210,4 +210,6 @@ To publish, add a `VAPOUR_TOKEN` repository secret ([create a token](../auth/tok
 - A game that already reads the keyboard needs no code change for a stick: map the stick onto the keys.
 - Never let a publish step that needs an unreleased action run on every push.
 
+For a faster `.wasm` and the WebGPU renderer, see [Make your web build fast](fast-web-builds.md#6-bevy-webgpu-and-a-faster-wasm).
+
 Next: the same flow for [Godot](godot.md) and [Unity](unity.md).

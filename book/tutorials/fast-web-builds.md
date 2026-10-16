@@ -54,6 +54,13 @@ Then check that the browser really uses your GPU:
 
 Headless screenshots of the tutorials use software rendering (SwiftShader), so their FPS numbers mean nothing.
 
+### Check your project
+
+Run `vapour perf` to get a quick performance check from your current project files.
+
+`vapour build`, `vapour test` and `vapour publish` also print perf warnings automatically. If you need clean logs,
+use `--no-perf-hints`.
+
 ## 2. Godot: turn threads on
 
 In **Project → Export… → Web**, switch **Thread Support** on. In `export_presets.cfg`:
@@ -150,8 +157,9 @@ artifact or release asset, and download it before the export step.
 - Under **Import**, use **VRAM Compressed** for large textures. Turn on **VRAM Texture Compression → For Mobile** as well
   if phones will play the game.
 - Use the export filter to leave out files the game never loads (videos, source art, test scenes).
-- Vapour serves Godot's `.wasm` and `.pck` without compression today. Unity builds that end in `.unityweb` are served with
-  their encoding. Compressing Godot files on publish is planned, not available.
+- New publishes are Brotli-compressed on upload for `.wasm`, `.js`, `.pck`, `.data` and `.json`, and served with
+  `Content-Encoding: br` (with identity fallback for clients that do not support Brotli).
+- Games published before that deploy keep their old objects. Republish to get compressed assets.
 
 ## 6. Bevy: WebGPU and a faster `.wasm`
 

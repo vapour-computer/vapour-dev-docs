@@ -287,8 +287,8 @@ Phone-controls changes still in review are listed here so you can track rollout 
 
 | Item | State |
 | --- | --- |
-| Runtime script required on play pages (`/__vapour/runtime.js`) | **Coming in the next release** |
-| Stick hold/hysteresis and 50 ms minimum press | **Coming in the next release** |
+| Runtime script required on play pages (`/__vapour/runtime.js`) | **Current behavior** |
+| Stick hold/hysteresis and 50 ms minimum press | **Current behavior** |
 
 ### Quitting and the mouse
 

@@ -38,6 +38,7 @@ browser or press Ctrl+C. Everything is cleaned up.
 When the profiler session ends, `vapour test` also saves a single JSON report to
 `.vapour/test-output/report.json` in your game folder and prints that path.
 This file contains one derived report document for the whole capture.
+Its frame/FPS data comes from the FPS overlay stream recorded during the run.
 
 If the performance page cannot start, the command says why and carries on with just the speed counter:
 

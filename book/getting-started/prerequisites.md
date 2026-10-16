@@ -76,6 +76,50 @@ the CLI checks for a new release at most once every 24 hours and prints
 `vapour X.Y.Z is available (you have A.B.C). Run: vapour update`. Set
 `VAPOUR_NO_UPDATE_CHECK=1` to turn that check off.
 
+### Uninstall
+
+First locate the executable so you remove the copy you installed, not another
+program with the same name:
+
+```sh
+command -v vapour
+command -v vapour-cli  # only if you used go install
+```
+
+If you used the install script, remove `vapour` from the directory it printed
+when installing. By default that is `/usr/local/bin` (may need `sudo`) or
+`~/.local/bin`; if you set `VAPOUR_INSTALL_DIR`, use that directory instead.
+For example, after confirming `command -v vapour` says `/usr/local/bin/vapour`:
+
+```sh
+sudo rm /usr/local/bin/vapour
+```
+
+If you used the `go install` commands above, remove both the `vapour-cli`
+executable and the `vapour` symlink you created. They are in
+`$(go env GOPATH)/bin` by default; if you set `GOBIN`, use that directory
+instead. Confirm the paths before deleting them:
+
+```sh
+rm "$(go env GOPATH)/bin/vapour" "$(go env GOPATH)/bin/vapour-cli"
+```
+
+For a manually unpacked release (including Windows), delete the `vapour`
+executable from the directory where you placed it. On Windows, use
+`Get-Command vapour` in PowerShell to find `vapour.exe`, then delete that file.
+Remove any `PATH` entry or shell completion setup you added yourself.
+Check for another copy afterward with `command -v vapour` (or
+`Get-Command vapour` on Windows).
+
+Uninstalling the executable does **not** delete saved credentials or the
+`vapour llm` cache. If you also want to remove local CLI data, run
+`vapour logout` **before** deleting the executable, or delete only the saved
+credentials file at `${XDG_CONFIG_HOME:-$HOME/.config}/vapour/credentials`
+on Linux (the equivalent user config directory on macOS or Windows).
+The optional cache lives in the user cache directory under `vapour/`.
+Deleting either does not revoke a token: revoke it in your
+[developer dashboard](../auth/tokens.md) if it must stop working.
+
 ### Check it works
 
 ```sh

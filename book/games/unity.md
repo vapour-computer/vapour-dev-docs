@@ -20,7 +20,7 @@ vapour publish --dry-run --version 0.1.0 --notes "Dry run"
 vapour publish --version 0.1.0 --notes "First release"
 ```
 
-These commands require the [source-preview CLI](../status.md). Do not assume the
+These commands require the [Vapour CLI](../getting-started/prerequisites.md). Do not assume the
 current generic file-serving API infers all engine-specific compression headers;
 verify the actual network responses or enable the export's supported fallback.
 

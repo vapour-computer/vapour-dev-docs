@@ -10,6 +10,8 @@ Status terms in this file:
 
 Vapour is a browser-game publishing flow around one per-game manifest (`vapour.toml`), a store page bundle (`store/page.json` + `store/template.md`), and a web export folder (or prebuilt zip).
 
+Install the CLI (macOS/Linux): `curl -fsSL https://raw.githubusercontent.com/vapour-computer/vapour-cli/main/install.sh | sh`. Or `go install github.com/vapour-computer/vapour-cli@latest` (Go 1.26+): that installs an executable named `vapour-cli`, so symlink or rename it to `vapour`. Windows: download the archive from https://github.com/vapour-computer/vapour-cli/releases. Update with `vapour update`. Do not tell users to clone and build the CLI.
+
 Typical flow:
 1. `vapour login --token vpr_...`
 2. `vapour create "My Game" --engine godot` (or `vapour template <engine> "My Game"`)

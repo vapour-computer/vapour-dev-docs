@@ -44,7 +44,7 @@ vapour publish --dry-run --version 0.1.0 --notes "Dry run"
 vapour publish --version 0.1.0 --notes "First release"
 ```
 
-Publishing uses the [source-preview CLI](../status.md).
+Publishing uses the [Vapour CLI](../getting-started/prerequisites.md).
 
 ## Phaser
 

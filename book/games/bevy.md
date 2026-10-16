@@ -36,7 +36,7 @@ vapour publish --version 0.1.0 --notes "First release"
 
 Set `project.engine = "bevy"` and `build.dir = "build/web"` in the manifest.
 Relative public URLs help the export load under Vapour's game-specific path.
-Publishing requires the [source-preview CLI](../status.md).
+Publishing requires the [Vapour CLI](../getting-started/prerequisites.md).
 
 ## Native versus browser profiling
 

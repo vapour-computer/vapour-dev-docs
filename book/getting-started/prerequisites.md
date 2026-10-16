@@ -5,51 +5,122 @@ installing the native profiler.
 
 | Workflow | Requirements |
 | --- | --- |
-| Build/use the publishing CLI source preview | Go 1.24+, Git, implemented CLI checkout |
+| Use the publishing CLI | macOS, Linux or Windows. Go 1.26+ only for `go install` |
 | Export a game | Your engine plus its matching Web export tools/templates |
 | Work on the web app/browser package | Node.js 24+ for the new scripts, npm, Git |
 | Build native profiler | Linux x86_64, Rust stable, clang BPF target, C compiler, pkg-config, libelf/zlib development files |
 | Run native BPF proof | Linux 5.15+, kernel BTF, bpftool and explicitly authorized BPF/perf privileges |
 
-## Publishing CLI from an implemented checkout
+## Install the Vapour CLI
 
-The source preview is not yet a public release; see [availability](../status.md).
-From the supplied `vapour-cli` directory:
+Install the released CLI. You do not need to clone or build the repository.
 
-```sh
-go test ./...
-mkdir -p "$HOME/.local/bin"
-go build -o "$HOME/.local/bin/vapour" .
-export PATH="$HOME/.local/bin:$PATH"
-vapour --help
-```
-
-Building with `-o .../vapour` gives the documented executable name. Do not assume
-that `go install .../vapour-cli@latest` installs an executable named `vapour` or
-contains unpublished commands. Once releases exist, use their platform-specific
-archive and published checksum.
-
-## Install and update from releases
-
-Install the latest published CLI release on macOS/Linux:
+### Option 1: install script (macOS and Linux)
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/vapour-computer/vapour-cli/main/install.sh | sh
+vapour --version
 ```
 
-The installer verifies checksums and writes `vapour` to `/usr/local/bin` or
-`~/.local/bin`. Pin a release with `VAPOUR_VERSION=vX.Y.Z` or choose install
-directory with `VAPOUR_INSTALL_DIR`.
+The script supports amd64 and arm64. It downloads the latest release from GitHub,
+verifies its checksum and installs `vapour` to `/usr/local/bin`, or to `~/.local/bin`
+when `/usr/local/bin` is not writable. Make sure that directory is on your `PATH`.
 
-To update an existing installation:
+| Variable | Effect |
+| --- | --- |
+| `VAPOUR_VERSION=vX.Y.Z` | Install a specific release instead of the latest |
+| `VAPOUR_INSTALL_DIR=/path` | Install into this directory |
 
 ```sh
-vapour update
-vapour update --check
+curl -fsSL https://raw.githubusercontent.com/vapour-computer/vapour-cli/main/install.sh | VAPOUR_VERSION=v0.1.1 sh
 ```
 
-Outside CI, the CLI checks for new releases at most once per 24 hours and prints
-an update notice. Set `VAPOUR_NO_UPDATE_CHECK=1` to disable that check.
+### Option 2: `go install`
+
+Needs Go 1.26 or newer.
+
+```sh
+go install github.com/vapour-computer/vapour-cli@latest
+```
+
+Go names the executable after the module, so this installs **`vapour-cli`**, not
+`vapour`, into `$(go env GOPATH)/bin` (usually `~/go/bin`). Add that directory to
+your `PATH`, then add the short name the guides use:
+
+```sh
+export PATH="$(go env GOPATH)/bin:$PATH"
+ln -sf "$(go env GOPATH)/bin/vapour-cli" "$(go env GOPATH)/bin/vapour"
+vapour --version
+```
+
+A `go install` build reports its version as `dev`. Use the install script or a
+release archive if you need a release number in `vapour --version`.
+
+### Option 3: release archive (including Windows)
+
+Download the archive for your system from the
+[releases page](https://github.com/vapour-computer/vapour-cli/releases). Archives
+exist for macOS, Linux and Windows on amd64 and arm64, with a `checksums.txt` file.
+Verify the checksum, unpack the archive and put `vapour` on your `PATH`.
+
+### Update
+
+```sh
+vapour update            # install the latest release over the running binary
+vapour update --check    # only report whether a newer release exists
+vapour update --version v0.1.1
+```
+
+`vapour update` verifies the checksum and is not available on Windows. Outside CI,
+the CLI checks for a new release at most once every 24 hours and prints
+`vapour X.Y.Z is available (you have A.B.C). Run: vapour update`. Set
+`VAPOUR_NO_UPDATE_CHECK=1` to turn that check off.
+
+### Check it works
+
+```sh
+vapour --help
+vapour login --token YOUR_TOKEN
+vapour whoami
+```
+
+Create the token in your [developer dashboard](../auth/tokens.md). See the
+[CLI command reference](../reference/cli.md) for every command.
+
+### Missing commands? You have an old build
+
+`vapour --help` in v0.1.1 lists `build`, `completion`, `controller`, `create`, `llm`,
+`login`, `logout`, `perf`, `publish`, `store`, `template`, `test`, `update` and
+`whoami`. If `llm`, `test`, `perf`, `template`, `controller` or `update` are missing,
+you have the older v0.1.0 binary. Reinstall and check the version:
+
+```sh
+go install github.com/vapour-computer/vapour-cli@v0.1.1
+# or: the curl install script above
+```
+
+Some old binaries cannot run `vapour update`, so reinstall instead.
+
+### Print the guide for an AI assistant
+
+`vapour llm` prints the whole curated Vapour developer guide (the same text as
+[`llm.txt`](https://vapour-dev-docs.pages.dev/llm.txt)) to standard output. Pipe it
+into your assistant, a file or your clipboard:
+
+```sh
+vapour llm                      # print the guide
+vapour llm > vapour-guide.md    # save it
+vapour llm --refresh            # fetch the newest copy
+vapour llm --offline            # use the cache or the copy built into the CLI
+```
+
+It works without logging in. See [Use this handbook with an AI assistant](../reference/ai-assistants.md).
+
+Optional shell completion (`bash`, `zsh`, `fish` or `powershell`):
+
+```sh
+vapour completion zsh --help
+```
 
 ## Browser package checkout
 

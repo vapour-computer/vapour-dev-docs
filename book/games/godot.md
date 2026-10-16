@@ -31,7 +31,7 @@ vapour publish --dry-run --version 0.1.0 --notes "Dry run"
 vapour publish --version 0.1.0 --notes "First release"
 ```
 
-The publishing commands require the [source-preview CLI](../status.md). If CI
+The publishing commands require the [Vapour CLI](../getting-started/prerequisites.md). If CI
 cannot locate the preset, commit the export preset file. If templates cannot be
 found, install the exact editor version's templates in the runner user's template
 directory, rather than mixing editor/template versions.

@@ -1,27 +1,83 @@
 # CLI command reference
 
-## Publishing CLI — implemented in source preview
+## Publishing CLI
 
-Global options: `--api <base-url>`, `--version`, and normal `--help`.
+Released in `vapour-cli` v0.1.1. Install it with the
+[install script or `go install`](../getting-started/prerequisites.md); you do not
+need to build it from a checkout. `go install` names the executable `vapour-cli`.
+
+```text
+vapour [command] [flags]
+```
+
+Global flags: `--api <base-url>`, `-v, --version`, `-h, --help`. Run
+`vapour <command> --help` for the text that matches your installed version.
+
+### Account
 
 | Command | Options and behavior |
 | --- | --- |
-| `vapour login` | `--token <PAT>` or `--token -` for stdin; `--no-verify` optionally skips `GET /me` |
-| `vapour logout` | Removes the local saved credential file; does not revoke a PAT or unset env vars |
-| `vapour whoami` | Queries the selected API and prints identity/role/API base |
-| `vapour create <name>` | `--engine godot\|unity\|bevy\|other`, `--from <git-url>`, `--offline` |
-| `vapour template <engine> <name>` | **Preview: on the CLI main branch, not yet released.** `--org <name>` (default `vapour-computer`), `--offline`. Engines: `godot`, `bevy`, `unity`. Clones `vapour-template-<engine>`, removes `.git`, then does what `create` does. The templates are skeletons: see [Create or import a project](../templates/overview.md) |
-| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`, plus `--skip-store`, `--dry-run`, `--no-perf-hints`; publishes each version once |
-| `vapour store check` | `--dir <game-dir>`; validates page JSON, Markdown and media without uploading |
-| `vapour store push` | `--dir <game-dir>`; updates the store page without publishing a build version |
-| `vapour build` | `--dir <game-dir>`, `--no-perf-hints`; runs the engine's web exporter or your `build.command`, checks `index.html`, writes `.vapour/build.json`. See [`[build]`](../games/manifest.md#build) |
-| `vapour perf` | `--dir <game-dir>`, optional `--engine godot\|unity\|bevy`; prints performance guidance and file/project findings |
-| `vapour test` | **Preview, in an open pull request.** `--dir`, `--port`, `--no-telemetry`, `--no-profile`, `--no-open`, `--profiler <path>`, `--no-perf-hints`. Serves your build on `127.0.0.1` with an FPS overlay and, on Linux, opens the profiler. See [Profile locally](../tutorials/profile-locally.md) |
-| `vapour llm` | `--refresh`, `--offline`, `--url <url>`; prints the curated assistant guide fetched from `/llm.txt` with cache and embedded fallback |
-| `vapour controller init` | **Preview, not yet released.** `--dir`, `--mode keyboard-map\|dedicated\|action-map`, `--preset default\|shooter\|dpad-only`, `--force`. Writes a starter `[controller]` (backs up `vapour.toml` first when replacing) |
-| `vapour controller check` | **Preview.** `--dir`. Validates `[controller]` and lists each control |
-| `vapour controller preview` | **Preview.** `--dir`, `--html`, `--out <file>`. ASCII layout, or an HTML page with `--html` |
-| `vapour completion` | Generates shell-completion scripts; use `completion --help` for supported shells |
+| `vapour login` | `--token <PAT>` or `--token -` to read the token from stdin; `--no-verify` saves it without calling `GET /me` |
+| `vapour logout` | Removes the saved credential file. It does not revoke the token or unset environment variables |
+| `vapour whoami` | Asks the selected API who the saved token belongs to and prints identity, role and API base |
+
+### Start a project
+
+| Command | Options and behavior |
+| --- | --- |
+| `vapour create <name>` | `--engine godot\|unity\|bevy\|other` (default `godot`), `--platform desktop\|native-mobile\|port` (default `desktop`), `--from <git-url>` to clone a sample game, `--offline` to scaffold only. Writes `vapour.toml` and `store/`. Without `--offline` the project is registered with the API |
+| `vapour template <engine> <name>` | Engines: `godot`, `bevy`, `unity`. `--org <name>` (default `vapour-computer`), `--offline`. Clones `vapour-template-<engine>`, removes `.git`, then does what `create` does. The templates are skeletons: see [Create or import a project](../templates/overview.md) |
+
+### Build, check and test
+
+| Command | Options and behavior |
+| --- | --- |
+| `vapour build` | `--dir <game-dir>`, `--no-perf-hints`. Runs the engine's web exporter for Godot, Unity or Bevy, or your `build.command`, checks for `index.html` and writes `.vapour/build.json`. See [`[build]`](../games/manifest.md#build) |
+| `vapour perf` | `--dir <game-dir>`, `--engine godot\|unity\|bevy` to override `vapour.toml`. Prints engine-specific web performance guidance and project findings |
+| `vapour test` | `--dir`, `--port <n>` (default: a free port), `--no-telemetry`, `--no-profile`, `--no-open`, `--player`, `--mobile`, `--profiler <path>`, `--no-perf-hints`. Serves `build.dir` on `127.0.0.1` with cross-origin isolation headers and an FPS overlay (toggle with Ctrl+Shift+F). `--player` previews in a production-like iframe shell with the sandbox and `allow` attributes; `--mobile` adds a phone-style shell and needs `--player`. On Linux it also starts `vapour-profiler`; `--no-open` skips the browser and the profiler. The overlay is injected while serving and never written to your build folder. See [Profile locally](../tutorials/profile-locally.md) |
+| `vapour store check` | `--dir <game-dir>`. Validates `store/page.json`, `store/template.md` and the media files without uploading |
+| `vapour controller init` | `--dir`, `--mode keyboard-map\|dedicated\|action-map`, `--preset default\|shooter\|dpad-only`, `--force`. Writes a starter `[controller]` and backs up `vapour.toml` first when replacing |
+| `vapour controller check` | `--dir`. Validates `[controller]` and lists each control |
+| `vapour controller preview` | `--dir`, `--html`, `--out <file>` (default `controller-preview.html`). ASCII layout, or an HTML page with `--html` |
+
+### Publish
+
+| Command | Options and behavior |
+| --- | --- |
+| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`. Also `--skip-store` (build only), `--dry-run`, `--no-perf-hints` and `--experimental-chunks`. Checks everything first, then uploads the store page (text, banner, screenshots, trailer) and the web export as a new version. Each version can be published once |
+| `vapour store push` | `--dir <game-dir>`. Updates the store page without publishing a build version |
+
+`publish --dry-run` validates and packs without authenticating, registering or
+uploading. It checks the store page unless `--skip-store` is supplied. `--version`
+and release notes are still required in dry run.
+
+`--experimental-chunks` uses the experimental v1 chunk protocol and needs a
+compatible server. Release notes are not sent with it. Do not use it unless the
+platform team asked you to.
+
+### Assistants, updates and shell setup
+
+| Command | Options and behavior |
+| --- | --- |
+| `vapour llm` | `--refresh`, `--offline`, `--url <url>`. Prints the curated assistant guide fetched from `/llm.txt`, with a cache and an embedded fallback |
+| `vapour update` | `--check` only reports, `--version <tag>` installs a specific release such as `v0.1.1`. Verifies the checksum. Not available on Windows |
+| `vapour completion <shell>` | Generates a completion script for `bash`, `zsh`, `fish` or `powershell`. Run `vapour completion <shell> --help` for loading instructions |
+| `vapour help [command]` | Shows help for any command |
+
+### Environment and files
+
+| Name | Meaning |
+| --- | --- |
+| `VAPOUR_API` | API base URL. Overridden by `--api` |
+| `VAPOUR_TOKEN` | Personal access token. Takes precedence over the saved credential |
+| `VAPOUR_NO_UPDATE_CHECK=1` | Turn off the once-a-day release check |
+| `VAPOUR_PROFILER` | Path to `vapour-profiler` for `vapour test` |
+| `VAPOUR_LLM_URL` | Override the URL `vapour llm` reads |
+| `VAPOUR_RELEASES_URL` | Override where `vapour update` and the update check look for releases |
+| `~/.config/vapour/credentials` | Saved login. Honors `XDG_CONFIG_HOME` |
+
+Install script variables `VAPOUR_VERSION` and `VAPOUR_INSTALL_DIR` are described in
+[installation](../getting-started/prerequisites.md).
 
 API base precedence is `--api`, then nonempty `VAPOUR_API`, saved login API,
 then `https://api.vapour.ink`. The default string is a source default, not a
@@ -30,15 +86,10 @@ saved credential. Explicitly select the target for staging and local work.
 
 Outside CI, the CLI checks GitHub releases at most once per 24 hours and prints
 `vapour X.Y.Z is available (you have A.B.C). Run: vapour update` when newer.
-Set `VAPOUR_NO_UPDATE_CHECK=1` to opt out.
 
-`publish --dry-run` validates and packs without authenticating, registering or
-uploading. It checks the store page unless `--skip-store` is supplied. `--version`
-and release notes are still required in dry run.
-
-No currently implemented Go command lists/deletes projects, starts a profiler or
-registers a `vapour://` handler. Use the [API reference](api.md) for project
-management outside the CLI.
+No currently implemented Go command lists/deletes projects, starts a profiler on
+its own or registers a `vapour://` handler. Use the [API reference](api.md) for
+project management outside the CLI.
 
 ## Standalone native executable — implemented proof
 

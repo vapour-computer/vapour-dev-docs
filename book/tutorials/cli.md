@@ -149,9 +149,9 @@ vapour publish --version 0.1.0 --notes "First release"
 It updates the store first, then uploads the ZIP and signed attestation.
 Each version is single-use. The server verifies the upload and an admin
 reviews it before it goes live. `--skip-store` leaves the page unchanged.
-`--experimental-chunks` is a separate, server-dependent preview; it scans
-but does not send a signed ZIP attestation or release notes. Do not use it
-against an ordinary ZIP-only API. See [publishing](../games/publish.md).
+`--experimental-chunks` supports a local dry run, but cannot upload until the
+protocol supplies a signed attestation. Use ZIP publishing instead. See
+[publishing](../games/publish.md).
 
 ## 9. Check integrity: `verify`
 

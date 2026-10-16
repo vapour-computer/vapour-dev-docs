@@ -36,9 +36,9 @@ An admin reviews whether the game:
 - has a store page that is accurate.
 
 An admin cannot approve a version whose zip check is `pending` or `rejected`, and cannot skip the admin
-review. For an `unverified` version (published without a signed attestation,
-for example by an older CLI), an admin must explicitly accept it. That is
-slower for you, so always use the latest CLI so the attestation is sent.
+review. For an `unverified` version (a legacy unsigned upload or a verification
+queue failure), an admin must explicitly accept it. New unsigned ZIP uploads
+are rejected before storage; use an updated CLI to send an attestation.
 
 Games marked 18+ (the NSFW toggle in the dashboard Edit form) are shown only to
 signed-in viewers who are 18 or older. The rating does not change what admins
@@ -51,4 +51,4 @@ check; it only changes who can see the game.
 | How long does review take? | No promise yet. The dashboard page will say when there is a target. |
 | Can I withdraw a pending version? | A pending version cannot be edited. Publish the fix under a new version number. |
 | Why does my version say `Rejected`? | Read the admin's note on the dashboard, fix what it describes, and publish the fix under a new version number. |
-| My zip check is `unverified`. Do I still get reviewed? | Yes, but an admin must explicitly accept the version. Publish again with the latest CLI so the signed attestation is included. |
+| My zip check is `unverified`. Do I still get reviewed? | Yes, but an admin must explicitly accept a legacy or queue-failed version. New unsigned ZIP uploads are rejected. |

@@ -46,7 +46,7 @@ Global flags: `--api <base-url>`, `-v, --version`, `-h, --help`. Run
 
 | Command | Options and behavior |
 | --- | --- |
-| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`. Also `--skip-store` (build only), `--dry-run`, `--no-perf-hints` and `--experimental-chunks`. Checks everything first, uploads the store page (text, banner, screenshots, trailer) and the web export as a new version, then runs a signed zip scan and sends the attestation with the upload. There is no flag to skip the scan. Each version can be published once |
+| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`. Also `--skip-store` (build only), `--dry-run`, `--no-perf-hints` and `--experimental-chunks`. Scans, signs and locally verifies the exact ZIP before upload; the API independently requires and verifies the attestation before storing it. There is no flag to skip the check. Each version can be published once |
 | `vapour store push` | `--dir <game-dir>`. Updates the store page without publishing a build version |
 
 `publish --dry-run` validates and packs without authenticating, registering or
@@ -54,10 +54,8 @@ uploading. It checks the store page unless `--skip-store` is supplied, and it
 writes `.vapour/build.zip.attestation.json` like a real publish. `--version`
 and release notes are still required in dry run.
 
-`--experimental-chunks` uses the experimental v1 chunk protocol and needs a
-compatible server. Release notes are not sent with it, and neither is the
-attestation; the scan still runs on the folder. Do not use it unless the
-platform team asked you to.
+`--experimental-chunks` accepts a local dry run but blocks real uploads until
+the protocol can send a signed attestation. Use ZIP publishing for uploads.
 
 ### Assistants, updates and shell setup
 

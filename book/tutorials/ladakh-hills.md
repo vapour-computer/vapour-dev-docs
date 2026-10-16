@@ -206,6 +206,104 @@ When `mobile_mode` is true, the game also:
 The web page itself helps: `index.html` sets `user-scalable=no` in its viewport tag and `touch-action: none` on the canvas,
 so the browser does not zoom or scroll when a thumb drags.
 
+### Conditional input handling: one game, two kinds of input
+
+The game never has two copies of its driving logic. It has **one set of input actions** and a few `if` checks that decide
+which device may drive them. Here is the whole map.
+
+**1. Keys and touch feed the same actions.** In `_ready()` the game registers every action and its keys with the `InputMap`
+from one dictionary, so no `project.godot` editing is needed:
+
+```gdscript
+const DRIVE_KEYS: Dictionary = {"accelerate":[KEY_W,KEY_UP],"brake":[KEY_S,KEY_DOWN],"steer_left":[KEY_A,KEY_LEFT],"steer_right":[KEY_D,KEY_RIGHT],"handbrake":[KEY_SPACE],"toggle_drive":[KEY_L],"recenter":[KEY_V],"enjoy_view":[KEY_E] ...}
+for action in DRIVE_KEYS:
+	if not InputMap.has_action(action): InputMap.add_action(action)
+	for key in DRIVE_KEYS[action]:
+		var event := InputEventKey.new()
+		event.physical_keycode = key
+		if not InputMap.action_has_event(action,event): InputMap.action_add_event(action,event)
+```
+
+`physical_keycode` means the keys are positions, not letters, so WASD works on a French or Dvorak keyboard. The touch script
+then calls `Input.action_press("accelerate", 0.6)`. The physics code only ever asks
+`Input.get_axis("brake","accelerate")`, so it cannot tell a finger from a key. A key press is a strength of 1.0 and a stick push
+is anything from 0 to 1.
+
+**2. Only the pointer that matches the device may move the camera.** `_unhandled_input()` has two branches that must never both run:
+
+```gdscript
+if event is InputEventMouseMotion and not mobile_mode:
+	if event.relative.length_squared()>1.0: camera_follow = false
+	camera_yaw -= event.relative.x*0.003
+	camera_pitch = clampf(camera_pitch+event.relative.y*0.002,0.08,0.85)
+if mobile_mode and event is InputEventScreenDrag:
+	camera_follow = false
+	camera_yaw -= event.relative.x*0.003
+	camera_pitch = clampf(camera_pitch+event.relative.y*0.002,0.08,0.85)
+```
+
+Browsers (and Godot's *Emulate Mouse From Touch* option) can turn a finger drag into mouse motion. Without `not mobile_mode`
+the same drag would turn the camera twice as far. The desktop branch also ignores jitter: it only stops the following camera
+when the mouse moves more than one pixel in a frame (`length_squared() > 1.0`).
+
+**3. Pointer capture is a desktop-only idea.**
+
+```gdscript
+if OS.has_feature("web") and not mobile_mode and event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+```
+
+On the web a browser only grants pointer lock after a user click, so the game captures the mouse on the first left click, not at
+startup. A phone has no pointer to lock, so mobile skips this, and `toggle_settings_panel()` keeps the mouse mode visible there:
+
+```gdscript
+Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if mobile_mode or settings_panel.visible or expedition_complete else Input.MOUSE_MODE_CAPTURED
+```
+
+Mouse wheel zoom (`camera_dist` between 6.5 and 18) is also a desktop-only input: there is no touch version.
+
+**4. Game state gates every device, in the same order.** Both handlers check the state first, so a keyboard and a finger obey
+the same rules:
+
+| Order | Check | Effect |
+| --- | --- | --- |
+| 1 | `ui_cancel` (Esc) | Opens or closes settings, even during a panorama |
+| 2 | `settings_panel.visible or expedition_complete` | Return: no driving or camera input while a panel is open or after the summit |
+| 3 | `cinematic_active` | Only skipping is allowed: `Enter` on a keyboard, `SKIP` on touch. Both call `finish_checkpoint_panorama()` |
+| 4 | Everything else | Camera, `recenter`, `enjoy_view`, driving |
+
+Esc has no phone equivalent, so `MENU` calls `toggle_settings_panel()` directly. The touch script applies the same gates: it
+returns from `_input()` while settings are open, and `available_actions()` shrinks the buttons for panoramas and the summit.
+
+**5. Conditions on the action itself, not on the device.** Some rules belong to the action, so every device gets them:
+
+- `enjoy_view` only works if `near_lookout()` is true, the handbrake is on, and speed is below 0.5 m/s. The `VIEW` button sends
+  the same action, so it is silently ignored away from a lookout, exactly as `E` is.
+- `recover_vehicle` checks `recovery_cooldown <= 0.0` in both the `R` key path and the `RECOVER` button path.
+- `toggle_drive` and `handbrake` flip a stored state (`four_wheel_drive`, `handbrake_engaged`) rather than reading whether the
+  key is held. The touch buttons call the same toggle, and the HUD and the button label read the same variable.
+- `run_started` flips when `abs(throttle_input) > 0.05`, which means a resting thumb inside the dead zone does not start the clock.
+
+**6. Text follows the device.** Whenever words name a control, the game picks them with `mobile_mode`:
+
+| Where | Desktop | Phone |
+| --- | --- | --- |
+| Start guide | `WASD / arrows   Drive`, `L   2WD / 4WD` | `Joystick: drive and steer`, `Tap 2WD / 4WD for traction` |
+| Panorama prompt | `Enter to start driving` | `Tap SKIP to start driving` |
+| Radio welcome | `welcome` | `welcome_mobile` |
+| Lookout hint | key-based | `LOOKOUT · P to park · VIEW to enjoy` |
+| Summit postcard button | `Drive again  ·  Enter` | `Drive again` |
+| Settings file | `user://graphics.cfg` | `user://mobile_graphics.cfg` |
+
+**Rules to copy into your own game**
+
+1. Define actions once; let keys, gamepad and touch all press them. Do not read `InputEventKey` in gameplay code.
+2. Branch on the *device* only where the event type differs (mouse motion, screen drag, pointer lock).
+3. Branch on the *game state* before the device, so every input obeys the same pause, menu and cutscene rules.
+4. Put validity checks (cooldowns, "near a lookout") in the action's handler, not in the button.
+5. Detect touch once, store it in a variable (`mobile_mode`) and use that variable everywhere, including your instruction text.
+6. Test both paths. The touch test sends synthetic touches; for the desktop branch, run `vapour test` in a browser.
+
 ### Layout
 
 `layout_buttons()` runs on startup and again whenever the control resizes (`resized.connect(layout_buttons)`), so rotating a

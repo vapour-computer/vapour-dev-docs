@@ -21,13 +21,16 @@ being minified.
 3. **Hash and sign.** The CLI computes the SHA-256 of the exact zip bytes it
    will upload and writes a signed attestation at
    `.vapour/build.zip.attestation.json`.
-4. **Upload.** The attestation is sent with the zip as the `attestation` part
-   of the publish request. The upload is accepted right away. Only a malformed
-   request fails immediately, with HTTP 400 and error code `invalid_upload`
-   (for example invalid attestation JSON or an attestation over 64 KiB).
-6. **Server check.** The server verifies the zip in the background: it
-   recomputes the hash of the bytes it received, verifies the signature,
-   compares the hash, and runs its own scan. It records a verification status
+4. **Local verification.** `publish` verifies the signed, exact ZIP bytes before
+   uploading. This is the same local signature and hash check as `vapour verify`.
+5. **Upload gate.** The server requires the attestation as part of the publish
+   request. It independently checks the signature, registered developer key,
+   SHA-256 and ZIP size **before storing any build or version**. Missing
+   attestations return HTTP 400 `verification_required`; forged, mismatched or
+   wrong-key attestations return HTTP 400 `verification_failed`. Malformed JSON,
+   duplicate or oversized attestations return HTTP 400 `invalid_upload`.
+6. **Background scan.** After accepting a verified upload, the server scans the
+   ZIP independently. It records a verification status
    for the version: `pending` while the check is queued, then `verified`
    or `rejected`.
 6. **Verify later.** Anyone with the zip and the attestation can check them
@@ -44,7 +47,7 @@ or `unverified`.
 | `pending` | The zip check is queued or running |
 | `verified` | Signature valid, SHA-256 and size match the bytes the server received, and the server's own scan passed |
 | `rejected` | Signature, hash, size or the server's scan failed. The version is taken offline automatically and can never be approved. Fix the problem and publish a new version. |
-| `unverified` | No attestation was sent, for example by an older CLI, and the server scan passed |
+| `unverified` | Historical uploads without an attestation, or a verification queue failure; new unsigned ZIP uploads are rejected |
 
 Rejection reasons you can see on the dashboard: `bad_signature`,
 `hash_mismatch`, `size_mismatch`, `bad_key_id`, `bad_key`,
@@ -144,7 +147,7 @@ prints `the server recorded SHA-256 … for version …, but your zip is …`.
 
 ### vapour publish
 
-`publish` runs the scan and signing automatically. There is no flag to skip the
+`publish` runs the scan, signing and local verification automatically. There is no flag to skip the
 scan. `--dry-run` scans and signs but uploads nothing; it writes the attestation
 exactly like a real publish:
 
@@ -158,9 +161,9 @@ pending and tells you to run `vapour verify --remote --version <v> <zip>` to
 see the result. The new version is not live until an admin approves it; see
 [Review and approval](review-and-approval.md).
 
-With `--experimental-chunks`, the scan runs on the folder before upload, but no
-attestation is sent. See [Publish and verify a build](publish.md) for the rest
-of the publish flow.
+`--experimental-chunks` remains available for a local dry run, but real chunk
+uploads are blocked until they can supply an attestation. Use ZIP publishing.
+See [Publish and verify a build](publish.md) for the rest of the flow.
 
 ## Attestation file
 
@@ -200,7 +203,7 @@ the SHA-256.
 | --- | --- |
 | `Verified` | The attestation signed the upload and the server check passed |
 | `Rejected` | The server check failed; the version is taken offline automatically |
-| `Unverified` | Published without an attestation, for example by an older CLI |
+| `Unverified` | Legacy version or verification queue failure; not a valid new unsigned ZIP upload |
 | `Pending` | The server check is queued or running |
 
 The zip check is not the whole story: every version still waits for an admin

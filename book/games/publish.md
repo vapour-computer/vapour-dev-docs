@@ -50,7 +50,8 @@ the game-page URL, but upload does not mean the version is live. See
 
 ## After you upload
 
-The upload is accepted right away, and the server verifies the zip in the
+The server rejects missing, forged or mismatched attestations before storing
+the build. After accepting a valid signed ZIP, it scans the archive in the
 background. The version is not live until an admin approves it. Run
 `vapour verify --remote --version <version> <zip>` to see the zip check result,
 and watch the game list on the dashboard for the review badge. While a new

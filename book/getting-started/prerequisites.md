@@ -87,6 +87,35 @@ vapour whoami
 Create the token in your [developer dashboard](../auth/tokens.md). See the
 [CLI command reference](../reference/cli.md) for every command.
 
+### Missing commands? You have an old build
+
+`vapour --help` in v0.1.1 lists `build`, `completion`, `controller`, `create`, `llm`,
+`login`, `logout`, `perf`, `publish`, `store`, `template`, `test`, `update` and
+`whoami`. If `llm`, `test`, `perf`, `template`, `controller` or `update` are missing,
+you have the older v0.1.0 binary. Reinstall and check the version:
+
+```sh
+go install github.com/vapour-computer/vapour-cli@v0.1.1
+# or: the curl install script above
+```
+
+Some old binaries cannot run `vapour update`, so reinstall instead.
+
+### Print the guide for an AI assistant
+
+`vapour llm` prints the whole curated Vapour developer guide (the same text as
+[`llm.txt`](https://vapour-dev-docs.pages.dev/llm.txt)) to standard output. Pipe it
+into your assistant, a file or your clipboard:
+
+```sh
+vapour llm                      # print the guide
+vapour llm > vapour-guide.md    # save it
+vapour llm --refresh            # fetch the newest copy
+vapour llm --offline            # use the cache or the copy built into the CLI
+```
+
+It works without logging in. See [Use this handbook with an AI assistant](../reference/ai-assistants.md).
+
 Optional shell completion (`bash`, `zsh`, `fish` or `powershell`):
 
 ```sh

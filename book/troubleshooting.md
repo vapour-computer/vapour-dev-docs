@@ -42,7 +42,7 @@ Use that canonical handbook address to find the current workflow and limits.
 | Phone controls do nothing | Coming in the next release: play pages require `/__vapour/runtime.js`. If that script is missing, controls and quit hooks are inactive |
 | Stick movement stutters or gets missed | Coming in the next release: hold-based stick input with hysteresis (~50% engage / ~35% release) and a 50 ms minimum press reduces missed frames |
 | Can't open menu on phone | Add a controller `menu` button mapped to `Escape`, and ensure the game binds `Escape` to pause/settings |
-| "Click to play" covers the game on phone | Coming in the next release: touch-only devices skip the pointer-lock prompt. Until then, remove forced mouse-capture on touch paths |
+| "Click to play" covers the game on phone | Touch-only devices skip the pointer-lock prompt. If it still appears, check pointer detection/runtime version and remove forced mouse-capture on touch paths |
 
 ## Browser telemetry
 

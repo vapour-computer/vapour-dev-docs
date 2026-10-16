@@ -198,7 +198,7 @@ On WebGL, do not call `Application.Quit()` directly from gameplay code. Use the 
 (`store`, `home`, `reload`, `stay`).
 
 For mouse capture, request pointer lock from a real click in gameplay. If the browser drops lock (Esc/tab switch), the
-player shows a click-to-resume prompt. (Touch-only prompt skipping is coming in the next release.)
+player shows a click-to-resume prompt. On touch-only devices, this prompt is skipped.
 
 ## 8. Build from the command line
 

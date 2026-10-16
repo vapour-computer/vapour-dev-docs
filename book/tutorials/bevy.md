@@ -153,7 +153,7 @@ Bevy exits with `AppExit`. On web builds, wire that to Vapour's JS bridge (`vapo
 helper) so the player receives a quit signal and applies `runtime.on_quit` (`store`, `home`, `reload`, `stay`).
 
 If your game uses pointer lock for camera look, request it from user input. The player handles click-to-resume when
-lock is dropped and suppresses first-move spikes. (Touch-only prompt skipping is coming in the next release.)
+lock is dropped and suppresses first-move spikes. On touch-only devices, the pointer-lock prompt is skipped.
 
 ## 5. Run it locally
 

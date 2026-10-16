@@ -167,7 +167,7 @@ Touch controls for phones. They are **drawn by the Vapour player on top of your 
 the keys your game already understands. Nothing is added to your build. See the
 [Godot tutorial](../tutorials/godot.md) for a worked example.
 
-Coming in the next release: on touch-only devices, the player will skip the pointer-lock prompt so touch games are not
+On touch-only devices, the player skips the pointer-lock prompt so touch games are not
 blocked by a "Click to play" overlay.
 
 | Entry | Type | Required | Meaning |

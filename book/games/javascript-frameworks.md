@@ -40,8 +40,8 @@ Publish only the generated static files, not `node_modules`, the dev server, or
 your source tree.
 
 ```sh
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 Publishing uses the [source-preview CLI](../status.md).

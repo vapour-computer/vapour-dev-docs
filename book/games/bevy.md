@@ -30,8 +30,8 @@ Example `index.html` at the game project root:
 
 ```sh
 trunk build --release --public-url ./ --dist build/web
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 Set `project.engine = "bevy"` and `build.dir = "build/web"` in the manifest.

@@ -24,9 +24,10 @@ workflow file value to commit.
 | --- | --- |
 | `token` | Required publishing PAT, supplied from secrets |
 | `dir` | Game directory containing `vapour.toml`; default `.` |
-| `version` | Optional publication version override |
+| `version` | Required publication version (usually tag name without leading `v`) |
+| `notes` | Required release notes text |
+| `notes-file` | Optional release notes file path (alternative to `notes`) |
 | `api` | API base URL; specify it for staging |
-| `cli-version` | Actual CLI release tag; empty selects latest |
 | `dry-run` | `true` validates/packs without uploading |
 
 Example step template; replace the action reference and release tag before use:
@@ -37,8 +38,16 @@ Example step template; replace the action reference and release tag before use:
     token: ${{ secrets.VAPOUR_TOKEN }}
     api: ${{ vars.VAPOUR_API }}
     dir: .
-    version: ${{ github.ref_name }}
-    cli-version: REPLACE_WITH_RELEASE_TAG
+    version: ${{ steps.version.outputs.value }}
+    notes: "Release ${{ github.ref_name }}"
+```
+
+With a tag trigger, strip the leading `v` first:
+
+```yaml
+- name: Resolve publish version
+  id: version
+  run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 ```
 
 Pin the action commit and CLI version for reproducibility. The source action

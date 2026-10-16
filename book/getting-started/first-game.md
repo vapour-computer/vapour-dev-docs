@@ -52,7 +52,7 @@ Creating a project does not compile the game for you.
 ## 4. Validate locally
 
 ```sh
-vapour publish --dry-run
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
 ```
 
 Expected: the CLI prints the packed size and `Dry run: nothing uploaded.` A dry
@@ -62,7 +62,7 @@ playability test or a substitute for the server's ZIP validation.
 ## 5. Publish and play
 
 ```sh
-vapour publish
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 Expected: `Published ...` and a `/games/<slug>` URL. Open it, launch the player,
@@ -72,7 +72,7 @@ reproduce the release later.
 For the next release:
 
 ```sh
-vapour publish --version 0.2.0
+vapour publish --version 0.2.0 --notes "Release 0.2.0"
 ```
 
 See [publishing](../games/publish.md) for verification and recovery. Performance

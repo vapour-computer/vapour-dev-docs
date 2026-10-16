@@ -40,7 +40,7 @@ see the whole change.
 | 3. Touch controls | Make the game playable on a phone with on-screen controls |
 | 4. Test locally | `vapour test` for an FPS overlay and a profiler |
 | 5. CI | A workflow that builds on every push and publishes on a tag |
-| 6. Publish | `vapour publish --dry-run`, then the real thing |
+| 6. Publish | `vapour publish --dry-run --version 0.1.0 --notes "Dry run"`, then the real thing |
 
 ## Be honest about the state of things
 
@@ -51,7 +51,7 @@ would rather tell you "not run" than imply it works.
 | --- | --- |
 | `vapour test` (overlay and profiler launch) | In an open pull request |
 | `vapour controller …` and `[controller]` | Implemented, not yet released |
-| `vapour build`, `vapour publish` | Preview CLI, no release yet |
+| `vapour build`, `vapour publish --version <semver> --notes "..."` | Preview CLI, no release yet |
 | `vapour-ci` (the `@v1` action) | Not released: publishing from CI will not work until it is |
 | Phone controls inside the Vapour player | Preview: we validated the config and the layout, not a real device |
 

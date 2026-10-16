@@ -59,8 +59,8 @@ See [Understand your game's performance](../telemetry/guide.md) to read what the
 ## 6. Publish
 
 ```sh
-vapour publish --dry-run
-vapour publish
+vapour publish --dry-run --version 0.1.0 --notes "Dry run"
+vapour publish --version 0.1.0 --notes "First release"
 ```
 
 A small Bevy game packs to about 10 MiB, far inside the 512 MiB limit.

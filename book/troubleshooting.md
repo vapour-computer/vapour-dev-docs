@@ -22,6 +22,8 @@ Use that canonical handbook address to find the current workflow and limits.
 | 403 | Developer role, publishing scope, and ownership of the selected project ID |
 | 409 creating a project | Slug collision; inspect existing projects before making another |
 | No `vapour.toml` | Change to the game root or use `publish --dir` |
+| `--version is required (e.g. --version 0.3.1)` | Add `--version <semver>` to every `vapour publish` command, including `--dry-run` |
+| `release notes are required: pass --notes "..." or --notes-file CHANGELOG.md` | Pass exactly one notes source and ensure it is not empty |
 | No `index.html` | Export for Web and correct `build.dir`; don't upload a desktop build |
 | Native binaries or symlinks rejected | Use the generated browser output with regular packaged files |
 | 413 | ZIP size, extracted size, entry count or cover limit |

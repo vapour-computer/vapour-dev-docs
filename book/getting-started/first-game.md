@@ -1,8 +1,8 @@
 # First game: build to publish
 
-**Availability: source-preview publishing workflow.** Use an implemented CLI
-checkout and an API environment supplied by the platform maintainer. No public
-release or live endpoint is assumed; see [status](../status.md).
+**Availability: released CLI, staging platform.** Install the released CLI and
+use an API environment supplied by the platform maintainer. No production
+endpoint is assumed; see [status](../status.md).
 
 ## 1. Install and choose the API
 

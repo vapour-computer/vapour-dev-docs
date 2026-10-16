@@ -10,13 +10,13 @@ source preview is not a deployment.
 | Standalone profiler (`vapour-profiler`) | Public, early | `probe-test`, the BPF build pipeline, the lifecycle test harness, the `.vpt` v1 trace specification |
 | Local performance dashboard | Implemented maintainer checkout; not yet a published release | `dashboard`, authenticated loopback API, CPU/RSS/PSS capture, dump viewer, flamegraphs, offline/Claude reports and comparisons |
 | Browser telemetry | Staging-only preview | Metrics, overlay, `.vpt` export and offline or direct-Claude analysis through an explicit integration API. Not wired into the player yet |
-| Publishing CLI (`vapour-cli`) | Preview, not yet released | `login`, `logout`, `whoami`, `create`, `publish`, store-page/media validation and upload, and one-time version publishing |
+| Publishing CLI (`vapour-cli`) | **Released** (v0.1.1) | Install with `curl` or `go install`; see [installation](getting-started/prerequisites.md). `login`, `logout`, `whoami`, `create`, `template`, `build`, `perf`, `test`, `publish`, `store check`/`push`, `controller`, `llm`, `update` and `completion`. See the [command reference](reference/cli.md) |
 | Per-asset load cost (`asset` records, dashboard panel, `/api/assets`) | Preview: merged to the profiler main branch, not yet released | The format, analyzer ranking and dashboard panel. **No producer emits `asset` records yet**, so a live capture shows none. See [Find expensive assets](analysis/assets.md) |
-| Starter templates (`vapour template`) | Preview: merged to the CLI main branch, not yet released. The three template repos are public in the `vapour-computer` org | Clones a skeleton repo and sets up `vapour.toml` and `store/`. The skeletons contain no engine project yet, so a build still needs one added |
-| Local testing (`vapour test`) | Preview: open pull request, not yet released | A local web server for your build, an FPS overlay, and (Linux) the profiler launched on a private browser profile. See [Profile locally](tutorials/profile-locally.md) |
-| Touch controls (`vapour controller`, `[controller]`) | Implemented in a maintainer checkout; not yet released | Layout, validation and preview in the CLI. The player-side overlay is a preview we have not tested on a device |
-| Engine builds (`vapour build`, `[build]` command/boot/split) | Preview, on the CLI main branch; not yet released | Godot, Unity and Bevy exporters, custom commands, boot-file metadata |
-| Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. Needs a CLI release first |
+| Starter templates (`vapour template`) | **Released** in CLI v0.1.1. The three template repos are public in the `vapour-computer` org | Clones a skeleton repo and sets up `vapour.toml` and `store/`. The skeletons contain no engine project yet, so a build still needs one added |
+| Local testing (`vapour test`) | **Released** in CLI v0.1.1 | A local web server for your build, an FPS overlay, and (Linux) the profiler launched on a private browser profile. See [Profile locally](tutorials/profile-locally.md) |
+| Touch controls (`vapour controller`, `[controller]`) | **Released** in CLI v0.1.1 | Layout, validation and preview in the CLI. The player-side overlay is a preview we have not tested on a device |
+| Engine builds (`vapour build`, `[build]` command/boot/split) | **Released** in CLI v0.1.1 | Godot, Unity and Bevy exporters, custom commands, boot-file metadata |
+| Publishing GitHub Action (`vapour-ci`) | Preview, not yet released | Composite action and engine templates. The CLI it needs is now released |
 | Vapour platform (hosted) | Staging | Accounts, tokens, store pages, media, versions, publishing and play on the staging site. Production is not open |
 
 When a guide says "from your checkout" it means a checkout that contains that implementation. Cloning a repository

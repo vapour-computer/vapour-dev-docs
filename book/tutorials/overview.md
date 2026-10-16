@@ -54,9 +54,9 @@ would rather tell you "not run" than imply it works.
 
 | Tool | State today |
 | --- | --- |
-| `vapour test` (overlay and profiler launch) | In an open pull request |
-| `vapour controller …` and `[controller]` | Implemented, not yet released |
-| `vapour build`, `vapour publish --version <semver> --notes "..."` | Preview CLI, no release yet |
+| `vapour test` (overlay and profiler launch) | Released in CLI v0.1.1 |
+| `vapour controller …` and `[controller]` | Released in CLI v0.1.1 |
+| `vapour build`, `vapour publish --version <semver> --notes "..."` | Released in CLI v0.1.1 |
 | `vapour-ci` (the `@v1` action) | Not released: publishing from CI will not work until it is |
 | Phone controls inside the Vapour player | Preview: we validated the config and the layout, not a real device |
 
@@ -71,7 +71,7 @@ route when you want something that already builds.
 
 ## Before you start
 
-- Install the `vapour` CLI from a checkout (see [prerequisites](../getting-started/prerequisites.md)).
+- Install the `vapour` CLI with the `curl` script or `go install` (see [prerequisites](../getting-started/prerequisites.md)).
 - Have the engine for the tutorial you pick installed, at the version it names.
 - Use a Chromium-family browser to test. For the profiler you also need Linux and the `vapour-profiler` binary.
 

@@ -104,8 +104,6 @@ Under **Player Settings → Publishing Settings** set **Compression Format** to 
 Fallback**. An uncompressed export is the simplest first build. Compressed files need the right `Content-Encoding`
 headers from the server.
 
-For WebGPU and **Code Optimization**, see [Make your web build fast](fast-web-builds.md#7-unity-webgpu).
-
 ## 6. Add the Vapour build script
 
 Copy `Vapour~/Assets/Editor/VapourBuild.cs` from the sample repository into your project at

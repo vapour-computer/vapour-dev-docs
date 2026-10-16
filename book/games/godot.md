@@ -12,9 +12,7 @@ depending on platform-specific features or a .NET export.
 2. Add a **Web** export preset in Project → Export.
 3. Use the **Compatibility** renderer for the documented WebGL-oriented path.
 4. Start with thread support disabled; enable it only when the game and actual
-   hosting environment support cross-origin isolation. The Vapour player and
-   `vapour test` send the isolation headers, and a threaded build is much
-   smoother. See [Make your web build fast](../tutorials/fast-web-builds.md).
+   hosting environment support cross-origin isolation.
 5. Export to `build/web/index.html`.
 
 Keep the generated `.wasm`, JavaScript and `.pck` files next to the entry point in

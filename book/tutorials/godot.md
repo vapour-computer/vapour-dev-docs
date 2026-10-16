@@ -73,8 +73,7 @@ We saved the preset as `export_presets.cfg`. These are the entries that matter:
 | Progressive Web App | off |
 
 - **Thread support is off.** Threaded Godot builds need cross-origin isolation headers. `vapour test` sends them, but
-  keep the first build simple. Once it runs, switch threads on: a single-threaded build runs the whole game on the
-  browser's main thread and stutters even on a fast GPU. See [Make your web build fast](fast-web-builds.md).
+  keep the first build simple.
 - **The preset must be named `Web` and have platform `Web`.** `vapour build` refuses anything else.
 
 > **A trap we hit:** upstream's `.gitignore` lists `export_presets.cfg`, so the file silently never reached Git. CI
@@ -425,7 +424,4 @@ vapour publish --notes "First tutorial build"
 - `vapour test` gives you an FPS overlay and a profiler without changing your build.
 - Keep the publish step out of workflows that run on every push until `vapour-ci` is released.
 
-Next: make this build run smoothly in [Make your web build fast](fast-web-builds.md). Threads, web-only settings and a
-speed-optimised export template matter more than the GPU.
-
-Then: the same flow for [Bevy](bevy.md) and [Unity](unity.md).
+Next: the same flow for [Bevy](bevy.md) and [Unity](unity.md).

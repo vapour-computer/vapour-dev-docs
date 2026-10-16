@@ -29,11 +29,6 @@ see the whole change.
     <p>The FPS overlay and the profiler that <code>vapour test</code> gives any engine. How to read them.</p>
     <p><span class="badge badge-preview">Verified</span></p>
   </div>
-  <div class="tutorial-card">
-    <h3><a href="fast-web-builds.html">Make it fast</a></h3>
-    <p>Threads, web-only settings, a speed-optimised Godot template, a faster Bevy <code>.wasm</code>, and where WebGPU is available.</p>
-    <p><span class="badge badge-warn">Not measured yet</span></p>
-  </div>
 </div>
 
 ## What every tutorial covers

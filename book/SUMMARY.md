@@ -14,7 +14,6 @@
 * [Bevy: a Rust game to the web](tutorials/bevy.md)
 * [Unity: a 2D platformer to WebGL](tutorials/unity.md)
 * [Profile your game locally](tutorials/profile-locally.md)
-* [Make your web build fast](tutorials/fast-web-builds.md)
 
 ## Templates
 

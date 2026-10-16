@@ -35,6 +35,10 @@ Capture started automatically; open the profiler tab to watch it. The profiler s
 A browser window opens with two tabs: **your game**, and **the performance page**. Measuring has already started. To stop, close the
 browser or press Ctrl+C. Everything is cleaned up.
 
+When the profiler session ends, `vapour test` also saves a single JSON report to
+`.vapour/test-output/report.json` in your game folder and prints that path.
+This file contains one derived report document for the whole capture.
+
 If the performance page cannot start, the command says why and carries on with just the speed counter:
 
 ```text
@@ -101,6 +105,10 @@ A test lasts at most **five minutes**. Run `vapour test` again for another.
 You can open a saved recording (a `.vpt` file) with **Open dump** on the performance page. Nothing is measured when you do, it is only
 read. Try the [demo recording](../.gitbook/assets/demo-session.vpt) (made-up data) to see charts, a flamegraph and a report without
 needing a game.
+
+Use **Download JSON** on the performance page when you want one file containing
+metrics plus trace data, or use `/api/report?trace=0` for a smaller metrics-only
+file.
 
 ## If it does not work
 

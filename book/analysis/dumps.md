@@ -14,6 +14,22 @@ Imports start no probes. See [dashboard usage](../telemetry/dashboard.md) for
 charts, flamegraphs, budgets and before/after comparisons. This command is not
 yet part of a published profiler release.
 
+## Single JSON report (`vp-report`)
+
+The profiler can also export one derived JSON file that includes both computed
+metrics and (optionally) the full retained trace:
+
+- Dashboard: **Download JSON** button (`/api/report`)
+- CLI: `vapour-profiler report capture.vpt -o report.json`
+
+For a smaller metrics-only output, omit `trace` (`/api/report?trace=0` or
+`vapour-profiler report --no-trace`).
+
+The schema is
+[`docs/schema/vp-report-v1.schema.json`](https://github.com/vapour-computer/vapour-profiler/blob/main/docs/schema/vp-report-v1.schema.json),
+and field details are in
+[`docs/report-format.md`](https://github.com/vapour-computer/vapour-profiler/blob/main/docs/report-format.md).
+
 ## Browser export: available package API
 
 With an active authorized session:

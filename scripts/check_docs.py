@@ -74,6 +74,19 @@ for missing in sorted(expected - set(navigation)):
 for extra in sorted(set(navigation) - expected):
     errors.append(f"Unexpected navigation target: {extra.relative_to(ROOT)}")
 
+llm = BOOK / "llm.txt"
+if not llm.is_file():
+    errors.append("Missing required file: book/llm.txt")
+else:
+    size = llm.stat().st_size
+    if size > 60 * 1024:
+        errors.append(f"book/llm.txt is {size} bytes; max is 61440 bytes")
+    cli = BOOK / "reference" / "cli.md"
+    allowed_flags = set(re.findall(r"--[a-z0-9-]+", cli.read_text()))
+    used_flags = set(re.findall(r"--[a-z0-9-]+", llm.read_text()))
+    for flag in sorted(used_flags - allowed_flags):
+        errors.append(f"book/llm.txt mentions flag not listed in book/reference/cli.md: {flag}")
+
 for config in [ROOT / ".gitbook.yaml", BOOK / ".gitbook.yaml", ROOT / "gitbook-docs.yaml"]:
     if not config.is_file():
         errors.append(f"Missing GitBook config: {config}")

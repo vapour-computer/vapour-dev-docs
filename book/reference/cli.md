@@ -11,11 +11,13 @@ Global options: `--api <base-url>`, `--version`, and normal `--help`.
 | `vapour whoami` | Queries the selected API and prints identity/role/API base |
 | `vapour create <name>` | `--engine godot\|unity\|bevy\|other`, `--from <git-url>`, `--offline` |
 | `vapour template <engine> <name>` | **Preview: on the CLI main branch, not yet released.** `--org <name>` (default `vapour-computer`), `--offline`. Engines: `godot`, `bevy`, `unity`. Clones `vapour-template-<engine>`, removes `.git`, then does what `create` does. The templates are skeletons: see [Create or import a project](../templates/overview.md) |
-| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`, plus `--skip-store`, `--dry-run`; publishes each version once |
+| `vapour publish` | `--dir <game-dir>`, required `--version <semver>`, and exactly one of `--notes <markdown>` or `--notes-file <path>`, plus `--skip-store`, `--dry-run`, `--no-perf-hints`; publishes each version once |
 | `vapour store check` | `--dir <game-dir>`; validates page JSON, Markdown and media without uploading |
 | `vapour store push` | `--dir <game-dir>`; updates the store page without publishing a build version |
-| `vapour build` | `--dir <game-dir>`; runs the engine's web exporter or your `build.command`, checks `index.html`, writes `.vapour/build.json`. See [`[build]`](../games/manifest.md#build) |
-| `vapour test` | **Preview, in an open pull request.** `--dir`, `--port`, `--no-telemetry`, `--no-profile`, `--no-open`, `--profiler <path>`. Serves your build on `127.0.0.1` with an FPS overlay and, on Linux, opens the profiler. See [Profile locally](../tutorials/profile-locally.md) |
+| `vapour build` | `--dir <game-dir>`, `--no-perf-hints`; runs the engine's web exporter or your `build.command`, checks `index.html`, writes `.vapour/build.json`. See [`[build]`](../games/manifest.md#build) |
+| `vapour perf` | `--dir <game-dir>`, optional `--engine godot\|unity\|bevy`; prints performance guidance and file/project findings |
+| `vapour test` | **Preview, in an open pull request.** `--dir`, `--port`, `--no-telemetry`, `--no-profile`, `--no-open`, `--profiler <path>`, `--no-perf-hints`. Serves your build on `127.0.0.1` with an FPS overlay and, on Linux, opens the profiler. See [Profile locally](../tutorials/profile-locally.md) |
+| `vapour llm` | `--refresh`, `--offline`, `--url <url>`; prints the curated assistant guide fetched from `/llm.txt` with cache and embedded fallback |
 | `vapour controller init` | **Preview, not yet released.** `--dir`, `--mode keyboard-map\|dedicated\|action-map`, `--preset default\|shooter\|dpad-only`, `--force`. Writes a starter `[controller]` (backs up `vapour.toml` first when replacing) |
 | `vapour controller check` | **Preview.** `--dir`. Validates `[controller]` and lists each control |
 | `vapour controller preview` | **Preview.** `--dir`, `--html`, `--out <file>`. ASCII layout, or an HTML page with `--html` |

@@ -69,6 +69,7 @@ for (const part of parts) {
 
 await writeFile(resolve(out, "llms.txt"), index);
 await writeFile(resolve(out, "llms-full.txt"), full);
+await cp(resolve(book, "llm.txt"), resolve(out, "llm.txt"));
 await writeFile(resolve(out, ".nojekyll"), "");
 await writeFile(resolve(out, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${site}sitemap.xml\n`);
 const urls = parts.flatMap((p) => p.pages.map((pg) => site + pg.path.replace(/\.md$/, ".html").replace(/^README\.html$/, "")));

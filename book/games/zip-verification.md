@@ -1,7 +1,8 @@
 # .zip verification
 
-**Availability: planned for CLI v0.2.** The commands and files on this page are a
-design target. The current CLI does not run this scan or write an attestation.
+**Availability: implemented on CLI main; check your installed release and server.**
+These commands may not be present in older CLI releases. A compatible API is
+required for server verification.
 
 `vapour publish` checks the build zip on your computer before anything is
 uploaded, signs it, and the server checks it again. It protects players and the

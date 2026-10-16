@@ -4,6 +4,9 @@ Step-by-step walkthroughs that take a **real sample project** all the way to a V
 separate from the [reference docs](../README.md): the docs tell you what every setting does, the tutorials show you
 the order to do things in, what went wrong for us, and why.
 
+New to the command line? Start with [CLI: every command, step by step](cli.md)
+for a guided pass through the full CLI, including optional and offline commands.
+
 Each tutorial uses a project we forked into the [`vapour-computer`](https://github.com/vapour-computer) organization, on a
 branch called `vapour-tutorial`. The branch contains exactly the files we added, so you can compare it to upstream and
 see the whole change.

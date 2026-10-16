@@ -6,6 +6,7 @@
 * [What is available today](status.md)
 * [Prerequisites and installation](getting-started/prerequisites.md)
 * [First game: build to publish](getting-started/first-game.md)
+* [CLI: every command, step by step](tutorials/cli.md)
 
 ## Tutorials
 

@@ -1,8 +1,9 @@
 # Publish and verify a build
 
-**Availability: staging through the source-preview CLI.** Select your target
+**Availability: staging through the CLI; ZIP signing is a source preview.** Select your target
 environment before publishing. A publication uploads the store page and game
-build, creates a version and makes the game visible to players.
+build and creates a version. The server verifies the ZIP and an admin reviews
+the version before it goes live.
 
 ## Before upload
 
@@ -23,8 +24,9 @@ vapour publish --dry-run --version 0.1.0 --notes "Dry run"
 ```
 
 The CLI validates the manifest, store text, layout and media, packs a directory
-or selects the supplied ZIP, checks release notes, and enforces local upload
-limits. Dry run exits before API authentication, registration or upload. It does
+or selects the supplied ZIP, checks release notes and local upload limits, then
+scans and signs the ZIP. It writes `.vapour/build.zip.attestation.json` even on
+a dry run. Dry run exits before API authentication, registration or upload. It does
 not load the game in a browser, test ownership, or run all server-side checks.
 
 ## Upload
@@ -42,8 +44,9 @@ vapour publish --dir ./games/my-game --version 0.2.0 --notes "Release 0.2.0"
 If the project has no ID, the CLI registers it first and saves the assigned ID.
 It updates the store page first, then sends the version, release notes and build
 ZIP. Updating the store first prevents rejected media from consuming a version.
-The service checks ownership and the archive before publishing. The CLI prints
-the public game-page URL.
+The service checks ownership before accepting the upload and verifies the archive asynchronously. The CLI prints
+the game-page URL, but upload does not mean the version is live. See
+[.zip verification](zip-verification.md) for the local and server checks.
 
 ## After you upload
 
@@ -89,6 +92,17 @@ updates the page without creating a build version. For an offline-created game,
 the first push registers the project and writes its ID to `vapour.toml`.
 
 ## Verify the outcome
+
+After uploading, check the server verification record:
+
+```sh
+vapour verify --remote --version 0.2.0
+```
+
+This checks the signed attestation and server record, not the bytes of a local
+ZIP. To check those too, pass the exact ZIP used for upload. A folder publish
+packs into a temporary ZIP; use a prebuilt ZIP and retain it when exact-byte
+verification matters. Admin review still follows server verification.
 
 - Inspect the returned game page and public catalog entry.
 - Open the player, checking the entry point and all asset requests.

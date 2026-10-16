@@ -1,10 +1,10 @@
 # Vapour developer guide for LLMs
-Version: 2026-10-16
+Version: 2026-10-17
 Source: https://vapour-dev-docs.pages.dev/llm.txt
 
 Status terms in this file:
-- Released: on vapour-cli main.
-- Preview: merged in source but not guaranteed in a published release yet.
+- Released: available in a published CLI release; check your installed binary's help for its commands.
+- Preview: merged in source but not guaranteed in a published release or deployed service yet.
 
 1) What Vapour is and the normal flow
 
@@ -24,6 +24,8 @@ Rules that often matter:
 - `vapour publish` requires `--version` and exactly one of `--notes` or `--notes-file`, including dry runs.
 - Each game version can be published once; publishing the same version again returns a version-exists error.
 - `vapour publish --dry-run` validates and packs locally, without API auth/upload.
+- ZIP publishing scans and signs the exact packed build before upload, including dry runs. A failing scan stops before a version is used.
+- Upload is not the same as going live: the server verifies the ZIP, then a Vapour admin reviews the version.
 - Store push and publish can register a project and write `project.id` into `vapour.toml` on first server registration.
 - A new version is not live until an admin approves it (preview; while it waits, players keep the previous approved version).
 
@@ -32,6 +34,7 @@ Getting this file:
 - Options: `--refresh`, `--offline`, `--url <URL>`
 - Env override: `VAPOUR_LLM_URL`
 - Direct URL: `https://vapour-dev-docs.pages.dev/llm.txt`
+- Guided tutorial for every top-level CLI command: `https://vapour-dev-docs.pages.dev/tutorials/cli.html`
 
 2) `vapour.toml` reference (fields assistants should use)
 
@@ -191,6 +194,7 @@ Zip scan and signing (preview, CLI v0.2):
 - `vapour verify <zip> [--attestation <file>] [--json]` checks a zip against its attestation locally.
 - `vapour publish` (including `--dry-run`) runs the scan, signs the zip and writes `.vapour/build.zip.attestation.json`. There is no flag to skip the scan. With `--experimental-chunks` the scan runs but no attestation is sent.
 - `vapour verify <zip> --remote --version <semver>` also compares the server's recorded SHA-256 and status; exit 1 unless the status is `verified`.
+- `vapour verify --remote --version <semver>` may omit the ZIP: it checks the signed attestation and server record, but not local ZIP bytes. `--dir` selects the project and `--json` emits a result object.
 - Server verification is asynchronous: the upload is accepted right away and the server records `pending`, then `verified`, `rejected` or `unverified`. `unverified` means no attestation was sent (older CLI) and the server scan passed.
 - Reject reasons include `bad_signature`, `hash_mismatch`, `size_mismatch`, `bad_key_id`, `bad_key`, `unsupported_version`, `unknown_key`, `bad_attestation`, or any scan code. A rejected version is taken offline and can never be approved; publish a new version.
 - Malformed requests (invalid attestation JSON, attestation over 64 KiB) fail immediately with HTTP 400 `invalid_upload`.

@@ -29,6 +29,28 @@ that `go install .../vapour-cli@latest` installs an executable named `vapour` or
 contains unpublished commands. Once releases exist, use their platform-specific
 archive and published checksum.
 
+## Install and update from releases
+
+Install the latest published CLI release on macOS/Linux:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/vapour-computer/vapour-cli/main/install.sh | sh
+```
+
+The installer verifies checksums and writes `vapour` to `/usr/local/bin` or
+`~/.local/bin`. Pin a release with `VAPOUR_VERSION=vX.Y.Z` or choose install
+directory with `VAPOUR_INSTALL_DIR`.
+
+To update an existing installation:
+
+```sh
+vapour update
+vapour update --check
+```
+
+Outside CI, the CLI checks for new releases at most once per 24 hours and prints
+an update notice. Set `VAPOUR_NO_UPDATE_CHECK=1` to disable that check.
+
 ## Browser package checkout
 
 ```sh

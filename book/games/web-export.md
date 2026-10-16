@@ -42,6 +42,10 @@ or WebP. Keep covers separate from the engine's runtime asset bundle when practi
 - Compressed Unity exports need matching serving/decompression behavior.
 - Threads/SharedArrayBuffer require actual cross-origin isolation, including
   subresource headers. Check `crossOriginIsolated` in the game frame.
+- Pointer lock is user-gesture only in browsers. If a game asks too early, the player shows an in-frame prompt
+  ("Click to play" / "Click to resume"). That click is swallowed so it does not also fire in-game actions.
+- After lock engages, the player ignores the first mouse-move spike on web builds to avoid camera jumps.
+- On touch-only devices, the pointer-lock prompt is not shown.
 - The sandboxed iframe must be the context in which game telemetry runs. Measuring
   rAF or memory on the surrounding dashboard does not profile the game.
 

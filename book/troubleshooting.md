@@ -39,6 +39,10 @@ Use that canonical handbook address to find the current workflow and limits.
 | Play URL points to Storage emulator `/play` | Configure the reachable API serving origin; current local defaults are not a complete hosted-player URL setup |
 | Newly uploaded content looks stale | Compare versioned asset URLs and cache behavior before republishing repeatedly |
 | Blank game despite accepted ZIP | An upload validates packaging, not browser/engine runtime compatibility |
+| Phone controls do nothing | Open the play page source/network tab and confirm it loads `/__vapour/runtime.js`; without runtime injection, controls and quit hooks are inactive |
+| Stick movement stutters or gets missed | Keep the stick past ~50% deflection so it stays held; release happens with hysteresis below ~35%, with a 50 ms minimum press to reach at least one game frame |
+| Can't open menu on phone | Add a controller `menu` button mapped to `Escape`, and ensure the game binds `Escape` to pause/settings |
+| "Click to play" covers the game on phone | The prompt should not appear on touch-only devices; if it does, check pointer detection/runtime version and remove forced mouse-capture on touch |
 
 ## Browser telemetry
 

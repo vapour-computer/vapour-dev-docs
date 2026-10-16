@@ -73,7 +73,8 @@ We saved the preset as `export_presets.cfg`. These are the entries that matter:
 | Progressive Web App | off |
 
 - **Thread support is off.** Threaded Godot builds need cross-origin isolation headers. `vapour test` sends them, but
-  keep the first build simple.
+  keep the first build simple. Once it runs, switch threads on: a single-threaded build runs the whole game on the
+  browser's main thread and stutters even on a fast GPU. See [Make your web build fast](fast-web-builds.md).
 - **The preset must be named `Web` and have platform `Web`.** `vapour build` refuses anything else.
 
 > **A trap we hit:** upstream's `.gitignore` lists `export_presets.cfg`, so the file silently never reached Git. CI
@@ -136,7 +137,7 @@ because `vapour-ci@v1` does not exist yet, described in [CI](#6-ci). The second 
 
 ## 4. Describe the controls in `vapour.toml`
 
-Now map the on-screen controls onto those keys. We used two sticks and three buttons:
+Now map the on-screen controls onto those keys. We used two sticks and four buttons:
 
 | Control | Type | Sends |
 | --- | --- | --- |
@@ -145,6 +146,7 @@ Now map the on-screen controls onto those keys. We used two sticks and three but
 | `jump` | button | `Space` |
 | `shoot` | button | `f` |
 | `aim` | button | `q` |
+| `menu` | button | `Escape` |
 
 ```toml
 [project]
@@ -156,6 +158,9 @@ version = "0.1.0"
 
 [build]
 dir = "build/web"
+
+[runtime]
+on_quit = "store"
 
 [controller]
 mode = "keyboard-map"
@@ -216,6 +221,15 @@ y = 0.30
 w = 0.11
 h = 0.11
 key = "q"
+
+[[controller.controls]]
+id = "menu"
+type = "button"
+x = 0.93
+y = 0.08
+w = 0.10
+h = 0.10
+key = "Escape"
 ```
 
 Every entry is explained in the [`vapour.toml` reference](../games/manifest.md).
@@ -232,6 +246,7 @@ Controller mode: keyboard-map
   jump         button   at (0.58, 0.48) size (0.13, 0.13)
   shoot        button   at (0.88, 0.46) size (0.13, 0.13)
   aim          button   at (0.74, 0.30) size (0.11, 0.11)
+  menu         button   at (0.93, 0.08) size (0.10, 0.10)
 Controller config looks good.
 Tip: run `vapour controller preview` to see the layout.
 ```
@@ -268,6 +283,35 @@ Preview (D=dpad, J=joystick, B=button)
 > **A mistake the preview caught.** Our first layout put `jump` at `y = 0.58`, and the ASCII preview showed it
 > overlapping the look stick (`JBJJ`). On a phone a thumb could not tell them apart. We moved the buttons up until no
 > two controls touched.
+
+For phone controls to work at all, the play page must load `/__vapour/runtime.js`. If runtime injection is disabled,
+the overlay can draw but buttons/sticks do nothing.
+
+The current stick behavior is hold-based: direction engages when deflection reaches about 50%, releases below about
+35% (hysteresis), and button presses are held for at least 50 ms so a tap reaches at least one game frame.
+
+### Quitting and the mouse
+
+Use `get_tree().quit()` as normal. The player handles quit with `runtime.on_quit` (`store`, `home`, `reload`, `stay`).
+For this tutorial we use `store`.
+
+In the TPS sample, keep pointer lock out of `_ready()`. Capture on first click in-level, and skip capture on touch
+devices so phones are playable:
+
+```gdscript
+if not DisplayServer.is_touchscreen_available() or OS.has_feature("pc"):
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+```
+
+For look controls driven by stick/touch, make look frame-rate independent and clamp pitch:
+
+```gdscript
+look_yaw += look_input.x * look_speed * delta
+look_pitch = clampf(look_pitch + look_input.y * look_speed * delta, deg_to_rad(-80.0), deg_to_rad(80.0))
+```
+
+If your `.pck` is very large, expect high memory pressure and slower startup on phones. Reduce texture/audio size,
+strip unused assets, and test on a real mid-range device.
 
 ## 5. Run it locally
 
@@ -346,4 +390,7 @@ vapour publish --notes "First tutorial build"
 - `vapour test` gives you an FPS overlay and a profiler without changing your build.
 - Keep the publish step out of workflows that run on every push until `vapour-ci` is released.
 
-Next: the same flow for [Bevy](bevy.md) and [Unity](unity.md).
+Next: make this build run smoothly in [Make your web build fast](fast-web-builds.md). Threads, web-only settings and a
+speed-optimised export template matter more than the GPU.
+
+Then: the same flow for [Bevy](bevy.md) and [Unity](unity.md).

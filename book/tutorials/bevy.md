@@ -74,6 +74,9 @@ version = "0.1.0"
 command = "custom"
 args = ["trunk", "build", "--release", "--public-url", "./", "--dist", "dist"]
 dir = "dist"
+
+[runtime]
+on_quit = "store"
 ```
 
 - **`engine = "bevy"`** tells Vapour how to treat the files. For example, nothing under `assets/` is marked as needed at boot.
@@ -144,6 +147,14 @@ Tip: run `vapour controller preview` to see the layout.
 > could not test this. If you see it, the simplest fix is a small change in the game's movement code to ignore touches
 > while the keyboard direction is non-zero.
 
+### Quitting and the mouse
+
+Bevy exits with `AppExit`. On web builds, wire that to Vapour's JS bridge (`vapour_quit()` from the template runtime
+helper) so the player receives a quit signal and applies `runtime.on_quit` (`store`, `home`, `reload`, `stay`).
+
+If your game uses pointer lock for camera look, request it from user input. The player handles click-to-resume when
+lock is dropped and suppresses first-move spikes; on touch-only devices the pointer-lock prompt is not shown.
+
 ## 5. Run it locally
 
 ```sh
@@ -209,5 +220,7 @@ To publish, add a `VAPOUR_TOKEN` repository secret ([create a token](../auth/tok
 - `build.command = "custom"` plus `args` lets Vapour build any toolchain, as long as the result is a folder with `index.html`.
 - A game that already reads the keyboard needs no code change for a stick: map the stick onto the keys.
 - Never let a publish step that needs an unreleased action run on every push.
+
+For a faster `.wasm` and the WebGPU renderer, see [Make your web build fast](fast-web-builds.md#6-bevy-webgpu-and-a-faster-wasm).
 
 Next: the same flow for [Godot](godot.md) and [Unity](unity.md).

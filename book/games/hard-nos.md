@@ -39,7 +39,7 @@ planned; treat them as "no" until the work lands.
 | --- | --- | --- |
 | Threaded builds (Unity threads, Godot threads, Bevy atomics) | The player page is not reliably cross-origin isolated, and Safari never is. | `threads` (warn) |
 | `OpenURL`, `shell_open`, clipboard, downloads, WebXR | The player sandbox blocks them. | `external_apis` (warn) |
-| Root-absolute asset paths such as `src="/game.js"` | Games are served under `/play/{slug}/`. Use relative paths; for Trunk use `--public-url ./`. | `absolute_paths` (warn) |
+| Asset paths that start with a slash (root-absolute) | Games are served under `/play/{slug}/`. Use relative paths; for Trunk use `--public-url ./`. | `absolute_paths` (warn) |
 | PWA service workers (Godot PWA, Unity PWA template) | They clash with other games on the shared origin. | `pwa_service_worker` (warn) |
 | Unity Default WebGL template | Fixed 960×600 canvas. Use Minimal or a responsive template. | `unity_default_template` (warn) |
 | Unity default compression without Decompression Fallback | Compressed files are served without `Content-Encoding` and fail to load. | none; see [Unity](unity.md) |

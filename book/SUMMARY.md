@@ -57,6 +57,7 @@
 * [Web export requirements](games/web-export.md)
 * [Large-game delivery plan](games/large-games.md)
 * [Supported engines and frameworks](games/frameworks.md)
+* [Hard no's: what Vapour cannot run](games/hard-nos.md)
 * [Godot](games/godot.md)
 * [Unity](games/unity.md)
 * [Bevy and Rust](games/bevy.md)
